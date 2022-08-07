@@ -1,0 +1,14 @@
+html {
+    background-color: #e4E9FD;
+}
+
+
+h1 {
+    color: #fff;
+    padding: 10px;
+}
+
+::placeholder {
+    color: gray;
+    opacity: 1;
+}

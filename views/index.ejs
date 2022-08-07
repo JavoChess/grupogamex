@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New entry</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>New user</h1>
+
+    <p>Enter you name and email</p>
+    <form method="post" action="/register">
+        <input type="text" name="nombre" placeholder="Name" autocomplete="off">
+        <input type="email" name="correo" placeholder="e-mail" autocomplete="off">
+        <button>Join now</button>
+    </form>
+    
+    <p>We are now <strong> <%= usuarios %> </strong></p>
+
+</body>
+</html>
+
+
+
