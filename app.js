@@ -12,11 +12,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-// Conexión a la DB
+// Conexión a la DBjawsdb
 let connection;
 
 if (process.env.JAWSDB_URL) {
-    connection = mysql.connection(process.env.JAWSDB_URL);
+    connection = mysql.createConnection(process.env.JAWSDB_URL);
 
 } else { 
     connection = mysql.createConnection({
@@ -28,10 +28,10 @@ if (process.env.JAWSDB_URL) {
 }
 
 // Home route. hace el conteo de los usuarios
-app.get("/", (req, res)=>{
+app.get("/", (req, res) => {
     //res.send("Welcome to your first real proyect");
     //res.sendFile(__dirname + "/index.html");
-    let sql = "select count(*) as conteo from grupogamex.users2";
+    let sql = "select count(*) as conteo from usuarios";
     let conteo = 0;
     
     connection.query(sql, function(err, results) {
@@ -45,12 +45,22 @@ app.get("/", (req, res)=>{
 });
 
 
-// Post - Registro de user
-app.post("/register", (req, res)=>{
+// Post - Registro de usuario 
+app.post("/register", (req, res) => {
 
-    let nombreUsuario = req.body.nombre;
-    let email = req.body.correo;
-    let sql = "insert into users2 (name, email) values ('" + nombreUsuario +  "', '" + email + "' )";
+    let nombre = req.body.fnombre;
+    let apellido = req.body.fapellido;
+    let area = req.body.farea;
+    let usuario = req.body.fusuario;
+    let contrasena = req.body.fcontrasena;
+    let tipoDeUsuario = req.body.ftipodeusuario;
+    let sql = "insert into usuarios (nombre, apellido, area, usuario, contrasena, tipo_usuario) values ('" + 
+                nombre +  "', '" + 
+                apellido +  "', '" + 
+                area +  "', '" + 
+                usuario +  "', '" + 
+                contrasena +  "', '" + 
+                tipoDeUsuario + "' )";
 
     connection.query(sql, function(err, results) {
         if (err) {
@@ -62,12 +72,8 @@ app.post("/register", (req, res)=>{
 });
 
 // agrega port dinámico
-app.listen( port, ()=>{
-    console.log("Server running a port " + port);
+app.listen( port, () => {
+    console.log("Server running on port " + port);
 });
 
 
-
-
-
-// Cambio a process.env.PORT, en la definición de la const

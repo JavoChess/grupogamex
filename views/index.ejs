@@ -12,9 +12,17 @@
 
     <p>Enter you name and email</p>
     <form method="post" action="/register">
-        <input type="text" name="nombre" placeholder="Name" autocomplete="off">
-        <input type="email" name="correo" placeholder="e-mail" autocomplete="off">
+
+        <!--  nombre | apellido | area | usuario | contrasena | tipo_usuario -->
+
+        <input type="text" name="fnombre" placeholder="Nombre" autocomplete="off">
+        <input type="text" name="fapellido" placeholder="Apellido" autocomplete="off">
+        <input type="text" name="farea" placeholder="Area" autocomplete="off">
+        <input type="text" name="fusuario" placeholder="Usuario" autocomplete="off">
+        <input type="text" name="fcontrasena" placeholder="Contraseña" autocomplete="off">
+        <input type="text" name="ftipodeusuario" placeholder="Tipo de usuario" autocomplete="off">
         <button>Join now</button>
+
     </form>
     
     <p>We are now <strong> <%= usuarios %> </strong></p>
