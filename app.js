@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
-// app y puerto
+// app y puerto dinámico 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Usos básicos
 app.set("view engine", "ejs");
@@ -13,13 +13,19 @@ app.use(express.static("public"));
 
 
 // Conexión a la DB
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'grupogamex'
-});
+let connection;
 
+if (process.env.JAWSDB_URL) {
+    connection = mysql.connection(process.env.JAWSDB_URL);
+
+} else { 
+    connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'grupogamex'
+    });
+}
 
 // Home route. hace el conteo de los usuarios
 app.get("/", (req, res)=>{
@@ -56,8 +62,12 @@ app.post("/register", (req, res)=>{
 });
 
 // agrega port dinámico
-app.listen( process.env.PORT || port, ()=>{
+app.listen( port, ()=>{
     console.log("Server running a port " + port);
 });
 
 
+
+
+
+// Cambio a process.env.PORT, en la definición de la const

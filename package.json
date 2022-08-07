@@ -1,10 +1,15 @@
 {
   "name": "grupogamex",
   "version": "1.0.0",
-  "description": "",
+  "description": "App de control de inventarios para grupogamex",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JavoChess/grupogamex.git"
   },
   "author": "",
   "license": "ISC",
