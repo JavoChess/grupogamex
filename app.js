@@ -27,6 +27,9 @@ if (process.env.JAWSDB_URL) {
     });
 }
 
+
+// Para ver si muestra msg
+
 // Home route. hace el conteo de los usuarios
 app.get("/", (req, res) => {
     //res.send("Welcome to your first real proyect");
@@ -66,6 +69,8 @@ app.post("/register", (req, res) => {
         if (err) {
             console.log(err);
         }
+
+        // si llega aqui es que se registró correctamente
         res.redirect("/");
     });
     
