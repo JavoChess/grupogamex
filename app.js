@@ -30,8 +30,19 @@ if (process.env.JAWSDB_URL) {
 
 // Para ver si muestra msg
 
-// Home route. hace el conteo de los usuarios
+// Start route. hace el conteo de los usuarios
 app.get("/", (req, res) => {
+    
+    res.render("start");
+    
+});
+
+app.get("/login", (req, res)=>{
+    res.render("login.ejs");
+});
+
+
+app.get("/register", (req, res)=>{
     //res.send("Welcome to your first real proyect");
     //res.sendFile(__dirname + "/index.html");
     let sql = "select count(*) as conteo from usuarios";
@@ -43,9 +54,11 @@ app.get("/", (req, res) => {
         }
         conteo = results[0].conteo;
         //res.send("we have " + conteo + " users in our users table");
-        res.render("index", {usuarios: conteo});
+        res.render("register", {usuarios: conteo});
     });
 });
+
+
 
 
 // Post - Registro de usuario 
@@ -71,10 +84,45 @@ app.post("/register", (req, res) => {
         }
 
         // si llega aqui es que se registró correctamente
-        res.redirect("/");
+        res.render("home");
     });
     
 });
+
+
+/* login */
+app.post("/login", (req, res)=> {
+    
+    const usuario = req.body.username;
+    const pass = req.body.password;
+    let conteo = 0;
+
+    let sql = "select count(*) as conteo " + 
+              "from usuarios " +
+              "where usuario = '" + usuario + "' and contrasena = '"+ pass +"' ";
+
+    console.log(sql);
+
+    connection.query(sql, function(err, results) {
+        if (err) {
+            console.log(err);
+        }
+        
+        conteo = results[0].conteo;
+
+        if (conteo == 1) { 
+            // si llega aqui es que se registró correctamente
+            res.render("home");
+        } else {
+            res.redirect("/");
+        }
+    });
+
+});
+
+
+
+
 
 // agrega port dinámico
 app.listen( port, () => {

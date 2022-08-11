@@ -1,0 +1,57 @@
+
+<%- include('partials/header') %>
+
+<div class="container">
+    <main>
+        <!--  nombre | apellido | area | usuario | contrasena | tipo_usuario -->
+        <div class="py-4 text-center">
+            <img class="d-block mx-auto mb-4" src="img/logo.jpeg" alt="" width="72" height="57">
+            <h2>Register</h2>
+            <p class="lead">Please fill all inputs below.</p>
+        </div>
+        
+        <div class="row g-5"> 
+            <div class="col-md-4 col-lg-4"></div>
+            <div class="col-md-4 col-lg-4"> 
+                <form method="post" action="/register">
+                    <div class="mb-3"> 
+                        <input type="text" class="form-control" name="fnombre" placeholder="Name" autocomplete="off">
+                    </div>
+                    <div class="mb-3"> 
+                        <input type="text" class="form-control" name="fapellido" placeholder="Last name" autocomplete="off">
+                    </div>
+                    <div class="mb-3"> 
+                        <input type="text" class="form-control" name="farea" placeholder="Area" autocomplete="off">
+                    </div>
+                    <div class="mb-3"> 
+                        <input type="text" class="form-control" name="fusuario" placeholder="User" autocomplete="off">
+                    </div>
+                    <div class="mb-3"> 
+                        <input type="text" class="form-control" name="fcontrasena" placeholder="Password" autocomplete="off">
+                    </div>
+                    <div class="mb-3"> 
+                        <select class="form-select" name="ftipodeusuario" aria-label="Default select example" aria-placeholder="Type of user">
+                            <option selected>Chosee...</option>
+                            <option value="Tipo 1">Tipo 1</option>
+                            <option value="Tipo 2">Tipo 2</option>
+                            <option value="Tipo 3">Tipo 3</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary">Join now</button>
+                    
+                </form>
+                <p>We are now <strong> <%= usuarios %> </strong></p>
+            </div>
+            <div class="col-md-4 col-lg-4"></div>
+        </div>
+    </main>
+</div>
+
+<%- include('partials/footer') %>
+    
+
+
+
+
+
