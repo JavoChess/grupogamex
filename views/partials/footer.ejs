@@ -1,6 +1,6 @@
 
     <footer class="my-3 pt-3 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2022 grupogamex</p>
+        <p class="mb-1">&copy; <%= new Date().getFullYear() %> grupogamex</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#">Privacy</a></li>
             <li class="list-inline-item"><a href="#">Terms</a></li>
@@ -22,9 +22,11 @@
 
     <script type="text/javascript">
 
-        var tabledata = <%- JSON.stringify(tabledata) %>; 
+        let tabledata = <%- JSON.stringify(tabledata) %>; 
+        let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
+        let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
         
-        var table = new Tabulator("#example-table", { 
+        let table = new Tabulator("#tabla-usuarios", { 
             height: 200, // set height of table to enable virtual DOM
             data: tabledata, //load initial data into table
             layout: "fitColumns", //fit columns to width of table (optional)
@@ -36,18 +38,50 @@
             ],
         });
         
-        //trigger an alert message when the row is clicked
-        table.on("rowClick", function(e, row) {
-            alert("Row " + row.getData().nombre + " Clicked!!!!");
-        });
+         let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
         
+        // nombre, codigo, tipo_producto, marca, cliente, proveedor, almacen, clasif_almacen, estatus
 
+        let table2 = new Tabulator("#tabla-materiales", { 
+            height: 200, // set height of table to enable virtual DOM
+            data: tabledata2, //load initial data into table
+            layout: "fitColumns", //fit columns to width of table (optional)
+            columns:[ //Define Table Columns
+                {title:"Nombre",          field:"nombre", sorter:"string", width:150},
+                {title:"Tipo producto",        field:"tipo_producto",  sorter:"string", hozAlign:"left"},
+                {title:"Marca",         field:"marca",  sorter:"string", headerSort:false},
+                {title:"Cliente",            field:"cliente",  sorter:"string",   hozAlign:"center"},
+                {title:"Proveedor",            field:"proveedor",  sorter:"string",   hozAlign:"center"},
+                {title:"Almacén",            field:"almacen",  sorter:"string",   hozAlign:"center"},
+                {title:"Clasif. Almacén",            field:"clasif_almacen",  sorter:"string",   hozAlign:"center"},
+                {title:"Estatus",            field:"estatus",  sorter:"string",   hozAlign:"center"},
+            ],
+        }); 
+        
+        
+        // ------------------------------
+        // JQuery's
+        // ------------------------------
+
+
+
+        $("#nav-admin-materiales").click(() => {
+            // vista-admin-materiales
+
+            
+        });
+
+        $("#nav-admin-usuarios").click(() => {
+            // vista-admin-usuarios
+            
+
+
+        });
 
     </script>
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+    <!-- para el boton responsive del nav-var -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
 
 </body>
 </html>

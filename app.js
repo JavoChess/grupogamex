@@ -29,41 +29,62 @@ if (process.env.JAWSDB_URL) {
 }
 
 
-
 app.get("/", (req, res)=>{
-    //res.render("start", {tabledata: {} });
-
-    res.render("inicio", {tabledata: {}});
-
+    /* res.render('inicio', {tabledata: {}, tabledata2: {} }); */
+    res.render('inicio', {tabledata: {}, 
+        tabledata2: {}, 
+        vistaUsuarios: "d-none", 
+        vistaMateriales: "d-none" } );
 });
 
+app.get("/usuarios", (req, res)=>{
 
-
-
-// Para ver si muestra msg
-
-// Start route. hace el conteo de los usuarios
-app.get("/tabla", (req, res) => {
-    
     // obtiene todos los usuarios de "ususarios"
     const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
-    
+
     connection.query(sql, function(err, results, fields) {
         if (err) {
             console.log(err);
         } else {
             
             // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+            
             const tabledata = JSON.parse(JSON.stringify(results));
-            
-            //console.log(tabledata);
-            
-            res.render('tabla', {tabledata: tabledata} );
+            res.render('inicio', {tabledata: tabledata, 
+                                tabledata2: {}, 
+                                vistaUsuarios: "", 
+                                vistaMateriales: "d-none" } );
         }
-        
     });
     
 });
+
+
+
+app.get("/materiales", (req, res)=>{
+
+    const sql2 = "select nombre, codigo, tipo_producto, marca, cliente, proveedor, almacen, clasif_almacen, estatus from materiales";
+    
+    connection.query(sql2, function(err, results, fields) {
+        if (err) {
+            console.log(err);
+        } else {
+            // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+            const tabledata2 = JSON.parse(JSON.stringify(results));
+            res.render('inicio', {tabledata: {}, 
+                                tabledata2: tabledata2, 
+                                vistaUsuarios: "d-none", 
+                                vistaMateriales: "" } );
+        }
+    });
+
+});
+
+
+
+
+
+
 
 
 app.get("/login", (req, res)=>{

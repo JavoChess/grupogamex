@@ -54,13 +54,13 @@
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/materiales" id="nav-admin-materiales">
               <span data-feather="file-text"></span>
               Catálogo de materiales
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/usuarios" id="nav-admin-usuarios">
               <span data-feather="file-text"></span>
               Administrar usuarios
             </a>
@@ -106,7 +106,17 @@
         </div>
       </div>
 
-      Acá va la info
+      <!-- Acá va la info -->
+      <div class="container">
+        <div id ="vista-admin-usuarios" class=<%= vistaUsuarios %>>
+          <%- include('usuarios') %>
+        </div>
+
+        <div  id="vista-admin-materiales" class=<%= vistaMateriales %>>
+          <%- include('materiales') %>
+        </div>
+      </div>
+      
 
 
     </main>
