@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
+
 // app y puerto dinámico 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-// Conexión a la DBjawsdb
+// Conexión a la DBjawsdb with Heroku 
 let connection;
 
 if (process.env.JAWSDB_URL) {
@@ -28,18 +29,47 @@ if (process.env.JAWSDB_URL) {
 }
 
 
+
+app.get("/", (req, res)=>{
+    //res.render("start", {tabledata: {} });
+
+    res.render("inicio", {tabledata: {}});
+
+});
+
+
+
+
 // Para ver si muestra msg
 
 // Start route. hace el conteo de los usuarios
-app.get("/", (req, res) => {
+app.get("/tabla", (req, res) => {
     
-    res.render("start");
+    // obtiene todos los usuarios de "ususarios"
+    const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
+    
+    connection.query(sql, function(err, results, fields) {
+        if (err) {
+            console.log(err);
+        } else {
+            
+            // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+            const tabledata = JSON.parse(JSON.stringify(results));
+            
+            //console.log(tabledata);
+            
+            res.render('tabla', {tabledata: tabledata} );
+        }
+        
+    });
     
 });
 
+
 app.get("/login", (req, res)=>{
-    res.render("login.ejs");
+    res.render("login", { tabledata: {}});
 });
+
 
 
 app.get("/register", (req, res)=>{
@@ -54,7 +84,7 @@ app.get("/register", (req, res)=>{
         }
         conteo = results[0].conteo;
         //res.send("we have " + conteo + " users in our users table");
-        res.render("register", {usuarios: conteo});
+        res.render("register", {usuarios: conteo, tabledata: {}});
     });
 });
 
@@ -64,13 +94,13 @@ app.get("/register", (req, res)=>{
 // Post - Registro de usuario 
 app.post("/register", (req, res) => {
 
-    let nombre = req.body.fnombre;
-    let apellido = req.body.fapellido;
-    let area = req.body.farea;
-    let usuario = req.body.fusuario;
-    let contrasena = req.body.fcontrasena;
-    let tipoDeUsuario = req.body.ftipodeusuario;
-    let sql = "insert into usuarios (nombre, apellido, area, usuario, contrasena, tipo_usuario) values ('" + 
+    const nombre = req.body.fnombre;
+    const apellido = req.body.fapellido;
+    const area = req.body.farea;
+    const usuario = req.body.fusuario;
+    const contrasena = req.body.fcontrasena;
+    const tipoDeUsuario = req.body.ftipodeusuario;
+    const sql = "insert into usuarios (nombre, apellido, area, usuario, contrasena, tipo_usuario) values ('" + 
                 nombre +  "', '" + 
                 apellido +  "', '" + 
                 area +  "', '" + 
@@ -84,7 +114,7 @@ app.post("/register", (req, res) => {
         }
 
         // si llega aqui es que se registró correctamente
-        res.render("home");
+        res.render("home", { tabledata: {}});
     });
     
 });
@@ -101,7 +131,7 @@ app.post("/login", (req, res)=> {
               "from usuarios " +
               "where usuario = '" + usuario + "' and contrasena = '"+ pass +"' ";
 
-    console.log(sql);
+    //console.log(sql);
 
     connection.query(sql, function(err, results) {
         if (err) {
@@ -111,9 +141,10 @@ app.post("/login", (req, res)=> {
         conteo = results[0].conteo;
 
         if (conteo == 1) { 
-            // si llega aqui es que se registró correctamente
-            res.render("home");
+            // usuario con acceso 
+            res.render("inicio", {tabledata: {}});
         } else {
+            // usuario no encontrado
             res.redirect("/");
         }
     });

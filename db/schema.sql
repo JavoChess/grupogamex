@@ -6,7 +6,6 @@ alter user 'root'@'localhost' identified with mysql_native_password by '';
 flush privileges;
 
 /* crea la primera tabla de usuarios */
-/* crea la primera tabla de usuarios */
 create table usuarios ( 
     usuario_id int primary key not null auto_increment,
     nombre varchar(150) not null,
@@ -23,4 +22,20 @@ create table tipo_usuarios (
     tipo_usuario_id int primary key not null  AUTO_INCREMENT,
     tipo_usuario varchar(50),
     puesto varchar(150)
+);
+
+
+/* crea tabla de materiales */
+create table materiales ( 
+    material_id int primary key not null auto_increment,
+    nombre varchar(150) not null,
+    codigo varchar(10) not null,
+    tipo_producto varchar(20) not null,
+    marca varchar(20) not null,
+    cliente varchar(15) not null,
+    proveedor varchar(50) not null,
+    almacen varchar(1) not null,
+    clasif_almacen varchar(1) not null,
+    estatus varchar(10) not null
+    
 );

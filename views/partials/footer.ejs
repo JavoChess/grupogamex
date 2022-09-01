@@ -8,9 +8,46 @@
         </ul>
     </footer>
 
+
     <!-- JavaScript JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- JavaScript Boostrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+
+    <!-- luxon (Tabulator) -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>		
+    <!-- Tabulator -->
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.3/dist/js/tabulator.min.js"></script>
+
+    <script type="text/javascript">
+
+        var tabledata = <%- JSON.stringify(tabledata) %>; 
+        
+        var table = new Tabulator("#example-table", { 
+            height: 200, // set height of table to enable virtual DOM
+            data: tabledata, //load initial data into table
+            layout: "fitColumns", //fit columns to width of table (optional)
+            columns:[ //Define Table Columns
+                {title:"Nombre",          field:"nombre", sorter:"string", width:150},
+                {title:"Apellido",        field:"apellido",  sorter:"string", hozAlign:"left"},
+                {title:"Usuario",         field:"usuario",  sorter:"string", headerSort:false},
+                {title:"Tipo",            field:"tipo_usuario",  sorter:"string",   hozAlign:"center"},
+            ],
+        });
+        
+        //trigger an alert message when the row is clicked
+        table.on("rowClick", function(e, row) {
+            alert("Row " + row.getData().nombre + " Clicked!!!!");
+        });
+        
+
+
+    </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+
 </body>
 </html>
