@@ -27,56 +27,164 @@
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
         
         let table = new Tabulator("#tabla-usuarios", { 
-            height: 200, // set height of table to enable virtual DOM
+            height: 380, // set height of table to enable virtual DOM
             data: tabledata, //load initial data into table
             layout: "fitColumns", //fit columns to width of table (optional)
+            pagination: "local",       //paginate the data
+            paginationSize: 10,         //allow 7 rows per page of data
+            paginationCounter: "rows", //display count of paginated rows in footer
             columns:[ //Define Table Columns
                 {title:"Nombre",          field:"nombre", sorter:"string", width:150},
                 {title:"Apellido",        field:"apellido",  sorter:"string", hozAlign:"left"},
                 {title:"Usuario",         field:"usuario",  sorter:"string", headerSort:false},
-                {title:"Tipo",            field:"tipo_usuario",  sorter:"string",   hozAlign:"center"},
+                {title:"Tipo",            field:"tipo_usuario",  sorter:"string",   hozAlign:"left"},
             ],
         });
         
-         let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
+        let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
         
         // nombre, codigo, tipo_producto, marca, cliente, proveedor, almacen, clasif_almacen, estatus
 
+        //Generate print icon
+        let iconoElimina = function(cell, formatterParams){ //plain text value
+            return "<i class='bi bi-trash3'></i>";
+        };
+
+        let iconoEdita = function(cell, formatterParams){ //plain text value
+            return "<i class='bi bi-pencil'></i>";
+        };
+
+        let iconoGuarda = function(cell, formatterParams){ //plain text value
+            return "<i class='bi bi-hdd'></i>";
+        };
+
         let table2 = new Tabulator("#tabla-materiales", { 
-            height: 200, // set height of table to enable virtual DOM
-            data: tabledata2, //load initial data into table
-            layout: "fitColumns", //fit columns to width of table (optional)
-            columns:[ //Define Table Columns
-                {title:"Nombre",          field:"nombre", sorter:"string", width:150},
-                {title:"Tipo producto",        field:"tipo_producto",  sorter:"string", hozAlign:"left"},
-                {title:"Marca",         field:"marca",  sorter:"string", headerSort:false},
-                {title:"Cliente",            field:"cliente",  sorter:"string",   hozAlign:"center"},
-                {title:"Proveedor",            field:"proveedor",  sorter:"string",   hozAlign:"center"},
-                {title:"Almacén",            field:"almacen",  sorter:"string",   hozAlign:"center"},
-                {title:"Clasif. Almacén",            field:"clasif_almacen",  sorter:"string",   hozAlign:"center"},
-                {title:"Estatus",            field:"estatus",  sorter:"string",   hozAlign:"center"},
+            height: 380,               // set height of table to enable virtual DOM
+            data: tabledata2,          //load initial data into table
+            history: true,             //allow undo and redo actions on the table
+            //selectable:true,           //make rows selectable
+            pagination: "local",       //paginate the data
+            paginationSize: 10,        //allow 7 rows per page of data
+            paginationCounter: "rows", //display count of paginated rows in footer
+            keybindings:{
+                        "redo" : "ctrl + r", //bind redo function to ctrl + r
+                        },
+            columns: [ //Define Table Columns
+                {title:"Id",              field:"material_id",    sorter:"string",   hozAlign:"left"},
+                {title:"Nombre",          field:"nombre",         sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Código",          field:"codigo",         sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Tipo producto",   field:"tipo_producto",  sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Marca",           field:"marca",          sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Cliente",         field:"cliente",        sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Proveedor",       field:"proveedor",      sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Almacén",         field:"almacen",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
+                {title:"Clasif. Almacén", field:"clasif_almacen", sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
+                {title:"Estatus",         field:"estatus",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
+                {formatter:iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
+                            
+                            const id = cell.getRow().getData().material_id;
+                            let ejecutar = confirm("Se va a eliminar el registro: " + id);
+
+                            if (ejecutar) {
+                                // https://codeforgeek.com/handle-get-post-request-express-4/
+                                $.post("/materiales/eliminar/" + id, {}, function(data) {
+                                    if(data === 'eliminado') { 
+                                        alert("Se eliminó el registro.");
+                                        location.reload();
+                                    }
+                                });
+                                
+                            } 
+                    }
+                },
+                {formatter:iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                            const id = cell.getRow().getData().material_id;
+                            const valores = cell.getRow().getData();
+                            let ejecutar = confirm("Se va a editar el registro: " + id);
+                            if (ejecutar) {
+                                // https://codeforgeek.com/handle-get-post-request-express-4/
+
+                                $.post("/materiales/editar/" + id, valores, function(data) {
+                                    if(data === 'editado') { 
+                                        alert("Se editó el registro.");
+                                        location.reload();
+                                    }
+                                });
+                                
+                            } 
+                    
+                    }
+                },
+                {formatter:iconoGuarda, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                            
+                            const valores = cell.getRow().getData();
+                            delete valores.material_id;
+                            Object.keys(valores).forEach(function(key, index) {
+        
+                                if (typeof valores[key] == 'undefined') {
+                                    valores[key]="";
+                                }
+                            });
+                            /* console.log(valores); */
+                            
+                            let ejecutar = confirm("Se va a guardar el nuevo registro ");
+                            if (ejecutar) {
+                                $.post("/materiales/guardar/", valores, function(data) {
+                                    if(data === 'Registro correcto') { 
+                                        alert("Se guardó el registro.");
+                                        location.reload();
+                                    }
+                                });
+                                
+                            } 
+                    
+                    }
+                },
+                
             ],
         }); 
         
+        // ------------------------------
+        // table1
+        // ------------------------------
+
+
+
         
         // ------------------------------
-        // JQuery's
+        // table2
         // ------------------------------
 
+        // SELECCION DE UN ELELEMTO
+        // Guarda el Id del registro seleccionado
+        let table2ItemSeleccionado=0;
 
-
-        $("#nav-admin-materiales").click(() => {
-            // vista-admin-materiales
-
-            
+        table2.on("rowSelected", function(row) {
+            table2ItemSeleccionado = row._row.data.material_id;
+            $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado);
+        });
+        
+        table2.on("rowSelectionChanged", function(data, rows) {
+            //document.getElementById("#tabla-materiales-lower-label").innerHTML = data.length;
+            if (data.length === 0 ) {
+                table2ItemSeleccionado = 0;
+                $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado);
+            }
         });
 
-        $("#nav-admin-usuarios").click(() => {
-            // vista-admin-usuarios
-            
+        // Botón eliminar
 
+        // EDICION
+        // La edición se hace directo en la tabla y al dar clic  en el boton editar, se guarda en el BE
 
+        // agrega Fila
+        $("#materiales-nuevo").click(function() { 
+            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
+            const nuevoId = 0;
+            table2.addRow( {material_id: nuevoId }, true);
         });
+        
+
 
     </script>
 

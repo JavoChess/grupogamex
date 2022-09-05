@@ -31,27 +31,27 @@ if (process.env.JAWSDB_URL) {
 
 app.get("/", (req, res)=>{
     /* res.render('inicio', {tabledata: {}, tabledata2: {} }); */
-    res.render('inicio', {tabledata: {}, 
-        tabledata2: {}, 
+    res.render('inicio', {tabledata: [], 
+        tabledata2: [], 
         vistaUsuarios: "d-none", 
         vistaMateriales: "d-none" } );
 });
 
-app.get("/usuarios", (req, res)=>{
 
-    // obtiene todos los usuarios de "ususarios"
+
+// Obtiene los datos de la tabla usuarios y los manda al Front
+app.get("/usuarios", (req, res) => {
+
     const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
-
     connection.query(sql, function(err, results, fields) {
         if (err) {
             console.log(err);
         } else {
             
             // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
-            
             const tabledata = JSON.parse(JSON.stringify(results));
             res.render('inicio', {tabledata: tabledata, 
-                                tabledata2: {}, 
+                                tabledata2: [], 
                                 vistaUsuarios: "", 
                                 vistaMateriales: "d-none" } );
         }
@@ -60,27 +60,61 @@ app.get("/usuarios", (req, res)=>{
 });
 
 
+// Obtiene los datos de la tabla materiales y los manda al front
+app.get("/materiales", (req, res) => {
 
-app.get("/materiales", (req, res)=>{
-
-    const sql2 = "select nombre, codigo, tipo_producto, marca, cliente, proveedor, almacen, clasif_almacen, estatus from materiales";
-    
-    connection.query(sql2, function(err, results, fields) {
+    const sql = "select * from materiales";
+    connection.query(sql, function(err, results, fields) {
         if (err) {
             console.log(err);
-        } else {
+        } else { 
             // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
             const tabledata2 = JSON.parse(JSON.stringify(results));
-            res.render('inicio', {tabledata: {}, 
+            res.render('inicio', {tabledata: [], 
                                 tabledata2: tabledata2, 
                                 vistaUsuarios: "d-none", 
-                                vistaMateriales: "" } );
-        }
+                                vistaMateriales: "" } 
+            );
+        } 
     });
 
 });
 
 
+/* Agrega un nuevo registro a la tabla materiales */ 
+app.post("/materiales/guardar", (req, res) => { 
+    //console.log(req.params); 
+    const valores = req.body;
+
+    /* console.log(valores); */
+    
+    const sql = "insert into materiales set ?";
+    connection.query(sql, [valores],  function(err, results, fields) {
+        err ? res.end(err) : res.end("Registro correcto");
+    });
+}); 
+
+/* Elimina de la tabla materiales el id seleccionado */ 
+app.post("/materiales/eliminar/:id", (req, res) => { 
+    //console.log(req.params); 
+    const id = req.params.id;
+    const sql = "delete from materiales where material_id = ?";
+    connection.query(sql, [id],  function(err, results, fields) {
+        err ? res.end(err) : res.end("eliminado");
+    });
+}); 
+
+
+/* Edita de la tabla materiales el id seleccionado */ 
+app.post("/materiales/editar/:id", (req, res) => { 
+    //console.log(req.params); 
+    const valores = req.body;
+    const id = req.params.id;
+    const sql = "update materiales set ? where material_id = ?";
+    connection.query(sql, [valores, id], function(err, results, fields) {
+        err ? res.end(err) : res.end("editado");
+    }); 
+}); 
 
 
 
@@ -88,7 +122,7 @@ app.get("/materiales", (req, res)=>{
 
 
 app.get("/login", (req, res)=>{
-    res.render("login", { tabledata: {}});
+    res.render("login", { tabledata: {}} );
 });
 
 
