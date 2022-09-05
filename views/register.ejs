@@ -6,8 +6,8 @@
         <!--  nombre | apellido | area | usuario | contrasena | tipo_usuario -->
         <div class="py-4 text-center">
             <img class="d-block mx-auto mb-4" src="img/logo.jpeg" alt="" width="72" height="57">
-            <h2>Register</h2>
-            <p class="lead">Please fill all inputs below.</p>
+            <h2>Nuevo usuario</h2>
+            <p class="lead">Ingresa los datos de registro.</p>
         </div>
         
         <div class="row g-5"> 
@@ -15,40 +15,40 @@
             <div class="col-md-4 col-lg-4"> 
                 <form method="post" action="/register">
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="fnombre" placeholder="Name" autocomplete="off">
+                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" autocomplete="off">
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="fapellido" placeholder="Last name" autocomplete="off">
+                        <input type="text" class="form-control" name="apellido" placeholder="Apellido" autocomplete="off">
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="farea" placeholder="Area" autocomplete="off">
+                        <input type="text" class="form-control" name="area" placeholder="Area" autocomplete="off">
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="fusuario" placeholder="User" autocomplete="off">
+                        <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off">
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="fcontrasena" placeholder="Password" autocomplete="off">
+                        <input type="password" class="form-control" name="contrasena" placeholder="Password" autocomplete="off">
                     </div>
                     <div class="mb-3"> 
-                        <select class="form-select" name="ftipodeusuario" aria-label="Default select example" aria-placeholder="Type of user">
+                        <select class="form-select" name="tipo_usuario" aria-label="Default select example" aria-placeholder="Type of user">
                             <option selected>Chosee...</option>
-                            <option value="Tipo 1">Tipo 1</option>
-                            <option value="Tipo 2">Tipo 2</option>
-                            <option value="Tipo 3">Tipo 3</option>
+                            <option value="Tipo 1">Administrador</option>
+                            <option value="Tipo 2">Supervisor</option>
+                            <option value="Tipo 3">Auxiliar</option>
                         </select>
                     </div>
                     
-                    <button class="btn btn-primary">Join now</button>
+                    <button class="btn btn-primary">Enviar alta</button>
                     
                 </form>
-                <p>We are now <strong> <%= usuarios %> </strong></p>
+                
             </div>
             <div class="col-md-4 col-lg-4"></div>
         </div>
     </main>
 </div>
 
-<%- include('partials/footer') %>
+<%- include('partials/footer2') %>
     
 
 

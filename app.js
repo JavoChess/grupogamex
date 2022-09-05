@@ -7,7 +7,7 @@ const mysql = require("mysql");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Usos básicos
+// Usos
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -29,8 +29,10 @@ if (process.env.JAWSDB_URL) {
 }
 
 
-app.get("/", (req, res)=>{
-    /* res.render('inicio', {tabledata: {}, tabledata2: {} }); */
+
+// Pantalla de inicio
+app.get("/main", (req, res)=>{
+    
     res.render('inicio', {tabledata: [], 
         tabledata2: [], 
         vistaUsuarios: "d-none", 
@@ -40,6 +42,7 @@ app.get("/", (req, res)=>{
 
 
 // Obtiene los datos de la tabla usuarios y los manda al Front
+// REVISAR EL SQL
 app.get("/usuarios", (req, res) => {
 
     const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
@@ -53,16 +56,17 @@ app.get("/usuarios", (req, res) => {
             res.render('inicio', {tabledata: tabledata, 
                                 tabledata2: [], 
                                 vistaUsuarios: "", 
-                                vistaMateriales: "d-none" } );
+                                vistaMateriales: "d-none" } 
+            );
         }
     });
     
 });
 
 
-// Obtiene los datos de la tabla materiales y los manda al front
-app.get("/materiales", (req, res) => {
 
+/* Lectura de datos de la tabla materiales */
+app.get("/materiales", (req, res) => {
     const sql = "select * from materiales";
     connection.query(sql, function(err, results, fields) {
         if (err) {
@@ -77,17 +81,12 @@ app.get("/materiales", (req, res) => {
             );
         } 
     });
-
 });
 
 
 /* Agrega un nuevo registro a la tabla materiales */ 
 app.post("/materiales/guardar", (req, res) => { 
-    //console.log(req.params); 
     const valores = req.body;
-
-    /* console.log(valores); */
-    
     const sql = "insert into materiales set ?";
     connection.query(sql, [valores],  function(err, results, fields) {
         err ? res.end(err) : res.end("Registro correcto");
@@ -96,7 +95,6 @@ app.post("/materiales/guardar", (req, res) => {
 
 /* Elimina de la tabla materiales el id seleccionado */ 
 app.post("/materiales/eliminar/:id", (req, res) => { 
-    //console.log(req.params); 
     const id = req.params.id;
     const sql = "delete from materiales where material_id = ?";
     connection.query(sql, [id],  function(err, results, fields) {
@@ -104,10 +102,8 @@ app.post("/materiales/eliminar/:id", (req, res) => {
     });
 }); 
 
-
 /* Edita de la tabla materiales el id seleccionado */ 
 app.post("/materiales/editar/:id", (req, res) => { 
-    //console.log(req.params); 
     const valores = req.body;
     const id = req.params.id;
     const sql = "update materiales set ? where material_id = ?";
@@ -118,65 +114,36 @@ app.post("/materiales/editar/:id", (req, res) => {
 
 
 
-
-
-
-app.get("/login", (req, res)=>{
-    res.render("login", { tabledata: {}} );
+// Root inicial
+app.get("/", (req, res) => {
+    res.render("login");
 });
 
-
-
+// Para registrase, envía el formulario al usuario
 app.get("/register", (req, res)=>{
-    //res.send("Welcome to your first real proyect");
-    //res.sendFile(__dirname + "/index.html");
-    let sql = "select count(*) as conteo from usuarios";
-    let conteo = 0;
-    
-    connection.query(sql, function(err, results) {
-        if (err) {
-            console.log(err);
-        }
-        conteo = results[0].conteo;
-        //res.send("we have " + conteo + " users in our users table");
-        res.render("register", {usuarios: conteo, tabledata: {}});
-    });
+    res.render("register");
 });
 
 
 
-
-// Post - Registro de usuario 
+// POST - Registro de usuario 
 app.post("/register", (req, res) => {
 
-    const nombre = req.body.fnombre;
-    const apellido = req.body.fapellido;
-    const area = req.body.farea;
-    const usuario = req.body.fusuario;
-    const contrasena = req.body.fcontrasena;
-    const tipoDeUsuario = req.body.ftipodeusuario;
-    const sql = "insert into usuarios (nombre, apellido, area, usuario, contrasena, tipo_usuario) values ('" + 
-                nombre +  "', '" + 
-                apellido +  "', '" + 
-                area +  "', '" + 
-                usuario +  "', '" + 
-                contrasena +  "', '" + 
-                tipoDeUsuario + "' )";
-
-    connection.query(sql, function(err, results) {
+    const valores = req.body;
+    const sql = "insert into usuarios set ?";
+    connection.query(sql, [valores],  function(err, results, fields) {
         if (err) {
             console.log(err);
         }
-
         // si llega aqui es que se registró correctamente
-        res.render("home", { tabledata: {}});
+        res.redirect("/main");
     });
     
 });
 
 
-/* login */
-app.post("/login", (req, res)=> {
+/* POST login */
+app.post("/login", (req, res) => {
     
     const usuario = req.body.username;
     const pass = req.body.password;
@@ -185,8 +152,6 @@ app.post("/login", (req, res)=> {
     let sql = "select count(*) as conteo " + 
               "from usuarios " +
               "where usuario = '" + usuario + "' and contrasena = '"+ pass +"' ";
-
-    //console.log(sql);
 
     connection.query(sql, function(err, results) {
         if (err) {
@@ -197,7 +162,7 @@ app.post("/login", (req, res)=> {
 
         if (conteo == 1) { 
             // usuario con acceso 
-            res.render("inicio", {tabledata: {}});
+            res.redirect("/main");
         } else {
             // usuario no encontrado
             res.redirect("/");
@@ -210,7 +175,7 @@ app.post("/login", (req, res)=> {
 
 
 
-// agrega port dinámico
+// PORT dinámico
 app.listen( port, () => {
     console.log("Server running on port " + port);
 });
