@@ -47,15 +47,16 @@
 
         //Generate print icon
         let iconoElimina = function(cell, formatterParams){ //plain text value
-            return "<i class='bi bi-trash3'></i>";
+            //return "<i class='bi bi-trash3'></i>";
+            return "<span class='material-icons md-dark md-inactive md-18'>remove</span>";
         };
 
         let iconoEdita = function(cell, formatterParams){ //plain text value
-            return "<i class='bi bi-pencil'></i>";
+            return "<span class='material-icons md-dark md-inactive md-18'>edit</span>";
         };
 
         let iconoGuarda = function(cell, formatterParams){ //plain text value
-            return "<i class='bi bi-hdd'></i>";
+            return "<span class='material-icons md-dark md-inactive md-18'>save</span>";
         };
 
         let table2 = new Tabulator("#tabla-materiales", { 
@@ -117,10 +118,12 @@
                 },
                 {formatter:iconoGuarda, width:40, hozAlign:"center", cellClick:function(e, cell) {
                             
-                            const valores = cell.getRow().getData();
+                        const valores = cell.getRow().getData();
+                        if (valores.material_id === 0) { 
+
                             delete valores.material_id;
                             Object.keys(valores).forEach(function(key, index) {
-        
+            
                                 if (typeof valores[key] == 'undefined') {
                                     valores[key]="";
                                 }
@@ -137,7 +140,7 @@
                                 });
                                 
                             } 
-                    
+                        }
                     }
                 },
                 
@@ -172,12 +175,8 @@
             }
         });
 
-        // Botón eliminar
-
-        // EDICION
-        // La edición se hace directo en la tabla y al dar clic  en el boton editar, se guarda en el BE
-
-        // agrega Fila
+        
+        // agrega Fila en table2
         $("#materiales-nuevo").click(function() { 
             // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
             const nuevoId = 0;
