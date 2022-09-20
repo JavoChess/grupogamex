@@ -7,38 +7,37 @@
         <div class="py-4 text-center">
             <img class="d-block mx-auto mb-4" src="img/logo.jpeg" alt="" width="72" height="57">
             <h2>Nuevo usuario</h2>
-            <p class="lead">Ingresa los datos de registro.</p>
         </div>
         
         <div class="row g-5"> 
             <div class="col-md-4 col-lg-4"></div>
             <div class="col-md-4 col-lg-4"> 
-                <form method="post" action="/register">
+                <form id="form-registro"  method="post" action="/register" >
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" autocomplete="off">
+                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="apellido" placeholder="Apellido" autocomplete="off">
+                        <input type="text" class="form-control" name="apellido" placeholder="Apellido" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="area" placeholder="Area" autocomplete="off">
+                        <input type="text" class="form-control" name="area" placeholder="Area" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off">
+                        <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="password" class="form-control" name="contrasena" placeholder="Password" autocomplete="off">
+                        <input type="password" class="form-control" name="contrasena" placeholder="Password" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <select class="form-select" name="tipo_usuario" aria-label="Default select example" aria-placeholder="Type of user">
-                            <option selected>Chosee...</option>
+                        <select class="form-select" name="tipo_usuario" aria-label="Default select example" aria-placeholder="Type of user" required>
+                            <option selected></option>
                             <option value="Tipo 1">Administrador</option>
                             <option value="Tipo 2">Supervisor</option>
                             <option value="Tipo 3">Auxiliar</option>
                         </select>
                     </div>
                     
-                    <button class="btn btn-primary">Enviar alta</button>
+                    <button class="btn btn-primary" type="submit">Enviar alta</button>
                     
                 </form>
                 

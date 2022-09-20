@@ -40,7 +40,6 @@ app.get("/main", (req, res)=>{
 });
 
 
-
 // Obtiene los datos de la tabla usuarios y los manda al Front
 // REVISAR EL SQL
 app.get("/usuarios", (req, res) => {
@@ -64,7 +63,6 @@ app.get("/usuarios", (req, res) => {
 });
 
 
-
 /* Lectura de datos de la tabla materiales */
 app.get("/materiales", (req, res) => {
     const sql = "select * from materiales";
@@ -84,14 +82,39 @@ app.get("/materiales", (req, res) => {
 });
 
 
-/* Agrega un nuevo registro a la tabla materiales */ 
-app.post("/materiales/guardar", (req, res) => { 
+// TABLA USUARIOS
+
+/* Elimina de la tabla usuarios el id seleccionado */ 
+app.post("/usuarios/eliminar/:id", (req, res) => { 
+    const id = req.params.id;
+    const sql = "delete from usuarios where usuario_id = ?";
+    connection.query(sql, [id],  function(err, results, fields) {
+        err ? res.end(err) : res.end("eliminado");
+    });
+}); 
+
+/* Edita de la tabla usuarios el id seleccionado */ 
+app.post("/usuarios/editar/:id", (req, res) => { 
     const valores = req.body;
-    const sql = "insert into materiales set ?";
+    const id = req.params.id;
+    const sql = "update usuarios set ? where usuario_id = ?";
+    connection.query(sql, [valores, id], function(err, results, fields) {
+        err ? res.end(err) : res.end("editado");
+    }); 
+}); 
+
+/* Agrega un nuevo registro a la tabla usuarios */ 
+app.post("/usuarios/guardar", (req, res) => { 
+    const valores = req.body;
+    const sql = "insert into usuarios set ?";
     connection.query(sql, [valores],  function(err, results, fields) {
         err ? res.end(err) : res.end("Registro correcto");
     });
 }); 
+
+
+
+// TABLA MATERIALES
 
 /* Elimina de la tabla materiales el id seleccionado */ 
 app.post("/materiales/eliminar/:id", (req, res) => { 
@@ -99,6 +122,15 @@ app.post("/materiales/eliminar/:id", (req, res) => {
     const sql = "delete from materiales where material_id = ?";
     connection.query(sql, [id],  function(err, results, fields) {
         err ? res.end(err) : res.end("eliminado");
+    });
+}); 
+
+/* Agrega un nuevo registro a la tabla materiales */ 
+app.post("/materiales/guardar", (req, res) => { 
+    const valores = req.body;
+    const sql = "insert into materiales set ?";
+    connection.query(sql, [valores],  function(err, results, fields) {
+        err ? res.end(err) : res.end("Registro correcto");
     });
 }); 
 
@@ -123,7 +155,6 @@ app.get("/", (req, res) => {
 app.get("/register", (req, res)=>{
     res.render("register");
 });
-
 
 
 // POST - Registro de usuario 
@@ -170,7 +201,6 @@ app.post("/login", (req, res) => {
     });
 
 });
-
 
 
 

@@ -23,8 +23,23 @@
     <script type="text/javascript">
 
         let tabledata = <%- JSON.stringify(tabledata) %>; 
+        let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
         let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
+
+        //Generate print icon
+        let iconoElimina = function(cell, formatterParams) { //plain text value
+            return "<span class='material-icons md-dark md-inactive md-18'>remove</span>";
+        };
+
+        let iconoEdita = function(cell, formatterParams) { //plain text value
+            return "<span class='material-icons md-dark md-inactive md-18'>edit</span>";
+        };
+
+        let iconoGuarda = function(cell, formatterParams) { //plain text value
+            return "<span class='material-icons md-dark md-inactive md-18'>save</span>";
+        };
+
         
         let table = new Tabulator("#tabla-usuarios", { 
             height: 380, // set height of table to enable virtual DOM
@@ -33,31 +48,68 @@
             pagination: "local",       //paginate the data
             paginationSize: 10,         //allow 7 rows per page of data
             paginationCounter: "rows", //display count of paginated rows in footer
-            columns:[ //Define Table Columns
-                {title:"Nombre",          field:"nombre", sorter:"string", width:150},
-                {title:"Apellido",        field:"apellido",  sorter:"string", hozAlign:"left"},
-                {title:"Usuario",         field:"usuario",  sorter:"string", headerSort:false},
-                {title:"Tipo",            field:"tipo_usuario",  sorter:"string",   hozAlign:"left"},
+            columns: [ //Define Table Columns
+                {title:"Id",              field:"usuario_id",   sorter:"string",    hozAlign:"left"},
+                {title:"Nombre",          field:"nombre",       sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Apellido",        field:"apellido",     sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Usuario",         field:"usuario",      sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Tipo",            field:"tipo_usuario", sorter:"string",    hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Administrador", "Supervisor", "Auxiliar"]}},
+                {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
+                        const id = cell.getRow().getData().usuario_id;
+                        let ejecutar = confirm("Se va a eliminar el registro: " + id);
+                        if (ejecutar) {
+                            $.post("/usuarios/eliminar/" + id, {}, function(res) { 
+                                if(res === 'eliminado') { 
+                                    alert("¡Se eliminó el registro!");
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                },
+                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                        const id = cell.getRow().getData().usuario_id;
+                        const valores = cell.getRow().getData();
+                        let ejecutar = confirm("Se va a editar el registro: " + id);
+                        if (ejecutar) {
+                            $.post("/usuarios/editar/" + id, valores, function(res) {
+                                if(res === 'editado') { 
+                                    alert("¡Se editó el registro!");
+                                    location.reload();
+                                }
+                            });
+                        } 
+                    
+                    }
+                },
+                {formatter: iconoGuarda, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                            
+                        const valores = cell.getRow().getData();
+                        if (valores.usuario_id === 0) { 
+
+                            delete valores.usuario_id;
+                            Object.keys(valores).forEach(function(key, index) {
+            
+                                if (typeof valores[key] == 'undefined') {
+                                    valores[key]="";
+                                }
+                            });
+                            
+                            let ejecutar = confirm("Se va a guardar el nuevo registro");
+                            if (ejecutar) {
+                                $.post("/usuarios/guardar/", valores, function(res) {
+                                    if(res === 'Registro correcto') { 
+                                        alert("¡Se guardó el registro!"); 
+                                        location.reload();
+                                    }
+                                });
+                            } 
+                        }
+                    }
+                },
             ],
         });
         
-        let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
-        
-        // nombre, codigo, tipo_producto, marca, cliente, proveedor, almacen, clasif_almacen, estatus
-
-        //Generate print icon
-        let iconoElimina = function(cell, formatterParams){ //plain text value
-            //return "<i class='bi bi-trash3'></i>";
-            return "<span class='material-icons md-dark md-inactive md-18'>remove</span>";
-        };
-
-        let iconoEdita = function(cell, formatterParams){ //plain text value
-            return "<span class='material-icons md-dark md-inactive md-18'>edit</span>";
-        };
-
-        let iconoGuarda = function(cell, formatterParams){ //plain text value
-            return "<span class='material-icons md-dark md-inactive md-18'>save</span>";
-        };
 
         let table2 = new Tabulator("#tabla-materiales", { 
             height: 380,               // set height of table to enable virtual DOM
@@ -81,42 +133,36 @@
                 {title:"Almacén",         field:"almacen",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
                 {title:"Clasif. Almacén", field:"clasif_almacen", sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
                 {title:"Estatus",         field:"estatus",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
-                {formatter:iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
+                {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                             
-                            const id = cell.getRow().getData().material_id;
-                            let ejecutar = confirm("Se va a eliminar el registro: " + id);
+                        const id = cell.getRow().getData().material_id;
+                        let ejecutar = confirm("Se va a eliminar el registro: " + id);
 
-                            if (ejecutar) {
-                                // https://codeforgeek.com/handle-get-post-request-express-4/
-                                $.post("/materiales/eliminar/" + id, {}, function(data) {
-                                    if(data === 'eliminado') { 
-                                        alert("Se eliminó el registro.");
-                                        location.reload();
-                                    }
-                                });
-                                
-                            } 
+                        if (ejecutar) { // https://codeforgeek.com/handle-get-post-request-express-4/
+                            $.post("/materiales/eliminar/" + id, {}, function(data) {
+                                if(data === 'eliminado') { 
+                                    alert("¡Se eliminó el registro!");
+                                    location.reload();
+                                }
+                            });
+                        } 
                     }
                 },
-                {formatter:iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
-                            const id = cell.getRow().getData().material_id;
-                            const valores = cell.getRow().getData();
-                            let ejecutar = confirm("Se va a editar el registro: " + id);
-                            if (ejecutar) {
-                                // https://codeforgeek.com/handle-get-post-request-express-4/
-
-                                $.post("/materiales/editar/" + id, valores, function(data) {
-                                    if(data === 'editado') { 
-                                        alert("Se editó el registro.");
-                                        location.reload();
-                                    }
-                                });
-                                
-                            } 
-                    
+                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                        const id = cell.getRow().getData().material_id;
+                        const valores = cell.getRow().getData();
+                        let ejecutar = confirm("Se va a editar el registro: " + id);
+                        if (ejecutar) {
+                            $.post("/materiales/editar/" + id, valores, function(res) {
+                                if(res === 'editado') { 
+                                    alert("¡Se editó el registro!");
+                                    location.reload();
+                                }
+                            });
+                        } 
                     }
                 },
-                {formatter:iconoGuarda, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                {formatter: iconoGuarda, width:40, hozAlign:"center", cellClick:function(e, cell) {
                             
                         const valores = cell.getRow().getData();
                         if (valores.material_id === 0) { 
@@ -132,18 +178,16 @@
                             
                             let ejecutar = confirm("Se va a guardar el nuevo registro ");
                             if (ejecutar) {
-                                $.post("/materiales/guardar/", valores, function(data) {
-                                    if(data === 'Registro correcto') { 
-                                        alert("Se guardó el registro.");
+                                $.post("/materiales/guardar/", valores, function(res) {
+                                    if(res === 'Registro correcto') { 
+                                        alert("¡Se guardó el registro!"); 
                                         location.reload();
                                     }
                                 });
-                                
                             } 
                         }
                     }
                 },
-                
             ],
         }); 
         
@@ -176,19 +220,38 @@
         });
 
         
-        // agrega Fila en table2
+        // agrega Fila en table2 (materiales)
         $("#materiales-nuevo").click(function() { 
             // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
             const nuevoId = 0;
             table2.addRow( {material_id: nuevoId }, true);
         });
         
+        // agrega Fila en table2 (materiales)
+        $("#usuarios-nuevo").click(function() { 
+            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
+            const nuevoId = 0;
+            table.addRow( {material_id: nuevoId }, true);
+        });
         
+
+
+    </script>
+
+    
+    <script>
+        // Validacion de form
+
+        // Register
+
 
     </script>
 
     <!-- para el boton responsive del nav-var -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+
+
+
 
 </body>
 </html>

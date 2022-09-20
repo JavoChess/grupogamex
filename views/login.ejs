@@ -11,18 +11,18 @@
             <div class="col-md-4 col-lg-4"></div>
             <div class="col-md-4 col-lg-4"> 
 
-                <form action="/login" method="POST">
+                <form id="form-login" action="/login" method="POST">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" name="username">
+                        <input type="text" class="form-control" id="floatingInput" name="username" required>
                         <label for="floatingInput">Usuario</label>
                     </div>
                     <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" name ="password">
+                        <input type="password" class="form-control" id="floatingPassword" name ="password" required>
                         <label for="floatingPassword">Password</label>
                     </div>
                     
                     <button class="btn btn-primary" type="submit">Login</button>
-                    <a href="/register" role="button" class="btn btn-secondary">Register</a>
+                    <a href="/register" role="button" class="btn btn-secondary">Registro</a>
                     
                 </form>
                 
