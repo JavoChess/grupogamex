@@ -60,18 +60,18 @@
                         if (ejecutar) {
                             $.post("/usuarios/eliminar/" + id, {}, function(res) { 
                                 if(res === 'eliminado') { 
-                                    alert("¡Se eliminó el registro!");
-                                    location.reload();
-                                }
+                                    alert("¡Se eliminó el registro!"); 
+                                    location.reload(); 
+                                } 
                             });
                         }
                     }
                 },
-                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
+                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                         const id = cell.getRow().getData().usuario_id;
                         const valores = cell.getRow().getData();
                         let ejecutar = confirm("Se va a editar el registro: " + id);
-                        if (ejecutar) {
+                        if (ejecutar) { 
                             $.post("/usuarios/editar/" + id, valores, function(res) {
                                 if(res === 'editado') { 
                                     alert("¡Se editó el registro!");
@@ -115,17 +115,17 @@
             height: 380,               // set height of table to enable virtual DOM
             data: tabledata2,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
-            //selectable:true,           //make rows selectable
-            pagination: "local",       //paginate the data
-            paginationSize: 10,        //allow 7 rows per page of data
-            paginationCounter: "rows", //display count of paginated rows in footer
-            keybindings:{
-                        "redo" : "ctrl + r", //bind redo function to ctrl + r
-                        },
-            columns: [ //Define Table Columns
+            //selectable:true,           //make rows selectable 
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            keybindings:{ 
+                        "redo" : "ctrl + r", //bind redo function to ctrl + r 
+                        }, 
+            columns: [ //Define Table Columns 
                 {title:"Id",              field:"material_id",    sorter:"string",   hozAlign:"left"},
-                {title:"Nombre",          field:"nombre",         sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Código",          field:"codigo",         sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Nombre",          field:"nombre",         sorter:"string",   hozAlign:"left", editor: true}, 
+                {title:"Código",          field:"codigo",         sorter:"string",   hozAlign:"left", editor: true}, 
                 {title:"Tipo producto",   field:"tipo_producto",  sorter:"string",   hozAlign:"left", editor: true},
                 {title:"Marca",           field:"marca",          sorter:"string",   hozAlign:"left", editor: true},
                 {title:"Cliente",         field:"cliente",        sorter:"string",   hozAlign:"left", editor: true},
@@ -135,9 +135,9 @@
                 {title:"Estatus",         field:"estatus",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
                 {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                             
-                        const id = cell.getRow().getData().material_id;
-                        let ejecutar = confirm("Se va a eliminar el registro: " + id);
-
+                        const id = cell.getRow().getData().material_id; 
+                        let ejecutar = confirm("Se va a eliminar el registro: " + id); 
+ 
                         if (ejecutar) { // https://codeforgeek.com/handle-get-post-request-express-4/
                             $.post("/materiales/eliminar/" + id, {}, function(data) {
                                 if(data === 'eliminado') { 
@@ -147,9 +147,9 @@
                             });
                         } 
                     }
-                },
-                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) {
-                        const id = cell.getRow().getData().material_id;
+                }, 
+                {formatter: iconoEdita, width:40, hozAlign:"center", cellClick:function(e, cell) { 
+                        const id = cell.getRow().getData().material_id; 
                         const valores = cell.getRow().getData();
                         let ejecutar = confirm("Se va a editar el registro: " + id);
                         if (ejecutar) {
@@ -206,9 +206,9 @@
         // Guarda el Id del registro seleccionado
         let table2ItemSeleccionado=0;
 
-        table2.on("rowSelected", function(row) {
-            table2ItemSeleccionado = row._row.data.material_id;
-            $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado);
+        table2.on("rowSelected", function(row) { 
+            table2ItemSeleccionado = row._row.data.material_id; 
+            $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado); 
         });
         
         table2.on("rowSelectionChanged", function(data, rows) {
@@ -219,21 +219,22 @@
             }
         });
 
-        
+        /*
         // agrega Fila en table2 (materiales)
         $("#materiales-nuevo").click(function() { 
             // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
             const nuevoId = 0;
             table2.addRow( {material_id: nuevoId }, true);
-        });
+        }); 
         
-        // agrega Fila en table2 (materiales)
+        // agrega Fila en table2 (materiales) 
         $("#usuarios-nuevo").click(function() { 
-            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
+            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId 
             const nuevoId = 0;
             table.addRow( {material_id: nuevoId }, true);
-        });
-        
+        }); 
+
+        */
 
 
     </script>

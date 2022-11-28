@@ -16,31 +16,32 @@ app.use(express.static("public"));
 // Conexión a la DBjawsdb with Heroku 
 let connection;
 
-if (process.env.JAWSDB_URL) {
-    connection = mysql.createConnection(process.env.JAWSDB_URL);
+if (process.env.JAWSDB_URL) { 
+    connection = mysql.createConnection(process.env.JAWSDB_URL); 
 
 } else { 
-    connection = mysql.createConnection({
+    connection = mysql.createConnection({ 
         host: 'localhost',
         user: 'root',
         password: '',
         database: 'grupogamex'
-    });
-}
+    }); 
+} 
 
 
 
 // Pantalla de inicio
-app.get("/main", (req, res)=>{
+app.get("/main", (req, res) => {
     
     res.render('inicio', {tabledata: [], 
         tabledata2: [], 
-        vistaUsuarios: "d-none", 
-        vistaMateriales: "d-none" } );
+        vistaUsuarios: "d-none",  
+        vistaMateriales: "d-none" } ); 
 });
 
 
-// Obtiene los datos de la tabla usuarios y los manda al Front
+
+// Obtiene los datos de la tabla usuarios y los manda al Front 
 // REVISAR EL SQL
 app.get("/usuarios", (req, res) => {
 
