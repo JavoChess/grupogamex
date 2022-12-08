@@ -401,11 +401,19 @@
             });
         }
         
+        /* Limpia los objetos de un form */ 
+        function limpiaObjetosEnForm(frm) {
+            // 'function' is needed here 
+            $("#" + frm).find(":input").each(function () {  
+                $(this).val("");
+            });
+        }
+        
         /* Construye un array con los objetos de un form */ 
         function arrayObjetosEnForm(frm) {
             
             let valores = {};
-            $("#" + frm).find(":input").each(function () {
+            $("#" + frm).find(":input").each(function () {  /* 'function' is needed here */
                 valores[this.name] = $(this).val();
             });
             return valores;
@@ -418,7 +426,7 @@
             
             let valores = arrayObjetosEnForm("form-nuevo-pedido");
             delete valores.id_pedido;
-            $.post("/pedidos/guardar/", valores, (res) => {
+            $.post("/pedidos/guardar/", valores, (res) => { 
                 if(res === 'Registro correcto') { 
                     alert("¡Se guardó el registro!"); 
                     location.reload();
@@ -434,9 +442,11 @@
         });
 
         /* Cuando se da clic en el btn hace la consulta y con el array res llena el select del modal (res es un array) */
-        $("#btn-modal-agregar-productos").click(() => {
-            $.get("/compras/listaprod", (res) => {  
-                llenaSelect("modal-ppedidos-1", res)  
+        $("#btn-modal-agregar-productos").click(() => { 
+
+            limpiaObjetosEnForm('frm-modal-productos-pedidos');
+            $.get("/compras/listaprod", (res) => { 
+                llenaSelect("modal-ppedidos-1", res) 
             });
         });
 
