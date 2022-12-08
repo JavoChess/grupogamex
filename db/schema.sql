@@ -1,12 +1,14 @@
 /* crea la base */
 create database grupogamex;
 
+use grupogamex;
+
 /* habilita el usuario 'root' */
 alter user 'root'@'localhost' identified with mysql_native_password by '';
 flush privileges;
 
 /* crea la primera tabla de usuarios */
-create table grupogamex.usuarios ( 
+create table usuarios ( 
     usuario_id int primary key not null auto_increment,
     nombre varchar(150) not null,
     apellido varchar(150) not null,
@@ -18,7 +20,7 @@ create table grupogamex.usuarios (
 );
 
 /* crea una tabla con los tipos de usuario */
-create table grupogamex.tipo_usuarios ( 
+create table tipo_usuarios ( 
     tipo_usuario_id int primary key not null  AUTO_INCREMENT,
     tipo_usuario varchar(50),
     puesto varchar(150)
@@ -26,7 +28,7 @@ create table grupogamex.tipo_usuarios (
 
 
 /* crea tabla de materiales */
-create table grupogamex.materiales ( 
+create table materiales ( 
     material_id int primary key not null auto_increment,
     nombre varchar(150) not null,
     codigo varchar(10) not null,
@@ -42,9 +44,10 @@ create table grupogamex.materiales (
 
 
 /* crea la tabla pedidos */
-create table grupogamex.pedidos ( 
+create table pedidos ( 
     id_pedido int primary key not null auto_increment,
     id_producto int,
+    fecha_ts timestamp,
     nu_compra int,
     nb_proveedor varchar(150) not null,
     nb_usuario varchar(50) not null,
@@ -59,7 +62,7 @@ create table grupogamex.pedidos (
 
 
 /* crea la tabla prodpedidos */
-create table grupogamex.prodpedidos ( 
+create table prodpedidos ( 
     id_pedido int,
     id_producto int,
     nb_producto varchar(150),
@@ -75,7 +78,7 @@ create table grupogamex.prodpedidos (
 
 
 /* crea la tabla recepción */
-create table grupogamex.recepcion ( 
+create table recepcion ( 
     id_recepcion int primary key not null auto_increment,
     id_pedido int,
     fh_recepcion date,

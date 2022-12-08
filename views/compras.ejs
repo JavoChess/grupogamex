@@ -1,0 +1,268 @@
+
+<div class="row" id="pedidos-encabezados">
+  <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Pedido</h5>
+          <p class="card-text">Abre el formulario para generar un nuevo pedido</p>
+          <a class="btn btn-primary" id="btn-nuevo-pedido">Ir</a>
+        </div>
+      </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Lista de pedidos</h5>
+          <p class="card-text">Muestra la lista completa de pedidos con su estatus.</p>
+          <a class="btn btn-primary" id="btn-lista-pedidos">Ir a lista</a>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Form para capturar los datos del nuevo pedido 
+     np = nuevo pedido 
+-->
+<div class="row" id="pedidos-form">
+
+  <div class="col-md-12"> 
+      Generar nueva orden de compra
+  </div>
+
+  <form class="row g-3 needs-validation" id="form-nuevo-pedido" novalidate>
+    <div class="col-md-4">
+      <label for="np-1" class="form-label">Id de Pedido</label>
+      <input type="text" class="form-control" id="np-1" name="id_pedido" disabled>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+
+    <div class="col-md-4">
+      <label for="np-2" class="form-label">Orden de compra</label>
+      <input type="number" class="form-control" id="np-2" name="nu_compra" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+
+    <div class="col-md-8">
+      <label for="np-3" class="form-label">Nombre de proveedor</label>
+      <input type="text" class="form-control" id="np-3" name="nb_proveedor" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">
+      <label for="np-4" class="form-label">Nombre de usuario</label>
+      <input type="text" class="form-control" id="np-4" name="nb_usuario" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+
+    <div class="col-md-4">
+      <label for="np-5" class="form-label">Fecha del pedido</label>
+      <input type="date" class="form-control" id="np-5" name="fh_pedido" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+
+    <div class="col-md-8">
+      <label for="np-6" class="form-label">Términos de pago</label>
+      <input type="text" class="form-control" id="np-6" name="tx_terminos" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+
+
+    <div class="col-md-8">
+      <label for="np-7" class="form-label">Instrucción de entrega: Entregar en</label>
+      <input type="text" class="form-control" id="np-7" name="tx_entregar_en" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">
+      <label for="np-8" class="form-label">Instrucción de entrega: Horario</label>
+      <input type="text" class="form-control" id="np-8" name="nu_horario" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+
+    <div class="col-md-8">
+      <label for="np-9" class="form-label">Instrucción de entrega: Contacto</label>
+      <input type="text" class="form-control" id="np-9" name="nb_contacto" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+
+    <div class="col-md-3">
+      <label for="np-10" class="form-label">Estatus</label>
+      <input type="text" class="form-control" id="np-10" name="nb_estatus" value="Pendiente" disabled>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-9"></div>
+
+    <div class="col-md-8">
+      <label for="np-11" class="form-label">Comentarios</label>
+      <input type="text" class="form-control" id="np-11" name="tx_comentario" required>
+      <div class="valid-feedback">
+
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+
+
+
+
+    
+    <div class="col-md-12"> </div>
+
+    <div class="col-md-12">
+      
+      <br>
+      <!-- Modal aquí -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-productos-pedidos" id="btn-modal-agregar-productos">Agregar productos...</button>
+      <br>
+
+    </div>
+
+    <div class="col-md-12"> </div>
+
+    <div class="col-md-12"> 
+      <div id="tabla-productos-pedidos"></div>
+    </div>
+
+
+    <div class="col-12">
+      <button class="btn btn-primary" id="btn-enviar-pedido">Enviar pedido</button>
+      <button class="btn btn-primary" id="btn-editar-pedido" >Editar pedido (prueba productos)</button>
+    </div>
+
+    <div class="col-12"> <br> </div>
+
+    <div class="col-md-12">
+      Respuesta: Nuevo pedido generado!!!
+    </div>
+
+
+  </form>
+
+
+
+</div>
+
+<div class="row" id="pedidos-lista">
+
+  Aqui la tabla de pedidos
+</div>
+
+
+
+
+<!-- Definición del Modal de pedidos -->
+<div class="modal fade" id="modal-productos-pedidos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Seleccione un producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid"> 
+          <form>
+
+            <div class="row">
+              <div class="col-md-12">
+                <label for="modal-ppedidos-1" class="col-form-label">Producto</label>
+                <select class="form-select" id="modal-ppedidos-1" name="nb_producto" >
+                  <option selected>Seleccione producto...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <label for="modal-ppedidos-2" class="col-form-label">Cantidad</label>
+                <input type="text" class="form-control" id="modal-ppedidos-2" name="nu_cantidad">
+              </div>
+              <div class="col-md-8"></div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-3" class="col-form-label">Precio unitario</label>
+                <input type="text" class="form-control" id="modal-ppedidos-3" name="im_unidad">
+              </div>
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-4" class="col-form-label">Importe del pedido</label>
+                <input type="text" class="form-control" id="modal-ppedidos-4" name="im_pedido">
+              </div>
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-5" class="col-form-label">Art</label>
+                <input type="text" class="form-control" id="modal-ppedidos-5" name="cd_articulo">
+              </div>
+
+            </div>
+
+
+            <div class="row"> 
+              <div class="col-md-12">
+                <label for="modal-ppedidos-6" class="col-form-label">Especificaciones</label>
+                <input type="text" class="form-control" id="modal-ppedidos-6" name="tx_especificaciones">
+              </div>
+            </div>
+
+            <div class="row"> 
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-7" class="col-form-label">Moneda</label>
+                <input type="text" class="form-control" id="modal-ppedidos-7" name="cd_moneda">
+              </div>
+              
+              <div class="col-md-4">
+                <label for="modal-ppedidos-8" class="col-form-label">Tipo de cambio</label>
+                <input type="number" class="form-control" id="modal-ppedidos-8" name="im_tipo_de_cambio">
+              </div>
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-9" class="col-form-label">Fecha de entrega</label>
+                <input type="date" class="form-control" id="modal-ppedidos-9" name="fh_entrega">
+              </div>
+
+            </div> 
+
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,21 +26,21 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/compras" id="nav-home-compras">
               <span data-feather="file"></span>
-              Inventario
+              Compras
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="shopping-cart"></span>
-              Inventario2
+              Pedidos
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="users"></span>
-              Inventario3
+              Almacén
             </a>
           </li>
 
@@ -108,13 +108,22 @@
 
       <!-- Acá va la info -->
       <div class="container">
-        <div id ="vista-admin-usuarios" class=<%= vistaUsuarios %>>
-          <%- include('usuarios') %>
+
+        <div id ="vista-home-compras" class=<%= vistaCompras %>>
+          <%- include('compras') %>
         </div>
 
         <div  id="vista-admin-materiales" class=<%= vistaMateriales %>>
           <%- include('materiales') %>
         </div>
+
+
+        <div id ="vista-admin-usuarios" class=<%= vistaUsuarios %>>
+          <%- include('usuarios') %>
+        </div>
+
+        
+
       </div>
       
 

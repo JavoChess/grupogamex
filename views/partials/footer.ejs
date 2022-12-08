@@ -1,12 +1,12 @@
 
-    <footer class="my-3 pt-3 text-muted text-center text-small">
+<!--     <footer class="my-3 pt-3 text-muted text-center text-small">
         <p class="mb-1">&copy; <%= new Date().getFullYear() %> grupogamex</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#">Privacy</a></li>
             <li class="list-inline-item"><a href="#">Terms</a></li>
             <li class="list-inline-item"><a href="#">Support</a></li>
         </ul>
-    </footer>
+    </footer> -->
 
 
     <!-- JavaScript JQuery -->
@@ -21,11 +21,95 @@
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.3/dist/js/tabulator.min.js"></script>
 
     <script type="text/javascript">
+        
+        /* ------------------------------------- */
+        /* OTRAS FUNCIONES */
+        /* ------------------------------------- */
 
-        let tabledata = <%- JSON.stringify(tabledata) %>; 
-        let tabledata2 = <%- JSON.stringify(tabledata2) %>; 
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+            })
+        })()
+
+
+        /* Construye el timestamp para registro */
+        function timestampHoy() { 
+            let hoy = new Date();
+            let anio = hoy.getFullYear();
+            let mes = hoy.getMonth() + 1;
+            let dia = hoy.getDate();
+            let hora = hoy.getHours();
+            let minuto = hoy.getMinutes();
+            let segundo = hoy.getSeconds();
+            
+            if ( mes < 10 ) { 
+                mes = '0' + mes; 
+            } 
+            if ( dia < 10 ) { 
+                dia = '0' + dia; 
+            } 
+            if ( hora < 10 ) { 
+                hora = '0' + hora; 
+            } 
+            if ( minuto < 10 ) { 
+                minuto = '0' + minuto; 
+            } 
+            if ( segundo < 10 ) { 
+                segundo = '0' + segundo; 
+            }    
+            return anio + "-" + mes + "-" + dia + " " + hora + ":" + minuto + ":" + segundo;
+        }
+
+        /* Modal de pedidos */
+        var exampleModal = document.getElementById('modal-productos-pedidos');
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            //var recipient = button.getAttribute('data-bs-whatever')
+            // If necessary, you could initiate an AJAX request here
+            // and then do the updating in a callback.
+            //
+            // Update the modal's content.
+            var modalTitle = exampleModal.querySelector('.modal-title')
+            var modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+            //modalTitle.textContent = 'Seleccionar productos' 
+            //modalBodyInput.value = recipient
+        });
+
+
+        /* ------------------------------------- */
+        /* TERMINA OTRAS FUNCIONES */
+        /* ------------------------------------- */
+
+
+
+
+        let tabledataUsuarios = <%- JSON.stringify(tabledata) %>; 
+        let tabledataMateriales = <%- JSON.stringify(tabledata2) %>; 
+        let tabledataProductosPedidos = []; 
+
         let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
+        let vistaCompras = <%- JSON.stringify(vistaCompras) %>; 
+
 
         //Generate print icon
         let iconoElimina = function(cell, formatterParams) { //plain text value
@@ -40,10 +124,12 @@
             return "<span class='material-icons md-dark md-inactive md-18'>save</span>";
         };
 
-        
-        let table = new Tabulator("#tabla-usuarios", { 
+        // ------------------------------
+        // tabla usuarios
+        // ------------------------------
+        let tableUsuarios = new Tabulator("#tabla-usuarios", { 
             height: 380, // set height of table to enable virtual DOM
-            data: tabledata, //load initial data into table
+            data: tabledataUsuarios, //load initial data into table
             layout: "fitColumns", //fit columns to width of table (optional)
             pagination: "local",       //paginate the data
             paginationSize: 10,         //allow 7 rows per page of data
@@ -110,10 +196,13 @@
             ],
         });
         
+        // ------------------------------
+        // tabla materiales
+        // ------------------------------
 
-        let table2 = new Tabulator("#tabla-materiales", { 
+        let tableMateriales = new Tabulator("#tabla-materiales", { 
             height: 380,               // set height of table to enable virtual DOM
-            data: tabledata2,          //load initial data into table
+            data: tabledataMateriales,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
             pagination: "local",       //paginate the data 
@@ -152,6 +241,7 @@
                         const id = cell.getRow().getData().material_id; 
                         const valores = cell.getRow().getData();
                         let ejecutar = confirm("Se va a editar el registro: " + id);
+                        /* console.log(valores); */
                         if (ejecutar) {
                             $.post("/materiales/editar/" + id, valores, function(res) {
                                 if(res === 'editado') { 
@@ -174,7 +264,7 @@
                                     valores[key]="";
                                 }
                             });
-                            /* console.log(valores); */
+                            /*console.log(valores);*/
                             
                             let ejecutar = confirm("Se va a guardar el nuevo registro ");
                             if (ejecutar) {
@@ -191,20 +281,42 @@
             ],
         }); 
         
-        // ------------------------------
-        // table1
-        // ------------------------------
 
 
+        // ------------------------------
+        // tabla de los productos pedidos (Compras - Pedidos nuevos)
+        // ------------------------------
 
-        
-        // ------------------------------
-        // table2
-        // ------------------------------
+        let tableProductosPedidos = new Tabulator("#tabla-productos-pedidos", { 
+            height: 380,               // set height of table to enable virtual DOM
+            data: tabledataProductosPedidos,          //load initial data into table
+            history: true,             //allow undo and redo actions on the table
+            //selectable:true,           //make rows selectable 
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            keybindings:{ 
+                        "redo" : "ctrl + r", //bind redo function to ctrl + r 
+                        }, 
+            columns: [ //Define Table Columns 
+                {title:"Id de producto",  field:"id_producto",    sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Nombre de producto",  field:"nb_producto",         sorter:"string",   hozAlign:"left"}, 
+                {title:"Cantidad",          field:"nu_cantidad",         sorter:"string",   hozAlign:"left", editor: true}, 
+                {title:"Artículo",          field:"cd_articulo",  sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Especificaciones",  field:"tx_especificaciones",          sorter:"string",   hozAlign:"left", editor: true},
+                {title:"Precio unitario",   field:"im_unidad",        sorter:"string",   hozAlign:"left" },
+                {title:"Importe del pedido",       field:"im_pedido",      sorter:"string",   hozAlign:"left" },
+                {title:"Fecha de entrega",         field:"fh_entrega",        sorter:"date",   hozAlign:"left", editor: true },
+                {title:"Moneda",            field:"cd_moneda", sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["MXN", "USD"]}},
+                {title:"Tipo de cambio",         field:"im_tipo_de_cambio",        sorter:"string",   hozAlign:"left"},
+                
+            ],
+        }); 
+
 
         // SELECCION DE UN ELELEMTO
         // Guarda el Id del registro seleccionado
-        let table2ItemSeleccionado=0;
+/*         let table2ItemSeleccionado=0;
 
         table2.on("rowSelected", function(row) { 
             table2ItemSeleccionado = row._row.data.material_id; 
@@ -217,7 +329,7 @@
                 table2ItemSeleccionado = 0;
                 $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado);
             }
-        });
+        }); */
 
         /*
         // agrega Fila en table2 (materiales)
@@ -235,24 +347,111 @@
         }); 
 
         */
+        
+        
+        $("#pedidos-nuevo-producto").click(function() { 
+            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId 
+            const nuevoId = 0;
+            tableProductosPedidos.addRow( {id_producto: nuevoId }, true);
+        }); 
+
+
+
+        // ------------------------------
+        // General FE script
+        // ------------------------------
+        $("#pedidos-encabezados").attr("class", "row");
+        $("#pedidos-lista").attr("class", "row d-none");
+        $("#pedidos-form").attr("class", "row d-none");
+
+        $("#btn-nuevo-pedido").click( function () {
+            //alert("nuevo pedido");
+            $("#pedidos-lista").attr("class", "row d-none");
+            $("#pedidos-encabezados").attr("class", "row d-none");
+            $("#pedidos-form").attr("class", "row");
+        });
+
+        $("#btn-lista-pedidos").click( function () {
+            //alert("muestra la lista de pedidos");
+            $("#pedidos-encabezados").attr("class", "row d-none");
+            $("#pedidos-lista").attr("class", "row");
+            $("#pedidos-form").attr("class", "row d-none");
+        });
+
+
+        // btn enviar pedido (simula el submit)
+/*         $("#btn-enviar-pedido").submit(function() { 
+            alert("procedimiento para el envio de pedido");
+        }); */
+
+
+        /* Valida si el form está completo */
+        function validaFormulario(frm) {
+            let res;
+            $('#' + frm)[0].checkValidity() ? res=true : res=false;
+            return res;
+        }
+
+        /* Subrutina para Llenar el select obj con los datos del array */ 
+        function llenaSelect(idSelect, datosArr) {
+            
+            $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
+            datosArr.forEach((item, index) => { 
+                $('#' + idSelect).append('<option>' + item + '</option>')  
+            });
+        }
+        
+        /* Construye un array con los objetos de un form */ 
+        function arrayObjetosEnForm(frm) {
+            
+            let valores = {};
+            $("#" + frm).find(":input").each(function () {
+                valores[this.name] = $(this).val();
+            });
+            return valores;
+            /*Source: https://stackoverflow.com/questions/5603117/jquery-create-object-from-form-fields */
+        }
+        
+
+        /* Recorre el form form-nuevo-pedido y crea el array de datos luego manda el post para agregar el nuevo registro*/
+        function enviaNuevoPedido() {
+            
+            let valores = arrayObjetosEnForm("form-nuevo-pedido");
+            delete valores.id_pedido;
+            $.post("/pedidos/guardar/", valores, (res) => {
+                if(res === 'Registro correcto') { 
+                    alert("¡Se guardó el registro!"); 
+                    location.reload();
+                } 
+            }); 
+        }
+
+        /* Agrega un nuevo pedido (si esta completo el form) */ 
+        $( "#form-nuevo-pedido" ).submit(function( event ) { 
+
+            validaFormulario("form-nuevo-pedido") ? enviaNuevoPedido() : alert("Uno o más campos requeridos faltan de completar.");
+            event.preventDefault();
+        });
+
+        /* Cuando se da clic en el btn hace la consulta y con el array res llena el select del modal (res es un array) */
+        $("#btn-modal-agregar-productos").click(() => {
+            $.get("/compras/listaprod", (res) => {  
+                llenaSelect("modal-ppedidos-1", res)  
+            });
+        });
+
+
 
 
     </script>
 
     
-    <script>
-        // Validacion de form
-
-        // Register
-
-
-    </script>
 
     <!-- para el boton responsive del nav-var -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
 
 
 
-
+    
 </body>
 </html>

@@ -33,15 +33,19 @@ if (process.env.JAWSDB_URL) {
 // Pantalla de inicio
 app.get("/main", (req, res) => {
     
-    res.render('inicio', {tabledata: [], 
-        tabledata2: [], 
-        vistaUsuarios: "d-none",  
-        vistaMateriales: "d-none" } ); 
+    res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none",  
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none" 
+                        } 
+        ); 
 });
 
 
 
-// Obtiene los datos de la tabla usuarios y los manda al Front 
+// Vista administración de usuarios
 // REVISAR EL SQL
 app.get("/usuarios", (req, res) => {
 
@@ -53,10 +57,13 @@ app.get("/usuarios", (req, res) => {
             
             // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
             const tabledata = JSON.parse(JSON.stringify(results));
-            res.render('inicio', {tabledata: tabledata, 
-                                tabledata2: [], 
-                                vistaUsuarios: "", 
-                                vistaMateriales: "d-none" } 
+            res.render('inicio', {
+                                    tabledata: tabledata, 
+                                    tabledata2: [], 
+                                    vistaUsuarios: "", 
+                                    vistaMateriales: "d-none",
+                                    vistaCompras: "d-none" 
+                                } 
             );
         }
     });
@@ -64,7 +71,7 @@ app.get("/usuarios", (req, res) => {
 });
 
 
-/* Lectura de datos de la tabla materiales */
+/* Vista catalogo de materiales */
 app.get("/materiales", (req, res) => {
     const sql = "select * from materiales";
     connection.query(sql, function(err, results, fields) {
@@ -73,14 +80,69 @@ app.get("/materiales", (req, res) => {
         } else { 
             // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
             const tabledata2 = JSON.parse(JSON.stringify(results));
-            res.render('inicio', {tabledata: [], 
-                                tabledata2: tabledata2, 
-                                vistaUsuarios: "d-none", 
-                                vistaMateriales: "" } 
+            res.render('inicio', {
+                                    tabledata: [], 
+                                    tabledata2: tabledata2, 
+                                    vistaUsuarios: "d-none", 
+                                    vistaMateriales: "",
+                                    vistaCompras: "d-none" 
+                                } 
             );
         } 
     });
 });
+
+
+
+/* Vista compras. El usuario de Compras puede hacer pedidos en esta vista */
+app.get("/compras", (req, res) => {
+
+    res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none", 
+                            vistaMateriales: "d-none",
+                            vistaCompras: "" 
+                        } 
+    );
+});
+
+
+/* cuando abre el modal de prod pedidos */
+app.get("/compras/listaprod", (req, res) => {
+    let col = 'nombre';
+    const sql = "select distinct " + col + " from materiales";
+    connection.query(sql, function(err, results, fields) {
+        if (err) {
+            console.log(err);
+        } else { 
+            const datos = JSON.parse(JSON.stringify(results));
+            let resultado_qry =[];
+            datos.forEach((v) => 
+                resultado_qry.push(v[col])
+            );
+            res.send(resultado_qry);
+        } 
+    }); 
+});
+
+
+
+// TABLA PEDIDOS
+/* Agrega un nuevo registro a la tabla materiales */ 
+app.post("/pedidos/guardar", (req, res) => { 
+    const valores = req.body;
+    const sql = "insert into pedidos set ?";
+    /* console.log(valores);  */
+
+    connection.query(sql, [valores],  function(err, results, fields) {
+        err ? res.end(err) : res.end("Registro correcto");
+    });
+}); 
+
+
+
+
 
 
 // TABLA USUARIOS
@@ -108,6 +170,7 @@ app.post("/usuarios/editar/:id", (req, res) => {
 app.post("/usuarios/guardar", (req, res) => { 
     const valores = req.body;
     const sql = "insert into usuarios set ?";
+    console.log(valores);
     connection.query(sql, [valores],  function(err, results, fields) {
         err ? res.end(err) : res.end("Registro correcto");
     });
@@ -163,6 +226,8 @@ app.post("/register", (req, res) => {
 
     const valores = req.body;
     const sql = "insert into usuarios set ?";
+    console.log(valores);
+
     connection.query(sql, [valores],  function(err, results, fields) {
         if (err) {
             console.log(err);
