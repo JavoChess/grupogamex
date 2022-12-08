@@ -129,7 +129,7 @@ app.get("/compras/listaprod", (req, res) => {
 
 
 // TABLA PEDIDOS
-/* Agrega un nuevo registro a la tabla materiales */ 
+/* Agrega un nuevo registro a la tabla pedidos */ 
 app.post("/pedidos/guardar", (req, res) => { 
     const valores = req.body;
     const sql = "insert into pedidos set ?";
@@ -241,36 +241,35 @@ app.post("/register", async (req, res) => {
 /* POST login */
 app.post("/login",(req, res) => {
     
-    const usuario = req.body.username;
-    const pass = req.body.password;
-    let conteo = 0;
+    const usuario = req.body.username; 
+    const pass = req.body.password; 
+    let conteo = 0; 
     let sql = "select usuario,contrasena " + 
               "from usuarios " +
               "where usuario = '" + usuario +"' ";
 
-
-    connection.query(sql, async function(err, results) {
-        if (err) {
-            console.log(err);
-        }
-        let passwr=0;
-        results.forEach(fila => {
-            passwr=fila.contrasena;
-        });
-        let comparaPw = await bcryptjs.compare(pass,passwr);
-    
+    connection.query(sql, async function(err, results) { 
+        if (err) { 
+            console.log(err); 
+        } 
+        let passwr=0; 
+        results.forEach(fila => { 
+            passwr=fila.contrasena; 
+        }); 
+        let comparaPw = await bcryptjs.compare(pass,passwr); 
+        
         if (comparaPw == true) { 
             // usuario con acceso 
-            console.log('usuario con acceso');
-            res.redirect("/main");
-        } else {
-            // usuario no encontrado
-            console.log('usuario sin acceso');
-            res.redirect("/");
-        }
-    });
+            console.log('usuario con acceso'); 
+            res.redirect("/main"); 
+        } else { 
+            // usuario no encontrado 
+            console.log('usuario sin acceso'); 
+            res.redirect("/"); 
+        } 
+    }); 
 
-});
+}); 
 
 
 

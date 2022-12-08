@@ -392,7 +392,7 @@
             return res;
         }
 
-        /* Subrutina para Llenar el select obj con los datos del array */ 
+        /* Subrutina para Llenar el select obj con los datos del array datosArr */ 
         function llenaSelect(idSelect, datosArr) {
             
             $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
@@ -408,8 +408,8 @@
                 $(this).val("");
             });
         }
-        
-        /* Construye un array con los objetos de un form */ 
+
+        /* Construye un objeto con los inputs de un form */ 
         function arrayObjetosEnForm(frm) {
             
             let valores = {};
@@ -451,6 +451,10 @@
         });
 
 
+        /* Botón Agregar del modal - Pedidos */
+        $("#modal-ppedidos-agregar").click(function() {
+            alert("aqui agrega los datos a la tabla");
+        });
 
 
     </script>
