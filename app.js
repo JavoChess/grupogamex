@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-
+const bcryptjs = require('bcryptjs');
 
 // app y puerto dinámico 
 const app = express();
@@ -222,12 +222,11 @@ app.get("/register", (req, res)=>{
 
 
 // POST - Registro de usuario 
-app.post("/register", (req, res) => {
-
+app.post("/register", async (req, res) => {
     const valores = req.body;
+    let passwordHash= await bcryptjs.hash(valores.contrasena,10);
+    valores.contrasena=passwordHash;
     const sql = "insert into usuarios set ?";
-    console.log(valores);
-
     connection.query(sql, [valores],  function(err, results, fields) {
         if (err) {
             console.log(err);
@@ -240,28 +239,33 @@ app.post("/register", (req, res) => {
 
 
 /* POST login */
-app.post("/login", (req, res) => {
+app.post("/login",(req, res) => {
     
     const usuario = req.body.username;
     const pass = req.body.password;
     let conteo = 0;
-
-    let sql = "select count(*) as conteo " + 
+    let sql = "select usuario,contrasena " + 
               "from usuarios " +
-              "where usuario = '" + usuario + "' and contrasena = '"+ pass +"' ";
+              "where usuario = '" + usuario +"' ";
 
-    connection.query(sql, function(err, results) {
+
+    connection.query(sql, async function(err, results) {
         if (err) {
             console.log(err);
         }
-        
-        conteo = results[0].conteo;
-
-        if (conteo == 1) { 
+        let passwr=0;
+        results.forEach(fila => {
+            passwr=fila.contrasena;
+        });
+        let comparaPw = await bcryptjs.compare(pass,passwr);
+    
+        if (comparaPw == true) { 
             // usuario con acceso 
+            console.log('usuario con acceso');
             res.redirect("/main");
         } else {
             // usuario no encontrado
+            console.log('usuario sin acceso');
             res.redirect("/");
         }
     });
