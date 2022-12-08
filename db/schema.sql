@@ -46,8 +46,8 @@ create table materiales (
 /* crea la tabla pedidos */
 create table pedidos ( 
     id_pedido int primary key not null auto_increment,
-    id_producto int,
-    fecha_ts timestamp,
+    pedidos_created_at timestamp default current_timestamp,
+    pedidos_updated_at timestamp on update current_timestamp,
     nu_compra int,
     nb_proveedor varchar(150) not null,
     nb_usuario varchar(50) not null,
@@ -65,14 +65,16 @@ create table pedidos (
 create table prodpedidos ( 
     id_pedido int,
     id_producto int,
+    ppedidos_created_at timestamp default current_timestamp,
+    ppedidos_updated_at timestamp on update current_timestamp,
     nb_producto varchar(150),
-    nu_cantidad float,
+    nu_cantidad int,
     cd_articulo varchar(50),
-    tx_especificaciones varchar(150),
+    tx_especificaciones varchar(250),
     im_unidad float,
     im_pedido float,
     fh_entrega date,
-    cd_moneda varchar(5),
+    cd_moneda varchar(3),
     im_tipo_de_cambio float
 );
 
