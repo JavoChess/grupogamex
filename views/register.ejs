@@ -14,26 +14,23 @@
             <div class="col-md-4 col-lg-4"> 
                 <form id="form-registro"  method="post" action="/register" >
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" autocomplete="off" required>
+                        <input type="text" class="form-control" name="nb_usuario" placeholder="Nombre" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="apellido" placeholder="Apellido" autocomplete="off" required>
+                        <input type="text" class="form-control" name="nb_area" placeholder="Area" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="area" placeholder="Area" autocomplete="off" required>
+                        <input type="text" class="form-control" name="cd_usuario" placeholder="Usuario" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off" required>
+                        <input type="password" class="form-control" name="cd_contrasena" placeholder="Password" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
-                        <input type="password" class="form-control" name="contrasena" placeholder="Password" autocomplete="off" required>
-                    </div>
-                    <div class="mb-3"> 
-                        <select class="form-select" name="tipo_usuario" aria-label="Default select example" aria-placeholder="Type of user" required>
+                        <select class="form-select" name="tp_usuario" aria-label="Default select example" aria-placeholder="Type of user" required>
                             <option selected></option>
-                            <option value="Tipo 1">Administrador</option>
-                            <option value="Tipo 2">Supervisor</option>
-                            <option value="Tipo 3">Auxiliar</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Compras">Compras</option>
+                            <option value="Almacén">Almacén</option>
                         </select>
                     </div>
                     

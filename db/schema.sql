@@ -8,15 +8,18 @@ alter user 'root'@'localhost' identified with mysql_native_password by '';
 flush privileges; 
 
 /* crea la primera tabla de usuarios */
-create table usuarios ( 
-    usuario_id int primary key not null auto_increment,
-    nombre varchar(150) not null,
-    apellido varchar(150) not null,
-    area varchar(50) not null,
-    usuario varchar(50) not null,
-    contrasena varchar(50) not null,
-    tipo_usuario varchar(50) not null
-); 
+drop table usuarios;
+
+create table usuarios (
+	id_usuario int primary key not null auto_increment,
+    usuario_created_at timestamp default current_timestamp, 
+    usuario_updated_at timestamp on update current_timestamp, 
+	nb_usuario varchar(100),
+    nb_area varchar(60),
+    cd_usuario varchar(50), 
+    cd_contrasena varchar(60),
+    tp_usuario varchar(15)
+);
 
 /* crea una tabla con los tipos de usuario */
 create table tipo_usuarios ( 
@@ -47,16 +50,17 @@ create table pedidos (
     id_pedido int primary key not null auto_increment,
     pedidos_created_at timestamp default current_timestamp,
     pedidos_updated_at timestamp on update current_timestamp,
+    id_usuario int,
+	foreign key (id_usuario) references (usuarios),
     nu_compra int,
     nb_proveedor varchar(150) not null,
-    nb_usuario varchar(50) not null,
     fh_pedido date,
     tx_terminos varchar(150),
     tx_entregar_en varchar(50),
     nu_horario varchar(10),
     nb_contacto varchar(100),
     nb_estatus varchar(15),
-    tx_comentario varchar(200)
+    tx_especificaciones varchar(200)
 );
 
 

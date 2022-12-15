@@ -49,7 +49,8 @@ app.get("/main", (req, res) => {
 // REVISAR EL SQL
 app.get("/usuarios", (req, res) => {
 
-    const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
+    //const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
+    const sql = "select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios";
     connection.query(sql, function(err, results, fields) {
         if (err) {
             console.log(err);
@@ -150,7 +151,7 @@ app.post("/pedidos/guardar", (req, res) => {
 /* Elimina de la tabla usuarios el id seleccionado */ 
 app.post("/usuarios/eliminar/:id", (req, res) => { 
     const id = req.params.id;
-    const sql = "delete from usuarios where usuario_id = ?";
+    const sql = "delete from usuarios where id_usuario = ?";
     connection.query(sql, [id],  function(err, results, fields) {
         err ? res.end(err) : res.end("eliminado");
     });
@@ -160,7 +161,7 @@ app.post("/usuarios/eliminar/:id", (req, res) => {
 app.post("/usuarios/editar/:id", (req, res) => { 
     const valores = req.body;
     const id = req.params.id;
-    const sql = "update usuarios set ? where usuario_id = ?";
+    const sql = "update usuarios set ? where id_usuario = ?";
     connection.query(sql, [valores, id], function(err, results, fields) {
         err ? res.end(err) : res.end("editado");
     }); 
@@ -224,8 +225,8 @@ app.get("/register", (req, res)=>{
 // POST - Registro de usuario 
 app.post("/register", async (req, res) => {
     const valores = req.body;
-    let passwordHash= await bcryptjs.hash(valores.contrasena,10);
-    valores.contrasena=passwordHash;
+    let passwordHash= await bcryptjs.hash(valores.cd_contrasena,10);
+    valores.cd_contrasena=passwordHash;
     const sql = "insert into usuarios set ?";
     connection.query(sql, [valores],  function(err, results, fields) {
         if (err) {
@@ -241,12 +242,12 @@ app.post("/register", async (req, res) => {
 /* POST login */
 app.post("/login",(req, res) => {
     
-    const usuario = req.body.username; 
-    const pass = req.body.password; 
+    const usuario = req.body.cd_usuario; 
+    const pass = req.body.cd_contrasena; 
     let conteo = 0; 
-    let sql = "select usuario,contrasena " + 
+    let sql = "select cd_usuario, cd_contrasena " + 
               "from usuarios " +
-              "where usuario = '" + usuario +"' ";
+              "where cd_usuario = '" + usuario +"' ";
 
     connection.query(sql, async function(err, results) { 
         if (err) { 
@@ -254,7 +255,7 @@ app.post("/login",(req, res) => {
         } 
         let passwr=0; 
         results.forEach(fila => { 
-            passwr=fila.contrasena; 
+            passwr=fila.cd_contrasena; 
         }); 
         let comparaPw = await bcryptjs.compare(pass,passwr); 
         

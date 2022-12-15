@@ -97,7 +97,7 @@
 
     <div class="col-md-4">
       <label for="np-8" class="form-label">Instrucción de entrega: Horario</label>
-      <input type="text" class="form-control" id="np-8" name="nu_horario" required>
+      <input type="time" class="form-control" id="np-8" name="nu_horario" required>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -123,8 +123,8 @@
     <div class="col-md-9"></div>
 
     <div class="col-md-8">
-      <label for="np-11" class="form-label">Comentarios</label>
-      <input type="text" class="form-control" id="np-11" name="tx_comentario" required>
+      <label for="np-11" class="form-label">Especificaciones</label>
+      <input type="text" class="form-control" id="np-11" name="tx_especificaciones" required>
       <div class="valid-feedback">
 
         Looks good!
@@ -191,7 +191,7 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid"> 
-          
+
           <form id="frm-modal-productos-pedidos">
 
             <div class="row">
@@ -224,7 +224,7 @@
               </div>
 
               <div class="col-md-4">
-                <label for="modal-ppedidos-5" class="col-form-label">Art</label>
+                <label for="modal-ppedidos-5" class="col-form-label">Código de Artículo</label>
                 <input type="text" class="form-control" id="modal-ppedidos-5" name="cd_articulo">
               </div>
 
@@ -251,7 +251,7 @@
               </div>
 
               <div class="col-md-4">
-                <label for="modal-ppedidos-9" class="col-form-label">Fecha de entrega</label>
+                <label for="modal-ppedidos-9" class="col-form-label">Fecha estimada de entrega</label>
                 <input type="date" class="form-control" id="modal-ppedidos-9" name="fh_entrega">
               </div>
 
@@ -262,7 +262,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" id="modal-ppedidos-agregar">Agregar</button>
       </div>
     </div>
   </div>

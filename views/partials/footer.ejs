@@ -135,11 +135,12 @@
             paginationSize: 10,         //allow 7 rows per page of data
             paginationCounter: "rows", //display count of paginated rows in footer
             columns: [ //Define Table Columns
-                {title:"Id",              field:"usuario_id",   sorter:"string",    hozAlign:"left"},
-                {title:"Nombre",          field:"nombre",       sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Apellido",        field:"apellido",     sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Usuario",         field:"usuario",      sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Tipo",            field:"tipo_usuario", sorter:"string",    hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Administrador", "Supervisor", "Auxiliar"]}},
+
+                {title:"Id",              field:"id_usuario",   sorter:"string",    hozAlign:"left"},
+                {title:"Usuario",         field:"cd_usuario",      sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Nombre",          field:"nb_usuario",       sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Área",            field:"nb_area",     sorter:"string",    hozAlign:"left", editor: true},
+                {title:"Tipo",            field:"tp_usuario", sorter:"string",    hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Admin", "Compras", "Almacén"]}},
                 {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                         const id = cell.getRow().getData().usuario_id;
                         let ejecutar = confirm("Se va a eliminar el registro: " + id);
@@ -454,8 +455,11 @@
         /* Botón Agregar del modal - Pedidos */
         $("#modal-ppedidos-agregar").click(function() {
             alert("aqui agrega los datos a la tabla");
-        });
 
+            /* obtiene los datos del form */
+            let valores = arrayObjetosEnForm('frm-modal-productos-pedidos');
+            console.log(valores);
+        });
 
     </script>
 
