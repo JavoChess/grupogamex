@@ -42,7 +42,7 @@
 
     <div class="col-md-4">
       <label for="np-2" class="form-label">Orden de compra</label>
-      <input type="number" class="form-control" id="np-2" name="nu_compra" required>
+      <input type="number" class="form-control" id="np-2" name="nu_orden_compra" required>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -57,15 +57,6 @@
       </div>
     </div>
     <div class="col-md-4"></div>
-
-    <div class="col-md-4">
-      <label for="np-4" class="form-label">Nombre de usuario</label>
-      <input type="text" class="form-control" id="np-4" name="nb_usuario" required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-    </div>
-    <div class="col-md-8"></div>
 
     <div class="col-md-4">
       <label for="np-5" class="form-label">Fecha del pedido</label>
@@ -156,7 +147,6 @@
 
     <div class="col-12">
       <button class="btn btn-primary" id="btn-enviar-pedido">Enviar pedido</button>
-      <button class="btn btn-primary" id="btn-editar-pedido" >Editar pedido (prueba productos)</button>
     </div>
 
     <div class="col-12"> <br> </div>
@@ -168,6 +158,7 @@
 
   </form>
 
+    <button class="btn btn-primary" id="btn-editar-pedido" >Editar pedido (prueba productos)</button>
 
 
 </div>
@@ -192,12 +183,12 @@
       <div class="modal-body">
         <div class="container-fluid"> 
 
-          <form id="frm-modal-productos-pedidos">
+          <form class="row g-3 needs-validation" id="frm-modal-productos-pedidos" novalidate>
 
             <div class="row">
               <div class="col-md-12">
                 <label for="modal-ppedidos-1" class="col-form-label">Producto</label>
-                <select class="form-select" id="modal-ppedidos-1" name="nb_producto" >
+                <select class="form-select" id="modal-ppedidos-1" name="nb_producto" required>
                   <option selected>Seleccione producto...</option>
                 </select>
               </div>
@@ -206,7 +197,7 @@
             <div class="row">
               <div class="col-md-4">
                 <label for="modal-ppedidos-2" class="col-form-label">Cantidad</label>
-                <input type="text" class="form-control" id="modal-ppedidos-2" name="nu_cantidad">
+                <input type="number" class="form-control" id="modal-ppedidos-2" name="nu_cantidad" required>
               </div>
               <div class="col-md-8"></div>
             </div>
@@ -215,55 +206,60 @@
 
               <div class="col-md-4">
                 <label for="modal-ppedidos-3" class="col-form-label">Precio unitario</label>
-                <input type="text" class="form-control" id="modal-ppedidos-3" name="im_unidad">
+                <input type="number" step="0.01" class="form-control" id="modal-ppedidos-3" name="im_unidad" required>
               </div>
-
-              <div class="col-md-4">
-                <label for="modal-ppedidos-4" class="col-form-label">Importe del pedido</label>
-                <input type="text" class="form-control" id="modal-ppedidos-4" name="im_pedido">
-              </div>
-
-              <div class="col-md-4">
-                <label for="modal-ppedidos-5" class="col-form-label">Código de Artículo</label>
-                <input type="text" class="form-control" id="modal-ppedidos-5" name="cd_articulo">
-              </div>
-
-            </div>
-
-
-            <div class="row"> 
-              <div class="col-md-12">
-                <label for="modal-ppedidos-6" class="col-form-label">Especificaciones</label>
-                <input type="text" class="form-control" id="modal-ppedidos-6" name="tx_especificaciones">
-              </div>
-            </div>
-
-            <div class="row"> 
 
               <div class="col-md-4">
                 <label for="modal-ppedidos-7" class="col-form-label">Moneda</label>
-                <input type="text" class="form-control" id="modal-ppedidos-7" name="cd_moneda">
+                <!-- input type="text" class="form-control"  name="cd_moneda" -->
+
+                <select class="form-select" name="cd_moneda" id="modal-ppedidos-7" required>
+                  <option selected></option>
+                  <option value="MXN">MXN</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+
               </div>
               
               <div class="col-md-4">
                 <label for="modal-ppedidos-8" class="col-form-label">Tipo de cambio</label>
-                <input type="number" class="form-control" id="modal-ppedidos-8" name="im_tipo_de_cambio">
+                <input type="number" step="0.01" class="form-control" id="modal-ppedidos-8" name="im_tipo_de_cambio" required>
+              </div>
+
+
+            </div>
+
+
+
+            <div class="row"> 
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-4" class="col-form-label">Importe del pedido (MXN)</label>
+                <input type="number" step="0.01" class="form-control" id="modal-ppedidos-4" name="im_pedido" required>
+              </div>
+
+              <div class="col-md-4">
+                <label for="modal-ppedidos-5" class="col-form-label">Código de Artículo</label>
+                <input type="text" class="form-control" id="modal-ppedidos-5" name="cd_articulo" required>
               </div>
 
               <div class="col-md-4">
                 <label for="modal-ppedidos-9" class="col-form-label">Fecha estimada de entrega</label>
-                <input type="date" class="form-control" id="modal-ppedidos-9" name="fh_entrega">
+                <input type="date" class="form-control" id="modal-ppedidos-9" name="fh_entrega" required>
               </div>
 
             </div> 
 
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="modal-ppedidos-cancelar" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="modal-ppedidos-agregar">Agregar</button>
+            </div>
+
           </form>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="modal-ppedidos-agregar">Agregar</button>
-      </div>
+
     </div>
   </div>
 </div>

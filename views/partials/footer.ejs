@@ -289,7 +289,7 @@
         // ------------------------------
 
         let tableProductosPedidos = new Tabulator("#tabla-productos-pedidos", { 
-            height: 380,               // set height of table to enable virtual DOM
+            height: 280,               // set height of table to enable virtual DOM
             data: tabledataProductosPedidos,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
@@ -304,7 +304,6 @@
                 {title:"Nombre de producto",  field:"nb_producto",         sorter:"string",   hozAlign:"left"}, 
                 {title:"Cantidad",          field:"nu_cantidad",         sorter:"string",   hozAlign:"left", editor: true}, 
                 {title:"Artículo",          field:"cd_articulo",  sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Especificaciones",  field:"tx_especificaciones",          sorter:"string",   hozAlign:"left", editor: true},
                 {title:"Precio unitario",   field:"im_unidad",        sorter:"string",   hozAlign:"left" },
                 {title:"Importe del pedido",       field:"im_pedido",      sorter:"string",   hozAlign:"left" },
                 {title:"Fecha de entrega",         field:"fh_entrega",        sorter:"date",   hozAlign:"left", editor: true },
@@ -427,9 +426,13 @@
             
             let valores = arrayObjetosEnForm("form-nuevo-pedido");
             delete valores.id_pedido;
+            valores.id_usuario = 1;
+            console.log(valores);
+            
             $.post("/pedidos/guardar/", valores, (res) => { 
-                if(res === 'Registro correcto') { 
-                    alert("¡Se guardó el registro!"); 
+                console.log(res);
+                if(res > 0 ) { 
+                    alert("¡Se guardó el registro! Con el id: " + res); 
                     location.reload();
                 } 
             }); 
@@ -447,18 +450,54 @@
 
             limpiaObjetosEnForm('frm-modal-productos-pedidos');
             $.get("/compras/listaprod", (res) => { 
-                llenaSelect("modal-ppedidos-1", res) 
+                llenaSelect("modal-ppedidos-1", res); 
             });
         });
 
 
-        /* Botón Agregar del modal - Pedidos */
+        /* Modal - Pedidos - Botón Agregar */
         $("#modal-ppedidos-agregar").click(function() {
-            alert("aqui agrega los datos a la tabla");
+            // aplica el submit del boton
+        });
 
-            /* obtiene los datos del form */
-            let valores = arrayObjetosEnForm('frm-modal-productos-pedidos');
-            console.log(valores);
+        /* Modal - Pedidos - Calcula el Importe del pedido cuando el tipo de cambio pierde el foco */
+        $("#modal-ppedidos-8").focusout(function() {
+            // modal-ppedidos-2 * modal-ppedidos-3
+            let cantidad = parseFloat($("#modal-ppedidos-2").val());
+            let precio_unitario = parseFloat($("#modal-ppedidos-3").val());
+            let tipo_de_cambio = parseFloat($("#modal-ppedidos-8").val());
+            let importe = cantidad * precio_unitario * tipo_de_cambio; 
+            $("#modal-ppedidos-4").val( Math.round(importe * 100) / 100 ) ;
+            
+        });
+
+        /* Recorre el form frm-modal-productos-pedidos y crea el array de datos luego manda el post para agregar el nuevo producto */
+        /* Modal - Pedidos - Agrega un nuevo producto */ 
+        function agregaNuevoProductoEnTabla() {
+            
+            let valores = arrayObjetosEnForm("frm-modal-productos-pedidos");
+            valores.id_producto = '';
+            tableProductosPedidos.addRow( valores, true);
+            $("#modal-ppedidos-cancelar").click();
+
+
+        }
+
+        /* Modal - Pedidos - Agrega un nuevo producto */ 
+        $( "#frm-modal-productos-pedidos" ).submit(function( event ) { 
+
+            validaFormulario("frm-modal-productos-pedidos") ? agregaNuevoProductoEnTabla() : alert("Uno o más campos requeridos faltan de completar.");
+            event.preventDefault();
+        });
+
+
+
+
+        /* boton de prueba temporal */
+        $("#btn-editar-pedido").click(function() {
+            const rows = tableProductosPedidos.getRows();
+            console.log('rows', rows[0]._row.data);
+            console.log('rows', rows[1]._row.data);
         });
 
     </script>

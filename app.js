@@ -109,7 +109,7 @@ app.get("/compras", (req, res) => {
 });
 
 
-/* cuando abre el modal de prod pedidos */
+/* cuando abre el modal de prod pedidos le envía la lista de productos unicos */
 app.get("/compras/listaprod", (req, res) => {
     let col = 'nombre';
     const sql = "select distinct " + col + " from materiales";
@@ -136,8 +136,11 @@ app.post("/pedidos/guardar", (req, res) => {
     const sql = "insert into pedidos set ?";
     /* console.log(valores);  */
 
-    connection.query(sql, [valores],  function(err, results, fields) {
-        err ? res.end(err) : res.end("Registro correcto");
+    connection.query(sql, [valores],  function(err, results, fields) {  /* retorna el nuevo id  */
+        //console.log(results.insertId);
+        const nuevoId = results.insertId;
+        //err ? res.end(err) : res.end(results);
+        err ? res.end(err) : res.end(String(nuevoId));
     });
 }); 
 

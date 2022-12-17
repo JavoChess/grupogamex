@@ -23,9 +23,9 @@ create table usuarios (
 
 /* crea una tabla con los tipos de usuario */
 create table tipo_usuarios ( 
-    tipo_usuario_id int primary key not null  AUTO_INCREMENT,
-    tipo_usuario varchar(50),
-    puesto varchar(150)
+    tipo_usuario_id int primary key not null  auto_increment,
+    tipo_usuario varchar(50), 
+    puesto varchar(150) 
 );
 
 
