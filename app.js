@@ -111,18 +111,18 @@ app.get("/compras", (req, res) => {
 
 /* cuando abre el modal de prod pedidos le envía la lista de productos unicos */
 app.get("/compras/listaprod", (req, res) => {
-    let col = 'nombre';
-    const sql = "select distinct " + col + " from materiales";
+    
+    const sql = "select distinct id_producto, nb_producto from productos";
     connection.query(sql, function(err, results, fields) {
         if (err) {
             console.log(err);
         } else { 
             const datos = JSON.parse(JSON.stringify(results));
-            let resultado_qry =[];
+            /* let resultado_qry =[];
             datos.forEach((v) => 
                 resultado_qry.push(v[col])
-            );
-            res.send(resultado_qry);
+            ); */
+            res.send(datos);
         } 
     }); 
 });
@@ -143,6 +143,43 @@ app.post("/pedidos/guardar", (req, res) => {
         err ? res.end(err) : res.end(String(nuevoId));
     });
 }); 
+
+
+
+// TABLA PRODPEDIDOS
+/* Recibe los rows, y recorre para armar el sql insert */ 
+app.post("/pedidos/prodpedidos/", (req, res) => { 
+    
+    const prodPedidos = req.body;
+    const reg = parseInt(prodPedidos.totalRows);
+    let regArray = [];
+
+    for (let i=0; i<reg; i++) {
+        regArray.push(
+            [
+                prodPedidos[i].nb_producto
+                ,prodPedidos[i].nu_cantidad
+                ,prodPedidos[i].im_unidad
+                ,prodPedidos[i].cd_moneda
+                ,prodPedidos[i].im_tipo_de_cambio
+                ,prodPedidos[i].im_pedido
+                ,prodPedidos[i].cd_articulo
+                ,prodPedidos[i].fh_entrega
+                ,prodPedidos[i].id_producto
+                ,prodPedidos[i].id_pedido
+            ]
+        );
+    }
+    
+    //console.log(regArray);
+    const sql = 'insert into prodpedidos (nb_producto, nu_cantidad, im_unidad, cd_moneda, im_tipo_de_cambio, im_pedido, cd_articulo, fh_entrega, id_producto, id_pedido) values ?';
+    
+    connection.query(sql, [regArray],  function(err, results, fields) { 
+        err ? res.end(err) : res.end("ok"); 
+    }); 
+    
+
+});
 
 
 

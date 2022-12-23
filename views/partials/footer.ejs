@@ -393,7 +393,7 @@
         }
 
         /* Subrutina para Llenar el select obj con los datos del array datosArr */ 
-        function llenaSelect(idSelect, datosArr) {
+        function llenaSelect(idSelect, datosArr) { 
             
             $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
             datosArr.forEach((item, index) => { 
@@ -421,19 +421,44 @@
         }
         
 
+        
         /* Recorre el form form-nuevo-pedido y crea el array de datos luego manda el post para agregar el nuevo registro*/
         function enviaNuevoPedido() {
             
             let valores = arrayObjetosEnForm("form-nuevo-pedido");
             delete valores.id_pedido;
             valores.id_usuario = 1;
-            console.log(valores);
+            
             
             $.post("/pedidos/guardar/", valores, (res) => { 
-                console.log(res);
-                if(res > 0 ) { 
-                    alert("¡Se guardó el registro! Con el id: " + res); 
-                    location.reload();
+                
+                
+
+                if( res > 0 ) { 
+                    //console.log("¡Se guardó el registro! Con el id: " + res); 
+                    
+                    let tblProdPedidosRows = {};
+                    const rows = tableProductosPedidos.getRows();
+                    const rowCount = tableProductosPedidos.getDataCount();
+                    
+                    for(let i = 0; i<rowCount; i++) {
+                        tblProdPedidosRows[i] = rows[i]._row.data;
+                        tblProdPedidosRows[i].id_pedido = parseInt(res);
+                    }
+                    
+                    tblProdPedidosRows['totalRows'] = rowCount;
+
+                    // AQUI VAMOS HAY QUE PASAR LOS DATOS AL SERVIDOR
+                    
+                    /* aquí hacemos el post con los rows de la tabla de productos pedidos */
+                    $.post("/pedidos/prodpedidos/", tblProdPedidosRows, (res2) => {
+                        if (res2 === 'ok') {  /* definir bien la respuesta */
+                            alert("Pedido y productos registrados con éxito");
+                            location.reload();
+                        }
+                    });
+
+                    
                 } 
             }); 
         }
@@ -450,7 +475,14 @@
 
             limpiaObjetosEnForm('frm-modal-productos-pedidos');
             $.get("/compras/listaprod", (res) => { 
-                llenaSelect("modal-ppedidos-1", res); 
+                //console.log(res);
+                //llenaSelect("modal-ppedidos-1", res); 
+                let idSelect = "modal-ppedidos-1";
+                $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
+                res.forEach((item, index) => { 
+                    $('#' + idSelect).append('<option>' + item.id_producto + '-' + item.nb_producto + '</option>')  
+                });
+
             });
         });
 
@@ -476,7 +508,12 @@
         function agregaNuevoProductoEnTabla() {
             
             let valores = arrayObjetosEnForm("frm-modal-productos-pedidos");
-            valores.id_producto = '';
+            let idConProd = valores.nb_producto;
+            let pos = idConProd.indexOf('-');
+            let largo = idConProd.length;
+
+            valores.id_producto = idConProd.substring(0, pos);
+            valores.nb_producto = idConProd.substring(pos+1, largo);
             tableProductosPedidos.addRow( valores, true);
             $("#modal-ppedidos-cancelar").click();
 
@@ -496,8 +533,15 @@
         /* boton de prueba temporal */
         $("#btn-editar-pedido").click(function() {
             const rows = tableProductosPedidos.getRows();
-            console.log('rows', rows[0]._row.data);
-            console.log('rows', rows[1]._row.data);
+            const rowCount = tableProductosPedidos.getDataCount();
+
+            console.log( 'Rows: ' + rowCount);
+            
+            for(let i = 0; i<rowCount; i++){
+                console.log(rows[i]._row.data);
+            }
+            
+            
         });
 
     </script>
