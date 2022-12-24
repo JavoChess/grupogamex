@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const bcryptjs = require('bcryptjs');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: './.env' });
 
 // app y puerto dinámico 
 const app = express();
@@ -21,10 +24,10 @@ if (process.env.JAWSDB_URL) {
 
 } else { 
     connection = mysql.createConnection({ 
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'grupogamex'
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     }); 
 } 
 
@@ -151,9 +154,22 @@ app.post("/pedidos/guardar", (req, res) => {
 app.post("/pedidos/prodpedidos/", (req, res) => { 
     
     const prodPedidos = req.body;
+
+    /* estructura del body:
+       {
+        '0': {object},
+        '1': {object},
+        ...
+        'n': {object},
+        totalRows: 'n'
+       } 
+       y cada objeto {nb_producto: 'a', nu_cantidad: 'b', ....}
+   */
+
     const reg = parseInt(prodPedidos.totalRows);
     let regArray = [];
 
+    /* arma el array de arrays.  */
     for (let i=0; i<reg; i++) {
         regArray.push(
             [
@@ -172,7 +188,8 @@ app.post("/pedidos/prodpedidos/", (req, res) => {
     }
     
     //console.log(regArray);
-    const sql = 'insert into prodpedidos (nb_producto, nu_cantidad, im_unidad, cd_moneda, im_tipo_de_cambio, im_pedido, cd_articulo, fh_entrega, id_producto, id_pedido) values ?';
+    const cols = '(nb_producto,nu_cantidad,im_unidad,cd_moneda,im_tipo_de_cambio,im_pedido,cd_articulo,fh_entrega,id_producto,id_pedido)';
+    const sql = 'insert into prodpedidos ' + cols + ' values ?';
     
     connection.query(sql, [regArray],  function(err, results, fields) { 
         err ? res.end(err) : res.end("ok"); 

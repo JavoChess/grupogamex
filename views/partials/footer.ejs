@@ -446,9 +446,8 @@
                         tblProdPedidosRows[i].id_pedido = parseInt(res);
                     }
                     
+                    /* agrega el número de productos agregados */
                     tblProdPedidosRows['totalRows'] = rowCount;
-
-                    // AQUI VAMOS HAY QUE PASAR LOS DATOS AL SERVIDOR
                     
                     /* aquí hacemos el post con los rows de la tabla de productos pedidos */
                     $.post("/pedidos/prodpedidos/", tblProdPedidosRows, (res2) => {
@@ -477,6 +476,7 @@
             $.get("/compras/listaprod", (res) => { 
                 //console.log(res);
                 //llenaSelect("modal-ppedidos-1", res); 
+                // Llena el select con el id de producto y el nombre.k
                 let idSelect = "modal-ppedidos-1";
                 $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
                 res.forEach((item, index) => { 
