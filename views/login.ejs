@@ -28,6 +28,9 @@
                 
             </div>
             <div class="col-md-4 col-lg-4"></div>
+            <% if (valor === 0) { %>
+                <h4 class="alert alert-danger mt-4"> <%= mensaje %> </h4>
+            <% } %>
         </div>
     </main>
 </div>

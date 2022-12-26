@@ -23,7 +23,13 @@
                         <input type="text" class="form-control" name="cd_usuario" placeholder="Usuario" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
+                        <input type="email" class="form-control" name="cd_email" placeholder="e-mail" autocomplete="off" required>
+                    </div>
+                    <div class="mb-3"> 
                         <input type="password" class="form-control" name="cd_contrasena" placeholder="Password" autocomplete="off" required>
+                    </div>
+                    <div class="mb-3"> 
+                        <input type="password" class="form-control" name="cd_contrasena_confirm" placeholder="Confirm Password" autocomplete="off" required>
                     </div>
                     <div class="mb-3"> 
                         <select class="form-select" name="tp_usuario" aria-label="Default select example" aria-placeholder="Type of user" required>
@@ -40,6 +46,12 @@
                 
             </div>
             <div class="col-md-4 col-lg-4"></div>
+
+
+            <% if (valor === 0) { %>
+                <h4 class="alert alert-danger mt-4"> <%= mensaje %> </h4>
+            <% } %>
+
         </div>
     </main>
 </div>

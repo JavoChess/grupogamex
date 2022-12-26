@@ -3,6 +3,11 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const bcryptjs = require('bcryptjs');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const { promisify } = require('util');
+
+
 
 dotenv.config({ path: './.env' });
 
@@ -14,6 +19,8 @@ const port = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(cookieParser());
+
 
 
 // Conexión a la DBjawsdb with Heroku 
@@ -33,82 +40,163 @@ if (process.env.JAWSDB_URL) {
 
 
 
-// Pantalla de inicio
-app.get("/main", (req, res) => {
+/* Verifica si está loegado el usuario */
+IsLoggedIn = async (req, res, next) => {
     
-    res.render('inicio', {
+    //console.log(req.cookies);
+
+    if(req.cookies.jwt) {
+        try {   
+            // Verifica el token, para ver que usuario es
+            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+            
+            // Checa si el usuario existe
+            connection.query('select * from usuarios where id_usuario = ?', [decoded.id], (error, results) => {
+                //console.log(results);
+                if(!results) {
+                    return next();
+                }
+                req.user = results[0];
+                return next();
+
+            });
+
+        } catch(err) {
+            console.log(err);
+            return next();
+        }
+    } else {
+        next();
+    }
+    
+}
+
+
+// Pantalla de inicio
+app.get("/main", IsLoggedIn, (req, res) => {
+    
+    if (req.user) { 
+        res.render('inicio', {
                             tabledata: [], 
                             tabledata2: [], 
                             vistaUsuarios: "d-none",  
                             vistaMateriales: "d-none",
-                            vistaCompras: "d-none" 
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            usuario: req.user
                         } 
         ); 
+    } else {
+        res.redirect("/");
+    }
 });
 
 
 
 // Vista administración de usuarios
 // REVISAR EL SQL
-app.get("/usuarios", (req, res) => {
+app.get("/usuarios", IsLoggedIn, (req, res) => {
 
-    //const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
-    const sql = "select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios";
-    connection.query(sql, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-        } else {
-            
-            // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
-            const tabledata = JSON.parse(JSON.stringify(results));
-            res.render('inicio', {
-                                    tabledata: tabledata, 
-                                    tabledata2: [], 
-                                    vistaUsuarios: "", 
-                                    vistaMateriales: "d-none",
-                                    vistaCompras: "d-none" 
-                                } 
-            );
-        }
-    });
+    if(req.user) { 
+        //const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
+        const sql = "select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios";
+        connection.query(sql, function(err, results, fields) {
+            if (err) {
+                console.log(err);
+            } else {
+                
+                // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+                const tabledata = JSON.parse(JSON.stringify(results));
+                res.render('inicio', 
+                            {
+                            tabledata: tabledata, 
+                            tabledata2: [], 
+                            vistaUsuarios: "", 
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            usuario: req.user
+                });
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
     
 });
 
 
+/* profile */
+app.get("/profile", IsLoggedIn, (req, res ) => {
+
+    if (req.user) {
+        console.log(req.user);
+
+        res.render('inicio', {
+            tabledata: [], 
+            tabledata2: [], 
+            vistaUsuarios: "d-none", 
+            vistaMateriales: "d-none",
+            vistaCompras: "d-none" ,
+            vistaProfile: "",
+            usuario: req.user
+        }); 
+    } else {
+        // lo manda al login
+        res.redirect("/");
+    }
+
+
+});
+
+
 /* Vista catalogo de materiales */
-app.get("/materiales", (req, res) => {
+app.get("/materiales", IsLoggedIn, (req, res) => {
     const sql = "select * from materiales";
-    connection.query(sql, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-        } else { 
-            // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
-            const tabledata2 = JSON.parse(JSON.stringify(results));
-            res.render('inicio', {
-                                    tabledata: [], 
-                                    tabledata2: tabledata2, 
-                                    vistaUsuarios: "d-none", 
-                                    vistaMateriales: "",
-                                    vistaCompras: "d-none" 
-                                } 
-            );
-        } 
-    });
+    if (req.user) {
+        connection.query(sql, function(err, results, fields) {
+            if (err) {
+                console.log(err);
+            } else { 
+                // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+                const tabledata2 = JSON.parse(JSON.stringify(results));
+                res.render('inicio', {
+                                        tabledata: [], 
+                                        tabledata2: tabledata2, 
+                                        vistaUsuarios: "d-none", 
+                                        vistaMateriales: "",
+                                        vistaCompras: "d-none",
+                                        vistaProfile: "d-none",
+                                        usuario: req.user
+                                    } 
+                );
+            } 
+        });
+
+    } else {
+        res.redirect("/");
+    }
 });
 
 
 
 /* Vista compras. El usuario de Compras puede hacer pedidos en esta vista */
-app.get("/compras", (req, res) => {
+app.get("/compras", IsLoggedIn, (req, res) => {
 
-    res.render('inicio', {
+    if (req.user) {
+        res.render('inicio', {
                             tabledata: [], 
                             tabledata2: [], 
                             vistaUsuarios: "d-none", 
                             vistaMateriales: "d-none",
-                            vistaCompras: "" 
+                            vistaCompras: "",
+                            vistaProfile: "d-none",
+                            usuario: req.user
                         } 
-    );
+        );  
+    } else {
+        res.redirect("/");
+    }
 });
 
 
@@ -269,21 +357,40 @@ app.post("/materiales/editar/:id", (req, res) => {
 
 
 // Root inicial
-app.get("/", (req, res) => {
-    res.render("login");
+app.get("/", IsLoggedIn, (req, res) => {
+    if (req.user) {
+        res.redirect("/main");
+    }
+    else {
+        res.render("login", { 
+            mensaje: '',
+            valor: 1
+        });
+    }
+
 });
 
 // Para registrase, envía el formulario al usuario
-app.get("/register", (req, res)=>{
-    res.render("register");
+app.get("/register", IsLoggedIn, (req, res)=>{
+    if (req.user) {
+        res.redirect("/main");
+    }
+    else {
+        res.render("register", { 
+            mensaje: '',
+            valor: 1
+        });
+    }
 });
 
 
+
 // POST - Registro de usuario 
-app.post("/register", async (req, res) => {
+/* app.post("/register", async (req, res) => {
     const valores = req.body;
-    let passwordHash= await bcryptjs.hash(valores.cd_contrasena,10);
-    valores.cd_contrasena=passwordHash;
+    let passwordHash = await bcryptjs.hash(valores.cd_contrasena, 10);
+    valores.cd_contrasena = passwordHash;
+
     const sql = "insert into usuarios set ?";
     connection.query(sql, [valores],  function(err, results, fields) {
         if (err) {
@@ -293,39 +400,112 @@ app.post("/register", async (req, res) => {
         res.redirect("/main");
     });
     
+}); */
+ 
+// POST - Registro de usuario  V2
+app.post("/register", async (req, res) => {
+
+    //const {nb_usuario, nb_area, cd_usuario, cd_email, cd_contrasena, cd_contrasena_confirm, tp_suuario} = req.body;
+    const valores = req.body;
+    const sql_mail = "select cd_email from usuarios where cd_email = ?";
+    
+    connection.query(sql_mail, [valores.cd_email],  async (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+
+        if(results.length > 0) {
+            return res.render('register', {
+                mensaje: 'Correo ya registrado',
+                valor: 0
+            });
+
+        } else if(valores.cd_contrasena !== valores.cd_contrasena_confirm) {
+            return res.render('register', {
+                mensaje: 'Contraseña no coincide',
+                valor: 0
+            });
+        }
+
+        // si llega aqui es que es nuevo mail y la contraseña está ok
+        let passwordHash = await bcryptjs.hash(cd_contrasena, 10);
+        const sql_inserta = "insert into usuarios set ?";
+        valores.cd_contrasena = passwordHash;
+
+        connection.query(sql_inserta, [valores],  function(err2, results2) {
+            if (err2) {
+                console.log(err2);
+            }
+            // si llega aqui es que se registró correctamente
+            res.redirect("/main");
+        });
+
+
+    });
+
+
 });
 
 
 /* POST login */
-app.post("/login",(req, res) => {
+app.post("/login", async (req, res) => {
     
-    const usuario = req.body.cd_usuario; 
-    const pass = req.body.cd_contrasena; 
-    let conteo = 0; 
-    let sql = "select cd_usuario, cd_contrasena " + 
-              "from usuarios " +
-              "where cd_usuario = '" + usuario +"' ";
+    try{
+        const usuario = req.body.cd_usuario; 
+        const pass = req.body.cd_contrasena; 
+    
+        let sql = 'select * from usuarios where cd_usuario = ?';
+    
+        connection.query(sql, [usuario], async (err, results) => { 
+            if (err) {
+                console.log(err);
+            }
 
-    connection.query(sql, async function(err, results) { 
-        if (err) { 
-            console.log(err); 
-        } 
-        let passwr=0; 
-        results.forEach(fila => { 
-            passwr=fila.cd_contrasena; 
+            if (results.length > 0) {
+                let qry_pass = results[0].cd_contrasena;
+                if ( !results || !( await bcryptjs.compare(pass, qry_pass ) ) ) {
+                    res.status(401).render('login', {
+                        valor: 0,
+                        mensaje: 'Usuario o password incorrecto'
+                    });
+
+                } else {
+                    const id = results[0].id_usuario;
+                    const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
+                        expiresIn: process.env.JWT_EXPIRES_IN
+                    });
+                    console.log(token);
+                    const cookieOptions = {
+                        expires: new Date(
+                            Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+                        ),
+                        httpOnly: true
+                    }
+                    res.cookie('jwt', token, cookieOptions);
+                    req.user = results[0];
+                    res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none",  
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            usuario: req.user
+                        } 
+                    );
+
+                }
+            } else {
+                res.status(401).render('login', {
+                    valor: 0,
+                    mensaje: 'Usuario o password incorrecto'
+                });
+            }
+            
         }); 
-        let comparaPw = await bcryptjs.compare(pass,passwr); 
-        
-        if (comparaPw == true) { 
-            // usuario con acceso 
-            console.log('usuario con acceso'); 
-            res.redirect("/main"); 
-        } else { 
-            // usuario no encontrado 
-            console.log('usuario sin acceso'); 
-            res.redirect("/"); 
-        } 
-    }); 
+    } catch(er) {
+        console.log(er);
+    }
 
 }); 
 

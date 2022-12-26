@@ -30,51 +30,22 @@
         (function () {
         'use strict'
 
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
 
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-                }
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    }
 
-                form.classList.add('was-validated')
-            }, false)
-            })
+                    form.classList.add('was-validated')
+                }, false)
+                })
         })()
-
-
-        /* Construye el timestamp para registro */
-        function timestampHoy() { 
-            let hoy = new Date();
-            let anio = hoy.getFullYear();
-            let mes = hoy.getMonth() + 1;
-            let dia = hoy.getDate();
-            let hora = hoy.getHours();
-            let minuto = hoy.getMinutes();
-            let segundo = hoy.getSeconds();
-            
-            if ( mes < 10 ) { 
-                mes = '0' + mes; 
-            } 
-            if ( dia < 10 ) { 
-                dia = '0' + dia; 
-            } 
-            if ( hora < 10 ) { 
-                hora = '0' + hora; 
-            } 
-            if ( minuto < 10 ) { 
-                minuto = '0' + minuto; 
-            } 
-            if ( segundo < 10 ) { 
-                segundo = '0' + segundo; 
-            }    
-            return anio + "-" + mes + "-" + dia + " " + hora + ":" + minuto + ":" + segundo;
-        }
 
         /* Modal de pedidos */
         var exampleModal = document.getElementById('modal-productos-pedidos');

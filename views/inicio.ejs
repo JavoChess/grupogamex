@@ -1,18 +1,38 @@
 
 <%- include('partials/header') %>
 
-<div class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+<div class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Grupogamex</a>
-  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+
   
   <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="#">Sign out</a>
+    
+    <div class="nav-item">
+      <ul >
+
+          <% if (usuario) { %>
+            <li><a href="/profile"><%= usuario.nb_usuario %></a></li>
+            <li><a href="#">Logout</a></li>
+          <%} else { %>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Registro</a></li>
+          <% } %>
+        
+      </ul>
+
     </div>
+
   </div>
+
 </div>
+
+<!-- <nav>
+  <h4>Grupogamex</h4>
+  <ul>
+    <li><a href="" >Login</a></li>
+    <li><a href="" >Register</a></li>
+  </ul>
+</nav> -->
 
 <div class="container-fluid">
   <div class="row">
@@ -95,7 +115,7 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Main</h1>
+        
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
           <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -117,11 +137,13 @@
           <%- include('materiales') %>
         </div>
 
-
         <div id ="vista-admin-usuarios" class=<%= vistaUsuarios %>>
           <%- include('usuarios') %>
         </div>
 
+        <div id ="vista-admin-profile" class=<%= vistaProfile %>>
+          <%- include('profile') %>
+        </div>
         
 
       </div>
