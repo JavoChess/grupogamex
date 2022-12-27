@@ -132,7 +132,7 @@
     <div class="col-md-12">
       
       <br>
-      <!-- Modal aquí -->
+      <!-- Lanzar modal aquí -->
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-productos-pedidos" id="btn-modal-agregar-productos">Agregar productos...</button>
       <br>
 
@@ -152,13 +152,14 @@
     <div class="col-12"> <br> </div>
 
     <div class="col-md-12">
-      Respuesta: Nuevo pedido generado!!!
+      
     </div>
 
 
   </form>
-
-    <button class="btn btn-primary" id="btn-editar-pedido" >Editar pedido (prueba productos)</button>
+    
+    <!-- Este es un btn de pruebas -->
+    <!-- <button class="btn btn-primary" id="btn-editar-pedido" >Editar pedido (prueba productos)</button> -->
 
 
 </div>
@@ -183,14 +184,17 @@
       <div class="modal-body">
         <div class="container-fluid"> 
 
-          <form class="row g-3 needs-validation" id="frm-modal-productos-pedidos" novalidate>
-
+          <form autocomplete="off" class="row g-3 needs-validation" id="frm-modal-productos-pedidos" novalidate>
+            
             <div class="row">
               <div class="col-md-12">
                 <label for="modal-ppedidos-1" class="col-form-label">Producto</label>
-                <select class="form-select" id="modal-ppedidos-1" name="nb_producto" required>
+                <!-- <select class="form-select" id="modal-ppedidos-1" name="nb_producto" required>
                   <option selected>Seleccione producto...</option>
-                </select>
+                </select> -->
+                <input type="text" class="form-control" id="modal-ppedidos-1" name="nb_producto" required>
+                <!-- Para el autocomplete -->
+                <!-- https://www.w3schools.com/howto/howto_js_autocomplete.asp -->
               </div>
             </div>
 

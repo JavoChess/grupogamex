@@ -66,6 +66,110 @@
         });
 
 
+        /* Funciones del autocomplete */
+
+
+            function autocomplete(inp, arr) {
+                /*the autocomplete function takes two arguments,
+                the text field element and an array of possible autocompleted values:*/
+                var currentFocus;
+                /*execute a function when someone writes in the text field:*/
+                inp.addEventListener("input", function(e) {
+                    var a, b, i, val = this.value;
+                    /*close any already open lists of autocompleted values*/
+                    closeAllLists();
+                    if (!val) { return false;}
+                    currentFocus = -1;
+                    /*create a DIV element that will contain the items (values):*/
+                    a = document.createElement("DIV");
+                    a.setAttribute("id", this.id + "autocomplete-list");
+                    a.setAttribute("class", "autocomplete-items");
+                    /*append the DIV element as a child of the autocomplete container:*/
+                    this.parentNode.appendChild(a);
+                    /*for each item in the array...*/
+                    for (i = 0; i < arr.length; i++) {
+                        /*check if the item starts with the same letters as the text field value:*/
+                        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                            /*create a DIV element for each matching element:*/
+                            b = document.createElement("DIV");
+                            /*make the matching letters bold:*/
+                            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                            b.innerHTML += arr[i].substr(val.length);
+                            /*insert a input field that will hold the current array item's value:*/
+                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                            /*execute a function when someone clicks on the item value (DIV element):*/
+                            b.addEventListener("click", function(e) {
+                                /*insert the value for the autocomplete text field:*/
+                                inp.value = this.getElementsByTagName("input")[0].value;
+                                /*close the list of autocompleted values,
+                                (or any other open lists of autocompleted values:*/
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+                        }
+                    }
+                });
+                /*execute a function presses a key on the keyboard:*/
+                inp.addEventListener("keydown", function(e) {
+                    var x = document.getElementById(this.id + "autocomplete-list");
+                    if (x) x = x.getElementsByTagName("div");
+                    if (e.keyCode == 40) {
+                        /*If the arrow DOWN key is pressed,
+                        increase the currentFocus variable:*/
+                        currentFocus++;
+                        /*and and make the current item more visible:*/
+                        addActive(x);
+                    } else if (e.keyCode == 38) { //up
+                        /*If the arrow UP key is pressed,
+                        decrease the currentFocus variable:*/
+                        currentFocus--;
+                        /*and and make the current item more visible:*/
+                        addActive(x);
+                    } else if (e.keyCode == 13) {
+                        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                        e.preventDefault();
+                        if (currentFocus > -1) {
+                            /*and simulate a click on the "active" item:*/
+                            if (x) x[currentFocus].click();
+                        }
+                    }
+                });
+                function addActive(x) {
+                    /*a function to classify an item as "active":*/
+                    if (!x) return false;
+                    /*start by removing the "active" class on all items:*/
+                    removeActive(x);
+                    if (currentFocus >= x.length) currentFocus = 0;
+                    if (currentFocus < 0) currentFocus = (x.length - 1);
+                    /*add class "autocomplete-active":*/
+                    x[currentFocus].classList.add("autocomplete-active");
+                }
+                function removeActive(x) {
+                    /*a function to remove the "active" class from all autocomplete items:*/
+                    for (var i = 0; i < x.length; i++) {
+                        x[i].classList.remove("autocomplete-active");
+                    }
+                }
+                function closeAllLists(elmnt) {
+                    /*close all autocomplete lists in the document, except the one passed as an argument:*/
+                    var x = document.getElementsByClassName("autocomplete-items");
+                    for (var i = 0; i < x.length; i++) {
+                        if (elmnt != x[i] && elmnt != inp) {
+                            x[i].parentNode.removeChild(x[i]);
+                        }
+                    }
+                }
+                /*execute a function when someone clicks in the document:*/
+                document.addEventListener("click", function (e) {
+                    closeAllLists(e.target);
+                });
+            }
+
+            /* Aquí va el id del input ppedidos */
+            //autocomplete(document.getElementById("modal-ppedidos-1"), arr_productos);
+
+        /* Termina Funciones del autocomplete */
+
         /* ------------------------------------- */
         /* TERMINA OTRAS FUNCIONES */
         /* ------------------------------------- */
@@ -351,7 +455,8 @@
 
 
         // btn enviar pedido (simula el submit)
-/*         $("#btn-enviar-pedido").submit(function() { 
+        /*         
+        $("#btn-enviar-pedido").submit(function() { 
             alert("procedimiento para el envio de pedido");
         }); */
 
@@ -391,7 +496,6 @@
             /*Source: https://stackoverflow.com/questions/5603117/jquery-create-object-from-form-fields */
         }
         
-
         
         /* Recorre el form form-nuevo-pedido y crea el array de datos luego manda el post para agregar el nuevo registro*/
         function enviaNuevoPedido() {
@@ -399,36 +503,25 @@
             let valores = arrayObjetosEnForm("form-nuevo-pedido");
             delete valores.id_pedido;
             valores.id_usuario = 1;
-            
-            
             $.post("/pedidos/guardar/", valores, (res) => { 
-                
-                
-
                 if( res > 0 ) { 
                     //console.log("¡Se guardó el registro! Con el id: " + res); 
-                    
                     let tblProdPedidosRows = {};
                     const rows = tableProductosPedidos.getRows();
                     const rowCount = tableProductosPedidos.getDataCount();
-                    
                     for(let i = 0; i<rowCount; i++) {
                         tblProdPedidosRows[i] = rows[i]._row.data;
                         tblProdPedidosRows[i].id_pedido = parseInt(res);
                     }
-                    
                     /* agrega el número de productos agregados */
                     tblProdPedidosRows['totalRows'] = rowCount;
-                    
                     /* aquí hacemos el post con los rows de la tabla de productos pedidos */
                     $.post("/pedidos/prodpedidos/", tblProdPedidosRows, (res2) => {
                         if (res2 === 'ok') {  /* definir bien la respuesta */
                             alert("Pedido y productos registrados con éxito");
                             location.reload();
                         }
-                    });
-
-                    
+                    });                     
                 } 
             }); 
         }
@@ -445,14 +538,23 @@
 
             limpiaObjetosEnForm('frm-modal-productos-pedidos');
             $.get("/compras/listaprod", (res) => { 
-                //console.log(res);
-                //llenaSelect("modal-ppedidos-1", res); 
-                // Llena el select con el id de producto y el nombre.k
-                let idSelect = "modal-ppedidos-1";
+                
+                // PARA LLENAR UN SELECT
+                // Llena el select con el id de producto y el nombre
+                /* let idSelect = "modal-ppedidos-1";
                 $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
                 res.forEach((item, index) => { 
                     $('#' + idSelect).append('<option>' + item.id_producto + '-' + item.nb_producto + '</option>')  
+                }); */
+
+                // PARA HABILITAR EL AUTOCOMPLETE
+                let arr_productos=[];
+
+                res.forEach((item, index) => { 
+                    arr_productos.push(item.nb_producto + '--' + item.id_producto);
                 });
+
+                autocomplete(document.getElementById("modal-ppedidos-1"), arr_productos);
 
             });
         });
@@ -480,11 +582,11 @@
             
             let valores = arrayObjetosEnForm("frm-modal-productos-pedidos");
             let idConProd = valores.nb_producto;
-            let pos = idConProd.indexOf('-');
+            let pos = idConProd.indexOf('--');
             let largo = idConProd.length;
 
-            valores.id_producto = idConProd.substring(0, pos);
-            valores.nb_producto = idConProd.substring(pos+1, largo);
+            valores.id_producto = idConProd.substring(pos+2, largo);
+            valores.nb_producto = idConProd.substring(0, pos);
             tableProductosPedidos.addRow( valores, true);
             $("#modal-ppedidos-cancelar").click();
 

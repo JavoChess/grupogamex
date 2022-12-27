@@ -130,7 +130,7 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
 app.get("/profile", IsLoggedIn, (req, res ) => {
 
     if (req.user) {
-        console.log(req.user);
+        //console.log(req.user);
 
         res.render('inicio', {
             tabledata: [], 
@@ -316,7 +316,7 @@ app.post("/usuarios/editar/:id", (req, res) => {
 app.post("/usuarios/guardar", (req, res) => { 
     const valores = req.body;
     const sql = "insert into usuarios set ?";
-    console.log(valores);
+    //console.log(valores);
     connection.query(sql, [valores],  function(err, results, fields) {
         err ? res.end(err) : res.end("Registro correcto");
     });
@@ -383,6 +383,18 @@ app.get("/register", IsLoggedIn, (req, res)=>{
     }
 });
 
+
+// logout
+app.get("/logout", (req, res) => {
+
+    res.cookie('jwt', 'logout', {
+        expires: new Date(Date.now() + 2 * 1000),
+        httpOnly: true
+    });
+
+    res.status(200).redirect('/');
+
+});
 
 
 // POST - Registro de usuario 
@@ -471,19 +483,20 @@ app.post("/login", async (req, res) => {
 
                 } else {
                     const id = results[0].id_usuario;
-                    const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
-                        expiresIn: process.env.JWT_EXPIRES_IN
-                    });
-                    console.log(token);
+                    const token = jwt.sign(
+                                            { id: id }, 
+                                            process.env.JWT_SECRET, 
+                                            { expiresIn: process.env.JWT_EXPIRES_IN }
+                                        );
+                    //console.log(token);
                     const cookieOptions = {
-                        expires: new Date(
-                            Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-                        ),
+                        expires: new Date( Date.now() + process.env.COOKIE_EXPIRES * 60 * 60 * 1000 ),
                         httpOnly: true
                     }
+                    //console.log(cookieOptions);
                     res.cookie('jwt', token, cookieOptions);
                     req.user = results[0];
-                    res.render('inicio', {
+                    res.render('inicio', { 
                             tabledata: [], 
                             tabledata2: [], 
                             vistaUsuarios: "d-none",  
