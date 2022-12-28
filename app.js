@@ -84,6 +84,9 @@ app.get("/main", IsLoggedIn, (req, res) => {
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
                             vistaInicio: "",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
         ); 
@@ -117,6 +120,9 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
                             vistaInicio: "d-none",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "d-none",
                             usuario: req.user
                 });
             }
@@ -142,6 +148,9 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
             vistaCompras: "d-none" ,
             vistaProfile: "",
             vistaInicio: "d-none",
+            vistaListaPedidos: "d-none",
+            vistaAutorizar: "d-none",
+            vistaAlmacen: "d-none",
             usuario: req.user
         }); 
     } else {
@@ -171,6 +180,9 @@ app.get("/materiales", IsLoggedIn, (req, res) => {
                                         vistaCompras: "d-none",
                                         vistaProfile: "d-none",
                                         vistaInicio: "d-none",
+                                        vistaListaPedidos: "d-none",
+                                        vistaAutorizar: "d-none",
+                                        vistaAlmacen: "d-none",
                                         usuario: req.user
                                     } 
                 );
@@ -196,6 +208,9 @@ app.get("/compras", IsLoggedIn, (req, res) => {
                             vistaCompras: "",
                             vistaProfile: "d-none",
                             vistaInicio: "d-none",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
         );  
@@ -203,6 +218,80 @@ app.get("/compras", IsLoggedIn, (req, res) => {
         res.redirect("/");
     }
 });
+
+
+/* Vista lista de pedidos */
+app.get("/listapedidos", IsLoggedIn, (req, res) => {
+
+    if (req.user) {
+        res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none", 
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            vistaInicio: "d-none",
+                            vistaListaPedidos: "",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "d-none",
+                            usuario: req.user
+                        } 
+        );  
+    } else {
+        res.redirect("/");
+    }
+});
+
+
+/* Vista Autorizar */
+app.get("/autorizar", IsLoggedIn, (req, res) => {
+
+    if (req.user) {
+        res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none", 
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            vistaInicio: "d-none",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "",
+                            vistaAlmacen: "d-none",
+                            usuario: req.user
+                        } 
+        );  
+    } else {
+        res.redirect("/");
+    }
+});
+
+
+/* Vista Almacén */
+app.get("/almacen", IsLoggedIn, (req, res) => {
+
+    if (req.user) {
+        res.render('inicio', {
+                            tabledata: [], 
+                            tabledata2: [], 
+                            vistaUsuarios: "d-none", 
+                            vistaMateriales: "d-none",
+                            vistaCompras: "d-none",
+                            vistaProfile: "d-none",
+                            vistaInicio: "d-none",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "",
+                            usuario: req.user
+                        } 
+        );  
+    } else {
+        res.redirect("/");
+    }
+});
+
+
 
 
 /* cuando abre el modal de prod pedidos le envía la lista de productos unicos */
@@ -508,6 +597,9 @@ app.post("/login", async (req, res) => {
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
                             vistaInicio: "",
+                            vistaListaPedidos: "d-none",
+                            vistaAutorizar: "d-none",
+                            vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
                     );
