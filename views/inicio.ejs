@@ -1,133 +1,92 @@
 
 <%- include('partials/header') %>
 
-<div class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Grupogamex</a>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/main">Grupogamex</a>
+  <!-- Este botón se muestra cuando la pantalla es mas chica -->
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  
+  <!-- SECCIÓN DEL NAVBAR TOP, USER Y LOGOUT -->
   <div class="navbar-nav">
-    
-    <div class="nav-item">
+    <div class="nav-item text-nowrap">
       <ul >
-
-          <% if (usuario) { %>
-            <li><a href="/profile"><%= usuario.nb_usuario %></a></li>
-            <li><a href="/logout">Logout</a></li>
-          <%} else { %>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Registro</a></li>
-          <% } %>
-        
+        <li><a href="/profile"><%= usuario.nb_usuario %></a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
-
     </div>
-
   </div>
+</header>
 
-</div>
-
-<!-- <nav>
-  <h4>Grupogamex</h4>
-  <ul>
-    <li><a href="" >Login</a></li>
-    <li><a href="" >Register</a></li>
-  </ul>
-</nav> -->
 
 <div class="container-fluid">
   <div class="row">
+
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              <span data-feather="home"></span>
-              Home
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/compras" id="nav-home-compras">
-              <span data-feather="file"></span>
-              Compras
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Pedidos
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Almacén
-            </a>
-          </li>
 
-        </ul>
-
+        <!-- SECCION DE VISTAS DEPENDIENDO DEL USUARIO-->
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Admin</span>
-          <a class="link-secondary" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
-          </a>
+          <span>VIEWS</span>
         </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="/materiales" id="nav-admin-materiales">
-              <span data-feather="file-text"></span>
-              Catálogo de materiales
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/usuarios" id="nav-admin-usuarios">
-              <span data-feather="file-text"></span>
-              Administrar usuarios
-            </a>
-          </li>
+        <ul class="nav flex-column">
+
+          <% if (usuario.tp_usuario==='Admin') { %>
+            <li class="nav-item"><a class="nav-link" href="/compras">Nuevo Pedido</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Lista de Pedidos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Autorizar</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Almacén</a></li>
+
+            <!-- SECCION ADMIN -->
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>ADMIN</span>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/materiales" id="nav-admin-materiales">Catálogo de materiales</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/usuarios" id="nav-admin-usuarios">Administrar usuarios</a>
+              </li>
+            </ul>
+
+
+            <!-- SECCION DASHBOARD -->
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>DASHBOARD</span>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Report1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Report2</a>
+              </li>
+            </ul>
+          <%} else if (usuario.tp_usuario==='Compras') { %>
+            <li class="nav-item"><a class="nav-link" href="/compras">Nuevo Pedido</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Lista de Pedidos</a></li>
+          <%} else if (usuario.tp_usuario==='Almacén') { %>
+            <li class="nav-item"><a class="nav-link" href="#">Almacén</a></li>
+          <% } %>
+
         </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Dashboard</span>
-            <a class="link-secondary" href="#" aria-label="Add a new report">
-              <span data-feather="plus-circle"></span>
-            </a>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Report1
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Report2
-              </a>
-            </li>
-          </ul>
-
-
       </div>
-
     </nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-          <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button> -->
 
-          </div>
-
-        </div>
+      <div class="d-flex pt-3 pb-2 mb-3">
+        <!-- solo para dar un espacio between -->
       </div>
 
-      <!-- Acá va la info -->
+      <!-- Acá van las vistas -->
       <div class="container">
+
+        <div id ="vista-home-inicio" class=<%= vistaInicio %>>
+          <%- include('start') %>
+        </div>
 
         <div id ="vista-home-compras" class=<%= vistaCompras %>>
           <%- include('compras') %>
@@ -145,7 +104,6 @@
           <%- include('profile') %>
         </div>
         
-
       </div>
       
 

@@ -11,14 +11,22 @@
             <div class="col-md-4 col-lg-4"></div>
             <div class="col-md-4 col-lg-4"> 
 
-                <form id="form-login" action="/login" method="POST">
+                <form class="needs-validation"  action="/login" method="POST" novalidate>
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" name="cd_usuario" required>
+                        
+                        <input type="text" class="form-control" id="floatingInput" name="cd_usuario" placeholder="Usuario" required>
                         <label for="floatingInput">Usuario</label>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
                     <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" name ="cd_contrasena" required>
+                        
+                        <input type="password" class="form-control" id="floatingPassword" name ="cd_contrasena" placeholder="Password" required>
                         <label for="floatingPassword">Password</label>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
                     
                     <button class="btn btn-primary" type="submit">Login</button>

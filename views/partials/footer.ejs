@@ -435,38 +435,41 @@
         // ------------------------------
         // General FE script
         // ------------------------------
+
+/* 
         $("#pedidos-encabezados").attr("class", "row");
         $("#pedidos-lista").attr("class", "row d-none");
         $("#pedidos-form").attr("class", "row d-none");
 
-        $("#btn-nuevo-pedido").click( function () {
+        $("#btn-nuevo-pedido").click( function () {  
             //alert("nuevo pedido");
             $("#pedidos-lista").attr("class", "row d-none");
             $("#pedidos-encabezados").attr("class", "row d-none");
-            $("#pedidos-form").attr("class", "row");
+            $("#pedidos-form").attr("class", "row"); 
         });
 
-        $("#btn-lista-pedidos").click( function () {
+        $("#btn-lista-pedidos").click( function () { 
             //alert("muestra la lista de pedidos");
             $("#pedidos-encabezados").attr("class", "row d-none");
             $("#pedidos-lista").attr("class", "row");
             $("#pedidos-form").attr("class", "row d-none");
-        });
+        }); 
+         */
 
-
-        // btn enviar pedido (simula el submit)
-        /*         
+        
+        // btn enviar pedido (simula el submit) 
+        /* 
         $("#btn-enviar-pedido").submit(function() { 
-            alert("procedimiento para el envio de pedido");
-        }); */
+            alert("procedimiento para el envio de pedido"); 
+        }); 
+        */ 
 
-
-        /* Valida si el form está completo */
-        function validaFormulario(frm) {
+        /* Valida si el form está completo */ 
+        function validaFormulario(frm) { 
             let res;
             $('#' + frm)[0].checkValidity() ? res=true : res=false;
             return res;
-        }
+        } 
 
         /* Subrutina para Llenar el select obj con los datos del array datosArr */ 
         function llenaSelect(idSelect, datosArr) { 
@@ -474,8 +477,8 @@
             $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
             datosArr.forEach((item, index) => { 
                 $('#' + idSelect).append('<option>' + item + '</option>')  
-            });
-        }
+            }); 
+        } 
         
         /* Limpia los objetos de un form */ 
         function limpiaObjetosEnForm(frm) {
@@ -506,10 +509,10 @@
             $.post("/pedidos/guardar/", valores, (res) => { 
                 if( res > 0 ) { 
                     //console.log("¡Se guardó el registro! Con el id: " + res); 
-                    let tblProdPedidosRows = {};
-                    const rows = tableProductosPedidos.getRows();
-                    const rowCount = tableProductosPedidos.getDataCount();
-                    for(let i = 0; i<rowCount; i++) {
+                    let tblProdPedidosRows = {}; 
+                    const rows = tableProductosPedidos.getRows(); 
+                    const rowCount = tableProductosPedidos.getDataCount(); 
+                    for (let i = 0; i<rowCount; i++) { 
                         tblProdPedidosRows[i] = rows[i]._row.data;
                         tblProdPedidosRows[i].id_pedido = parseInt(res);
                     }
@@ -538,7 +541,7 @@
 
             limpiaObjetosEnForm('frm-modal-productos-pedidos');
             $.get("/compras/listaprod", (res) => { 
-                
+                // el res es de la forma {{ id_producto: x1, nb_producto: a1}...{ id_producto: xn, nb_producto: a}}
                 // PARA LLENAR UN SELECT
                 // Llena el select con el id de producto y el nombre
                 /* let idSelect = "modal-ppedidos-1";
@@ -549,11 +552,9 @@
 
                 // PARA HABILITAR EL AUTOCOMPLETE
                 let arr_productos=[];
-
                 res.forEach((item, index) => { 
                     arr_productos.push(item.nb_producto + '--' + item.id_producto);
                 });
-
                 autocomplete(document.getElementById("modal-ppedidos-1"), arr_productos);
 
             });
@@ -584,12 +585,11 @@
             let idConProd = valores.nb_producto;
             let pos = idConProd.indexOf('--');
             let largo = idConProd.length;
-
+            // los dos guiones apoyan para identificar el id al final del string
             valores.id_producto = idConProd.substring(pos+2, largo);
             valores.nb_producto = idConProd.substring(0, pos);
             tableProductosPedidos.addRow( valores, true);
             $("#modal-ppedidos-cancelar").click();
-
 
         }
 
@@ -610,10 +610,9 @@
 
             console.log( 'Rows: ' + rowCount);
             
-            for(let i = 0; i<rowCount; i++){
+            for(let i = 0; i<rowCount; i++) {
                 console.log(rows[i]._row.data);
             }
-            
             
         });
 

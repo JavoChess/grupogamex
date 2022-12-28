@@ -83,6 +83,7 @@ app.get("/main", IsLoggedIn, (req, res) => {
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
+                            vistaInicio: "",
                             usuario: req.user
                         } 
         ); 
@@ -115,6 +116,7 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
+                            vistaInicio: "d-none",
                             usuario: req.user
                 });
             }
@@ -139,6 +141,7 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
             vistaMateriales: "d-none",
             vistaCompras: "d-none" ,
             vistaProfile: "",
+            vistaInicio: "d-none",
             usuario: req.user
         }); 
     } else {
@@ -167,6 +170,7 @@ app.get("/materiales", IsLoggedIn, (req, res) => {
                                         vistaMateriales: "",
                                         vistaCompras: "d-none",
                                         vistaProfile: "d-none",
+                                        vistaInicio: "d-none",
                                         usuario: req.user
                                     } 
                 );
@@ -191,6 +195,7 @@ app.get("/compras", IsLoggedIn, (req, res) => {
                             vistaMateriales: "d-none",
                             vistaCompras: "",
                             vistaProfile: "d-none",
+                            vistaInicio: "d-none",
                             usuario: req.user
                         } 
         );  
@@ -465,9 +470,8 @@ app.post("/login", async (req, res) => {
     try{
         const usuario = req.body.cd_usuario; 
         const pass = req.body.cd_contrasena; 
-    
         let sql = 'select * from usuarios where cd_usuario = ?';
-    
+
         connection.query(sql, [usuario], async (err, results) => { 
             if (err) {
                 console.log(err);
@@ -503,6 +507,7 @@ app.post("/login", async (req, res) => {
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
                             vistaProfile: "d-none",
+                            vistaInicio: "",
                             usuario: req.user
                         } 
                     );
