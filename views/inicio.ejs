@@ -2,6 +2,7 @@
 <%- include('partials/header') %>
 
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/main">Grupogamex</a>
   <!-- Este botón se muestra cuando la pantalla es mas chica -->
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,6 +18,7 @@
       </ul>
     </div>
   </div>
+
 </header>
 
 
@@ -27,12 +29,15 @@
       <div class="position-sticky pt-3">
 
         <!-- SECCION DE VISTAS DEPENDIENDO DEL USUARIO-->
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>VIEWS</span>
-        </h6>
+
         <ul class="nav flex-column">
 
-          <% if (usuario.tp_usuario==='Admin') { %>
+          <% if (usuario.tp_usuario ==='Admin') { %>
+
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>VIEWS</span>
+            </h6>
+
             <li class="nav-item"><a class="nav-link" href="/compras">Nuevo Pedido</a></li>
             <li class="nav-item"><a class="nav-link" href="/listapedidos">Lista de Pedidos</a></li>
             <li class="nav-item"><a class="nav-link" href="/autorizar">Autorizar</a></li>
@@ -43,31 +48,30 @@
               <span>ADMIN</span>
             </h6>
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="/materiales" id="nav-admin-materiales">Catálogo de materiales</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/usuarios" id="nav-admin-usuarios">Administrar usuarios</a>
-              </li>
+              <li class="nav-item"><a class="nav-link" href="/materiales" id="nav-admin-materiales">Catálogo de materiales</a></li>
+              <li class="nav-item"><a class="nav-link" href="/usuarios" id="nav-admin-usuarios">Administrar usuarios</a></li>
             </ul>
-
 
             <!-- SECCION DASHBOARD -->
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                 <span>DASHBOARD</span>
             </h6>
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Report1</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Report2</a>
-              </li>
+              <li class="nav-item"><a class="nav-link" href="#">Report1</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Report2</a></li>
             </ul>
-          <%} else if (usuario.tp_usuario==='Compras') { %>
+
+          <%} else if (usuario.tp_usuario ==='Compras') { %>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>COMPRAS</span>
+            </h6>
             <li class="nav-item"><a class="nav-link" href="/compras">Nuevo Pedido</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Lista de Pedidos</a></li>
-          <%} else if (usuario.tp_usuario==='Almacén') { %>
+
+          <%} else if (usuario.tp_usuario ==='Almacén') { %>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>ALMACEN</span>
+            </h6>
             <li class="nav-item"><a class="nav-link" href="#">Almacén</a></li>
           <% } %>
 

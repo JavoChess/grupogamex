@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { promisify } = require('util');
+const { table } = require("console");
 
 
 
@@ -79,6 +80,7 @@ app.get("/main", IsLoggedIn, (req, res) => {
         res.render('inicio', {
                             tabledata: [], 
                             tabledata2: [], 
+                            tabledata3: [], 
                             vistaUsuarios: "d-none",  
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -104,7 +106,7 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
     if(req.user) { 
         //const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
         const sql = "select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios";
-        connection.query(sql, function(err, results, fields) {
+        connection.query(sql, function(err, results) {
             if (err) {
                 console.log(err);
             } else {
@@ -115,6 +117,7 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
                             {
                             tabledata: tabledata, 
                             tabledata2: [], 
+                            tabledata3: [], 
                             vistaUsuarios: "", 
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -143,6 +146,7 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
         res.render('inicio', {
             tabledata: [], 
             tabledata2: [], 
+            tabledata3: [], 
             vistaUsuarios: "d-none", 
             vistaMateriales: "d-none",
             vistaCompras: "d-none" ,
@@ -166,7 +170,7 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
 app.get("/materiales", IsLoggedIn, (req, res) => {
     const sql = "select * from materiales";
     if (req.user) {
-        connection.query(sql, function(err, results, fields) {
+        connection.query(sql, function(err, results) {
             if (err) {
                 console.log(err);
             } else { 
@@ -175,6 +179,7 @@ app.get("/materiales", IsLoggedIn, (req, res) => {
                 res.render('inicio', {
                                         tabledata: [], 
                                         tabledata2: tabledata2, 
+                                        tabledata3: [], 
                                         vistaUsuarios: "d-none", 
                                         vistaMateriales: "",
                                         vistaCompras: "d-none",
@@ -203,6 +208,7 @@ app.get("/compras", IsLoggedIn, (req, res) => {
         res.render('inicio', {
                             tabledata: [], 
                             tabledata2: [], 
+                            tabledata3: [], 
                             vistaUsuarios: "d-none", 
                             vistaMateriales: "d-none",
                             vistaCompras: "",
@@ -223,24 +229,53 @@ app.get("/compras", IsLoggedIn, (req, res) => {
 /* Vista lista de pedidos */
 app.get("/listapedidos", IsLoggedIn, (req, res) => {
 
+    const sql = "select * from pedidos where nb_estatus = 'Pendiente' ";
     if (req.user) {
-        res.render('inicio', {
-                            tabledata: [], 
-                            tabledata2: [], 
-                            vistaUsuarios: "d-none", 
-                            vistaMateriales: "d-none",
-                            vistaCompras: "d-none",
-                            vistaProfile: "d-none",
-                            vistaInicio: "d-none",
-                            vistaListaPedidos: "",
-                            vistaAutorizar: "d-none",
-                            vistaAlmacen: "d-none",
-                            usuario: req.user
-                        } 
-        );  
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log(err);
+            } else { 
+                // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+                const tabledata3 = JSON.parse(JSON.stringify(results));
+                res.render('inicio', {
+                                        tabledata: [], 
+                                        tabledata2: [], 
+                                        tabledata3: tabledata3, 
+                                        vistaUsuarios: "d-none", 
+                                        vistaMateriales: "d-none",
+                                        vistaCompras: "d-none",
+                                        vistaProfile: "d-none",
+                                        vistaInicio: "d-none",
+                                        vistaListaPedidos: "",
+                                        vistaAutorizar: "d-none",
+                                        vistaAlmacen: "d-none",
+                                        usuario: req.user
+                                    } 
+                );
+            } 
+        });
+
     } else {
         res.redirect("/");
     }
+
+});
+
+
+/* Vista lista de pedidos filtrada */
+app.post("/listapedidosfiltrada", (req, res) => {
+
+    let estatus = req.body.nb_estatus;
+    const sql = "select * from pedidos where nb_estatus = ?";
+
+    connection.query(sql, [estatus], function(err, results) { 
+        if (err) {
+            console.log(err);
+        } else { 
+            const tabledata3 = JSON.parse(JSON.stringify(results));
+            res.send(tabledata3);
+        } 
+    });
 });
 
 
@@ -251,6 +286,7 @@ app.get("/autorizar", IsLoggedIn, (req, res) => {
         res.render('inicio', {
                             tabledata: [], 
                             tabledata2: [], 
+                            tabledata3: [], 
                             vistaUsuarios: "d-none", 
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -274,7 +310,8 @@ app.get("/almacen", IsLoggedIn, (req, res) => {
     if (req.user) {
         res.render('inicio', {
                             tabledata: [], 
-                            tabledata2: [], 
+                            tabledata2: [],
+                            tabledata3: [],  
                             vistaUsuarios: "d-none", 
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -298,15 +335,11 @@ app.get("/almacen", IsLoggedIn, (req, res) => {
 app.get("/compras/listaprod", (req, res) => {
     
     const sql = "select distinct id_producto, nb_producto from productos";
-    connection.query(sql, function(err, results, fields) {
+    connection.query(sql, function(err, results) {
         if (err) {
             console.log(err);
         } else { 
             const datos = JSON.parse(JSON.stringify(results));
-            /* let resultado_qry =[];
-            datos.forEach((v) => 
-                resultado_qry.push(v[col])
-            ); */
             res.send(datos);
         } 
     }); 
@@ -321,7 +354,7 @@ app.post("/pedidos/guardar", (req, res) => {
     const sql = "insert into pedidos set ?";
     /* console.log(valores);  */
 
-    connection.query(sql, [valores],  function(err, results, fields) {  /* retorna el nuevo id  */
+    connection.query(sql, [valores],  function(err, results) {  /* retorna el nuevo id  */
         //console.log(results.insertId);
         const nuevoId = results.insertId;
         //err ? res.end(err) : res.end(results);
@@ -373,7 +406,7 @@ app.post("/pedidos/prodpedidos/", (req, res) => {
     const cols = '(nb_producto,nu_cantidad,im_unidad,cd_moneda,im_tipo_de_cambio,im_pedido,cd_articulo,fh_entrega,id_producto,id_pedido)';
     const sql = 'insert into prodpedidos ' + cols + ' values ?';
     
-    connection.query(sql, [regArray],  function(err, results, fields) { 
+    connection.query(sql, [regArray],  function(err, results) { 
         err ? res.end(err) : res.end("ok"); 
     }); 
     
@@ -391,7 +424,7 @@ app.post("/pedidos/prodpedidos/", (req, res) => {
 app.post("/usuarios/eliminar/:id", (req, res) => { 
     const id = req.params.id;
     const sql = "delete from usuarios where id_usuario = ?";
-    connection.query(sql, [id],  function(err, results, fields) {
+    connection.query(sql, [id],  function(err, results) {
         err ? res.end(err) : res.end("eliminado");
     });
 }); 
@@ -401,7 +434,7 @@ app.post("/usuarios/editar/:id", (req, res) => {
     const valores = req.body;
     const id = req.params.id;
     const sql = "update usuarios set ? where id_usuario = ?";
-    connection.query(sql, [valores, id], function(err, results, fields) {
+    connection.query(sql, [valores, id], function(err, results) {
         err ? res.end(err) : res.end("editado");
     }); 
 }); 
@@ -411,7 +444,7 @@ app.post("/usuarios/guardar", (req, res) => {
     const valores = req.body;
     const sql = "insert into usuarios set ?";
     //console.log(valores);
-    connection.query(sql, [valores],  function(err, results, fields) {
+    connection.query(sql, [valores],  function(err, results) {
         err ? res.end(err) : res.end("Registro correcto");
     });
 }); 
@@ -424,7 +457,7 @@ app.post("/usuarios/guardar", (req, res) => {
 app.post("/materiales/eliminar/:id", (req, res) => { 
     const id = req.params.id;
     const sql = "delete from materiales where material_id = ?";
-    connection.query(sql, [id],  function(err, results, fields) {
+    connection.query(sql, [id],  function(err, results) {
         err ? res.end(err) : res.end("eliminado");
     });
 }); 
@@ -433,7 +466,7 @@ app.post("/materiales/eliminar/:id", (req, res) => {
 app.post("/materiales/guardar", (req, res) => { 
     const valores = req.body;
     const sql = "insert into materiales set ?";
-    connection.query(sql, [valores],  function(err, results, fields) {
+    connection.query(sql, [valores],  function(err, results) {
         err ? res.end(err) : res.end("Registro correcto");
     });
 }); 
@@ -443,7 +476,7 @@ app.post("/materiales/editar/:id", (req, res) => {
     const valores = req.body;
     const id = req.params.id;
     const sql = "update materiales set ? where material_id = ?";
-    connection.query(sql, [valores, id], function(err, results, fields) {
+    connection.query(sql, [valores, id], function(err, results) {
         err ? res.end(err) : res.end("editado");
     }); 
 }); 
@@ -498,7 +531,7 @@ app.get("/logout", (req, res) => {
     valores.cd_contrasena = passwordHash;
 
     const sql = "insert into usuarios set ?";
-    connection.query(sql, [valores],  function(err, results, fields) {
+    connection.query(sql, [valores],  function(err, results) {
         if (err) {
             console.log(err);
         }
@@ -592,6 +625,7 @@ app.post("/login", async (req, res) => {
                     res.render('inicio', { 
                             tabledata: [], 
                             tabledata2: [], 
+                            tabledata3: [], 
                             vistaUsuarios: "d-none",  
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",

@@ -180,6 +180,8 @@
         let tabledataUsuarios = <%- JSON.stringify(tabledata) %>; 
         let tabledataMateriales = <%- JSON.stringify(tabledata2) %>; 
         let tabledataProductosPedidos = []; 
+        let tabledataListaPedidos = <%- JSON.stringify(tabledata3) %>; 
+        let tabledataListaProdPedidos = []; 
 
         let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
@@ -211,11 +213,11 @@
             paginationCounter: "rows", //display count of paginated rows in footer
             columns: [ //Define Table Columns
 
-                {title:"Id",              field:"id_usuario",   sorter:"string",    hozAlign:"left"},
-                {title:"Usuario",         field:"cd_usuario",      sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Nombre",          field:"nb_usuario",       sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Área",            field:"nb_area",     sorter:"string",    hozAlign:"left", editor: true},
-                {title:"Tipo",            field:"tp_usuario", sorter:"string",    hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Admin", "Compras", "Almacén"]}},
+                {title:"Id",      field:"id_usuario", sorter:"string", hozAlign:"left"},
+                {title:"Usuario", field:"cd_usuario", sorter:"string", hozAlign:"left", editor: true},
+                {title:"Nombre",  field:"nb_usuario", sorter:"string", hozAlign:"left", editor: true},
+                {title:"Área",    field:"nb_area",    sorter:"string", hozAlign:"left", editor: true},
+                {title:"Tipo",    field:"tp_usuario", sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Admin", "Compras", "Almacén"]}},
                 {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                         const id = cell.getRow().getData().usuario_id;
                         let ejecutar = confirm("Se va a eliminar el registro: " + id);
@@ -288,16 +290,16 @@
                         "redo" : "ctrl + r", //bind redo function to ctrl + r 
                         }, 
             columns: [ //Define Table Columns 
-                {title:"Id",              field:"material_id",    sorter:"string",   hozAlign:"left"},
-                {title:"Nombre",          field:"nombre",         sorter:"string",   hozAlign:"left", editor: true}, 
-                {title:"Código",          field:"codigo",         sorter:"string",   hozAlign:"left", editor: true}, 
-                {title:"Tipo producto",   field:"tipo_producto",  sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Marca",           field:"marca",          sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Cliente",         field:"cliente",        sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Proveedor",       field:"proveedor",      sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Almacén",         field:"almacen",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
-                {title:"Clasif. Almacén", field:"clasif_almacen", sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
-                {title:"Estatus",         field:"estatus",        sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
+                {title:"Id",              field:"material_id",    sorter:"string", hozAlign:"left"},
+                {title:"Nombre",          field:"nombre",         sorter:"string", hozAlign:"left", editor: true}, 
+                {title:"Código",          field:"codigo",         sorter:"string", hozAlign:"left", editor: true}, 
+                {title:"Tipo producto",   field:"tipo_producto",  sorter:"string", hozAlign:"left", editor: true},
+                {title:"Marca",           field:"marca",          sorter:"string", hozAlign:"left", editor: true},
+                {title:"Cliente",         field:"cliente",        sorter:"string", hozAlign:"left", editor: true},
+                {title:"Proveedor",       field:"proveedor",      sorter:"string", hozAlign:"left", editor: true},
+                {title:"Almacén",         field:"almacen",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
+                {title:"Clasif. Almacén", field:"clasif_almacen", sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
+                {title:"Estatus",         field:"estatus",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
                 {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                             
                         const id = cell.getRow().getData().material_id; 
@@ -375,18 +377,74 @@
                         "redo" : "ctrl + r", //bind redo function to ctrl + r 
                         }, 
             columns: [ //Define Table Columns 
-                {title:"Id de producto",  field:"id_producto",    sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Nombre de producto",  field:"nb_producto",         sorter:"string",   hozAlign:"left"}, 
-                {title:"Cantidad",          field:"nu_cantidad",         sorter:"string",   hozAlign:"left", editor: true}, 
-                {title:"Artículo",          field:"cd_articulo",  sorter:"string",   hozAlign:"left", editor: true},
-                {title:"Precio unitario",   field:"im_unidad",        sorter:"string",   hozAlign:"left" },
-                {title:"Importe del pedido",       field:"im_pedido",      sorter:"string",   hozAlign:"left" },
-                {title:"Fecha de entrega",         field:"fh_entrega",        sorter:"date",   hozAlign:"left", editor: true },
-                {title:"Moneda",            field:"cd_moneda", sorter:"string",   hozAlign:"left", editor: true, editor:"list", editorParams:{values:["MXN", "USD"]}},
-                {title:"Tipo de cambio",         field:"im_tipo_de_cambio",        sorter:"string",   hozAlign:"left"},
+                {title:"Id de producto",     field:"id_producto",       sorter:"string", hozAlign:"left" },
+                {title:"Nombre de producto", field:"nb_producto",       sorter:"string", hozAlign:"left" }, 
+                {title:"Cantidad",           field:"nu_cantidad",       sorter:"string", hozAlign:"left" }, 
+                {title:"Artículo",           field:"cd_articulo",       sorter:"string", hozAlign:"left" },
+                {title:"Precio unitario",    field:"im_unidad",         sorter:"string", hozAlign:"left" },
+                {title:"Importe del pedido", field:"im_pedido",         sorter:"string", hozAlign:"left" },
+                {title:"Fecha de entrega",   field:"fh_entrega",        sorter:"date",   hozAlign:"left" },
+                {title:"Moneda",             field:"cd_moneda",         sorter:"string", hozAlign:"left" },
+                {title:"Tipo de cambio",     field:"im_tipo_de_cambio", sorter:"string", hozAlign:"left" },
                 
             ],
         }); 
+
+
+        // ------------------------------
+        // tabla con la lista de los pedidos (Lista de Pedidos )
+        // ------------------------------
+
+        let tableListaPedidos = new Tabulator("#tabla-lista-pedidos", { 
+            height: 280,               // set height of table to enable virtual DOM
+            data: tabledataListaPedidos,          //load initial data into table
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            selectable: 1,
+            columns: [ //Define Table Columns 
+                {title:"Id de pedido",     field:"id_pedido",           sorter:"string", hozAlign:"left" },
+                {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left"}, 
+                {title:"Orden de compra",  field:"nu_orden_compra",     sorter:"string", hozAlign:"left" }, 
+                {title:"Estatus",          field:"nb_estatus",          sorter:"string", hozAlign:"left" }, 
+                {title:"Proveedor",        field:"nb_proveedor",        sorter:"string", hozAlign:"left" },
+                {title:"Fecha de pedido",  field:"fh_pedido",           sorter:"date",   hozAlign:"left" },
+                {title:"Términos",         field:"tx_terminos",         sorter:"string", hozAlign:"left" },
+                {title:"Entregar en",      field:"tx_entregar_en",      sorter:"string", hozAlign:"left" },
+                {title:"Horario",          field:"nu_horario",          sorter: "string",hozAlign:"left"},
+                {title:"Contacto",         field:"nb_contacto",         sorter:"string", hozAlign:"left"},
+                {title:"Especificaciones", field:"tx_especificaciones", sorter:"string", hozAlign:"left"},
+                
+            ],
+        }); 
+
+        // ------------------------------
+        // tabla con la lista de los productos pedidos (asociado con la Lista de Pedidos )
+        // ------------------------------
+
+        let tableListaProdPedidos = new Tabulator("#tabla-lista-prodpedidos", { 
+            height: 280,               // set height of table to enable virtual DOM
+            data: tabledataListaProdPedidos,          //load initial data into table
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            selectable: 1,
+            columns: [ //Define Table Columns 
+                {title:"Id de pedido",     field:"id_pedido",           sorter:"string", hozAlign:"left" },
+                {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left" }, 
+                {title:"Orden de compra",  field:"nu_orden_compra",     sorter:"string", hozAlign:"left" }, 
+                {title:"Estatus",          field:"nb_estatus",          sorter:"string", hozAlign:"left" }, 
+                {title:"Proveedor",        field:"nb_proveedor",        sorter:"string", hozAlign:"left" },
+                {title:"Fecha de pedido",  field:"fh_pedido",           sorter:"date",   hozAlign:"left" },
+                {title:"Términos",         field:"tx_terminos",         sorter:"string", hozAlign:"left" },
+                {title:"Entregar en",      field:"tx_entregar_en",      sorter:"string", hozAlign:"left" },
+                {title:"Horario",          field:"nu_horario",          sorter:"string", hozAlign:"left" },
+                {title:"Contacto",         field:"nb_contacto",         sorter:"string", hozAlign:"left" },
+                {title:"Especificaciones", field:"tx_especificaciones", sorter:"string", hozAlign:"left" },
+                
+            ],
+        }); 
+
 
 
         // SELECCION DE UN ELELEMTO
@@ -601,6 +659,32 @@
         });
 
 
+        /* VISTA - LISTA DE PEDIDOS */
+
+        // Guarda el Id del registro seleccionado
+        tableListaPedidos.on("rowSelected", function(row) { 
+
+            let id_pedido_seleccionado = row._row.data.id_pedido;
+            $("#id_pedido_seleccionado").html("Id seleccionado: " + id_pedido_seleccionado); 
+            //alert("id seleccionado " +  id_pedido_seleccionado);
+            //tableListaPedidos.deselectRow(row);
+        });
+
+        // Cuando cambia el select del form
+        $( "#lista_pedidos_combo" ).change(function() { 
+            let valores = {};
+            valores['nb_estatus'] = $( "#lista_pedidos_combo option:selected" ).text();
+            //alert( "Actualizamos el grid con " + seleccion );
+
+            $.post("/listapedidosfiltrada", valores, (res) => {
+                tableListaPedidos.replaceData(res);
+            });
+
+        });
+
+        
+
+        /* TERMINA VISTA - LISTA DE PEDIDOS */
 
 
         /* boton de prueba temporal */
