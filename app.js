@@ -272,8 +272,26 @@ app.post("/listapedidosfiltrada", (req, res) => {
         if (err) {
             console.log(err);
         } else { 
-            const tabledata3 = JSON.parse(JSON.stringify(results));
-            res.send(tabledata3);
+            const datos = JSON.parse(JSON.stringify(results));
+            res.send(datos);
+        } 
+    });
+});
+
+
+/* Vista lista de los productos pedidos filtrada (cuando da clic en un elemento, de los pedidos, 
+    se lanza este subquery y manda los productos asociados a dicho pedido) */
+app.post("/listapedidosfiltradaproductos", (req, res) => {
+
+    let id_pedido = req.body.id_pedido;
+    const sql = "select * from prodpedidos where id_pedido = ?";
+
+    connection.query(sql, [id_pedido], function(err, results) { 
+        if (err) {
+            console.log(err);
+        } else { 
+            const datos = JSON.parse(JSON.stringify(results));
+            res.send(datos);
         } 
     });
 });

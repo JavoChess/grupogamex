@@ -430,17 +430,17 @@
             paginationCounter: "rows", //display count of paginated rows in footer 
             selectable: 1,
             columns: [ //Define Table Columns 
-                {title:"Id de pedido",     field:"id_pedido",           sorter:"string", hozAlign:"left" },
-                {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left" }, 
-                {title:"Orden de compra",  field:"nu_orden_compra",     sorter:"string", hozAlign:"left" }, 
-                {title:"Estatus",          field:"nb_estatus",          sorter:"string", hozAlign:"left" }, 
-                {title:"Proveedor",        field:"nb_proveedor",        sorter:"string", hozAlign:"left" },
-                {title:"Fecha de pedido",  field:"fh_pedido",           sorter:"date",   hozAlign:"left" },
-                {title:"Términos",         field:"tx_terminos",         sorter:"string", hozAlign:"left" },
-                {title:"Entregar en",      field:"tx_entregar_en",      sorter:"string", hozAlign:"left" },
-                {title:"Horario",          field:"nu_horario",          sorter:"string", hozAlign:"left" },
-                {title:"Contacto",         field:"nb_contacto",         sorter:"string", hozAlign:"left" },
-                {title:"Especificaciones", field:"tx_especificaciones", sorter:"string", hozAlign:"left" },
+                {title:"Id",                    field:"id_prodpedidos",    sorter:"string", hozAlign:"left" },
+                {title:"Id de Pedido",          field:"id_pedido",         sorter:"string", hozAlign:"left" }, 
+                {title:"Id de producto",        field:"id_producto",       sorter:"string", hozAlign:"left" }, 
+                {title:"Producto",              field:"nb_producto",       sorter:"string", hozAlign:"left" }, 
+                {title:"Cantidad",              field:"nu_cantidad",       sorter:"string", hozAlign:"left" },
+                {title:"Código de artículo",    field:"cd_articulo",       sorter:"date",   hozAlign:"left" },
+                {title:"Precio unitario",       field:"im_unidad",         sorter:"string", hozAlign:"left" },
+                {title:"Importe del Pedido",    field:"im_pedido",         sorter:"string", hozAlign:"left" },
+                {title:"Fecha est. de entrega", field:"fh_entrega",        sorter:"date",   hozAlign:"left" },
+                {title:"Moneda",                field:"cd_moneda",         sorter:"string", hozAlign:"left" },
+                {title:"Tipo de cambio",        field:"im_tipo_de_cambio", sorter:"string", hozAlign:"left" },
                 
             ],
         }); 
@@ -661,13 +661,25 @@
 
         /* VISTA - LISTA DE PEDIDOS */
 
-        // Guarda el Id del registro seleccionado
+        // Obtiene el Id del registro seleccionado
         tableListaPedidos.on("rowSelected", function(row) { 
+            
+            const id_pedido_seleccionado = row._row.data.id_pedido;
+            let valores = {};
+            valores['id_pedido'] = id_pedido_seleccionado;
 
-            let id_pedido_seleccionado = row._row.data.id_pedido;
+
             $("#id_pedido_seleccionado").html("Id seleccionado: " + id_pedido_seleccionado); 
+
             //alert("id seleccionado " +  id_pedido_seleccionado);
             //tableListaPedidos.deselectRow(row);
+
+            // actualiza el segundo grid con la query
+            // select * from prodpedidos where id_pedido = id_pedido_seleccionado
+            $.post("/listapedidosfiltradaproductos", valores, (res) => {
+                tableListaProdPedidos.replaceData(res);
+            });
+
         });
 
         // Cuando cambia el select del form
