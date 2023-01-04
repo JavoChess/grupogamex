@@ -663,15 +663,13 @@
 
         // Obtiene el Id del registro seleccionado
         tableListaPedidos.on("rowSelected", function(row) { 
-            
+
             const id_pedido_seleccionado = row._row.data.id_pedido;
             let valores = {};
             valores['id_pedido'] = id_pedido_seleccionado;
 
-
             $("#id_pedido_seleccionado").html("Id seleccionado: " + id_pedido_seleccionado); 
 
-            //alert("id seleccionado " +  id_pedido_seleccionado);
             //tableListaPedidos.deselectRow(row);
 
             // actualiza el segundo grid con la query
@@ -683,10 +681,10 @@
         });
 
         // Cuando cambia el select del form
-        $( "#lista_pedidos_combo" ).change(function() { 
+        $("#lista_pedidos_combo").change(function() { 
             let valores = {};
             valores['nb_estatus'] = $( "#lista_pedidos_combo option:selected" ).text();
-            //alert( "Actualizamos el grid con " + seleccion );
+            $("#id_pedido_seleccionado").html("Id seleccionado: "); 
 
             $.post("/listapedidosfiltrada", valores, (res) => {
                 tableListaPedidos.replaceData(res);
@@ -695,6 +693,35 @@
         });
 
         
+        // btn autorizar pedido
+        $("#btn-autorizar-pedido").click(function() {
+            const cadena = $("#id_pedido_seleccionado").html();
+            const id_pedido = cadena.substring(17, cadena.length);
+            const valores = { 'id_pedido': id_pedido, 'nb_estatus': 'Autorizado' }
+            // aqui va el post
+            $.post("/actualizapedido", valores, function(res) {
+                if(res === 'Autorizado') { 
+                    alert("¡Pedido autorizado!"); 
+                    $("#lista_pedidos_combo").change();
+                    tableListaProdPedidos.replaceData([]);
+                }
+            });
+        });
+        
+        // btn cancelar pedido
+        $("#btn-cancelar-pedido").click(function() {
+            const cadena = $("#id_pedido_seleccionado").html();
+            const id_pedido = cadena.substring(17, cadena.length);
+            const valores = { 'id_pedido': id_pedido, 'nb_estatus': 'Cancelado' }
+            // aqui va el post
+            $.post("/actualizapedido", valores, function(res) {
+                if(res === 'Cancelado') { 
+                    alert("¡Pedido cancelado!"); 
+                    $("#lista_pedidos_combo").change();
+                    tableListaProdPedidos.replaceData([]);
+                }
+            });
+        });
 
         /* TERMINA VISTA - LISTA DE PEDIDOS */
 

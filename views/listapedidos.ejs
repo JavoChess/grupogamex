@@ -1,44 +1,68 @@
 
-<div class="container mt-4" id="lista-pedidos">
+<div class="container-fluid" id="lista-pedidos"> 
+
+    <div class="row">
+        <div class="col-md-12"> 
+            <h2>Lista de Pedidos</h2>
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+
+        <div class="col-md-3"> 
+            <select class="form-select" name="nb_estatus" id="lista_pedidos_combo" >
+                <option value="Pendiente" selected>Pendiente</option>
+                <option value="Cancelado">Cancelado</option>
+                <option value="Autorizado">Autorizado</option>
+            </select>
+        </div>
+        
+        <% if (usuario.tp_usuario ==='Admin') { %>
+            <div class="col-md-2"> 
+                <button class="btn btn-success bi bi-check" title="Autorizar" id="btn-autorizar-pedido"></button>
+                <button class="btn btn-danger bi bi-x" title="Cancelar" id="btn-cancelar-pedido"></button>
+            </div>
+        <%} else { %>
+            <div class="col-md-2">&nbsp;</div>
+        <% } %> 
+
+        <div class="col-md-7"> 
+            <!-- Aqui podemos agregar mas botones de acción -->
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="tabla-lista-pedidos"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="id_pedido_seleccionado">Id seleccionado: </p>
+        </div>
+    </div>
     
-    <div class="col-md-12"> 
-        <h2>Lista de Pedidos</h2>
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+        <div class="col-md-12"> 
+            <h3>Productos asociados</h3>
+        </div>
     </div>
 
-    <div class="col-md-12">&nbsp; </div>
+    <div class="row">&nbsp;</div>
 
-    <div class="col-md-3">
-
-        <select class="form-select" name="nb_estatus" id="lista_pedidos_combo" >
-            <option value="Pendiente" selected>Pendiente</option>
-            <option value="Cancelado">Cancelado</option>
-            <option value="Completado">Completado</option>
-        </select>
-    </div>
-
-    <div class="col-md-9"></div>
-
-    <div class="col-md-12">&nbsp; </div>
-
-
-    <div class="col-md-12">
-        <div id="tabla-lista-pedidos"></div>
-    </div>
-
-    <div class="col-md-12">
-        <p id="id_pedido_seleccionado"></p>
-    </div>
-
-    <div class="col-md-12">&nbsp; </div>
-
-    <div class="col-md-12"> 
-        <h3>Productos asociados</h3>
-    </div>
-    
-    <div class="col-md-12">&nbsp; </div>
-
-    <div class="col-md-12">
-        <div id="tabla-lista-prodpedidos"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="tabla-lista-prodpedidos"></div>
+        </div>
     </div>
 
 </div>
+

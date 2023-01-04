@@ -87,7 +87,6 @@ app.get("/main", IsLoggedIn, (req, res) => {
                             vistaProfile: "d-none",
                             vistaInicio: "",
                             vistaListaPedidos: "d-none",
-                            vistaAutorizar: "d-none",
                             vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
@@ -124,7 +123,6 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
                             vistaProfile: "d-none",
                             vistaInicio: "d-none",
                             vistaListaPedidos: "d-none",
-                            vistaAutorizar: "d-none",
                             vistaAlmacen: "d-none",
                             usuario: req.user
                 });
@@ -153,7 +151,6 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
             vistaProfile: "",
             vistaInicio: "d-none",
             vistaListaPedidos: "d-none",
-            vistaAutorizar: "d-none",
             vistaAlmacen: "d-none",
             usuario: req.user
         }); 
@@ -186,7 +183,6 @@ app.get("/materiales", IsLoggedIn, (req, res) => {
                                         vistaProfile: "d-none",
                                         vistaInicio: "d-none",
                                         vistaListaPedidos: "d-none",
-                                        vistaAutorizar: "d-none",
                                         vistaAlmacen: "d-none",
                                         usuario: req.user
                                     } 
@@ -215,7 +211,6 @@ app.get("/compras", IsLoggedIn, (req, res) => {
                             vistaProfile: "d-none",
                             vistaInicio: "d-none",
                             vistaListaPedidos: "d-none",
-                            vistaAutorizar: "d-none",
                             vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
@@ -247,7 +242,6 @@ app.get("/listapedidos", IsLoggedIn, (req, res) => {
                                         vistaProfile: "d-none",
                                         vistaInicio: "d-none",
                                         vistaListaPedidos: "",
-                                        vistaAutorizar: "d-none",
                                         vistaAlmacen: "d-none",
                                         usuario: req.user
                                     } 
@@ -283,7 +277,7 @@ app.post("/listapedidosfiltrada", (req, res) => {
     se lanza este subquery y manda los productos asociados a dicho pedido) */
 app.post("/listapedidosfiltradaproductos", (req, res) => {
 
-    let id_pedido = req.body.id_pedido;
+    const id_pedido = req.body.id_pedido;
     const sql = "select * from prodpedidos where id_pedido = ?";
 
     connection.query(sql, [id_pedido], function(err, results) { 
@@ -297,29 +291,19 @@ app.post("/listapedidosfiltradaproductos", (req, res) => {
 });
 
 
-/* Vista Autorizar */
-app.get("/autorizar", IsLoggedIn, (req, res) => {
 
-    if (req.user) {
-        res.render('inicio', {
-                            tabledata: [], 
-                            tabledata2: [], 
-                            tabledata3: [], 
-                            vistaUsuarios: "d-none", 
-                            vistaMateriales: "d-none",
-                            vistaCompras: "d-none",
-                            vistaProfile: "d-none",
-                            vistaInicio: "d-none",
-                            vistaListaPedidos: "d-none",
-                            vistaAutorizar: "",
-                            vistaAlmacen: "d-none",
-                            usuario: req.user
-                        } 
-        );  
-    } else {
-        res.redirect("/");
-    }
+/* boton de autorizar/Cancelar un pedido */
+app.post("/actualizapedido", (req, res) => {
+    
+    const {nb_estatus, id_pedido} = req.body;    
+    const sql = "update pedidos set nb_estatus = ? where id_pedido = ?";
+    connection.query(sql, [nb_estatus, id_pedido], function(err, results) { 
+        err ? console.log(err) : res.end(nb_estatus);
+    });
+
 });
+
+
 
 
 /* Vista Almacén */
@@ -336,7 +320,6 @@ app.get("/almacen", IsLoggedIn, (req, res) => {
                             vistaProfile: "d-none",
                             vistaInicio: "d-none",
                             vistaListaPedidos: "d-none",
-                            vistaAutorizar: "d-none",
                             vistaAlmacen: "",
                             usuario: req.user
                         } 
@@ -650,7 +633,6 @@ app.post("/login", async (req, res) => {
                             vistaProfile: "d-none",
                             vistaInicio: "",
                             vistaListaPedidos: "d-none",
-                            vistaAutorizar: "d-none",
                             vistaAlmacen: "d-none",
                             usuario: req.user
                         } 
