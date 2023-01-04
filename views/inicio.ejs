@@ -13,7 +13,8 @@
   <div class="navbar-nav">
     <div class="nav-item text-nowrap">
       <ul >
-        <li><a href="/profile"><%= usuario.nb_usuario %></a></li>
+        <li id="nav-id-usuario" class="d-none"><%= usuario.id_usuario %></li>
+        <li id="nav-nb-usuario"><a href="/profile"><%= usuario.nb_usuario %></a></li>
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>

@@ -295,9 +295,9 @@ app.post("/listapedidosfiltradaproductos", (req, res) => {
 /* boton de autorizar/Cancelar un pedido */
 app.post("/actualizapedido", (req, res) => {
     
-    const {nb_estatus, id_pedido} = req.body;    
-    const sql = "update pedidos set nb_estatus = ? where id_pedido = ?";
-    connection.query(sql, [nb_estatus, id_pedido], function(err, results) { 
+    const {nb_estatus, id_pedido, id_usr_cambia_estatus, tx_comentarios_estatus} = req.body;
+    const sql = "update pedidos set nb_estatus = ?, id_usr_cambia_estatus = ?, tx_comentarios_estatus = ? where id_pedido = ?";
+    connection.query(sql, [nb_estatus, id_usr_cambia_estatus, tx_comentarios_estatus, id_pedido], function(err, results) { 
         err ? console.log(err) : res.end(nb_estatus);
     });
 
@@ -568,7 +568,8 @@ app.post("/register", async (req, res) => {
         }
 
         // si llega aqui es que es nuevo mail y la contraseña está ok
-        let passwordHash = await bcryptjs.hash(cd_contrasena, 10);
+        delete valores.cd_contrasena_confirm;
+        let passwordHash = await bcryptjs.hash(valores.cd_contrasena, 10);
         const sql_inserta = "insert into usuarios set ?";
         valores.cd_contrasena = passwordHash;
 

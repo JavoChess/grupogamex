@@ -694,10 +694,21 @@
 
         
         // btn autorizar pedido
-        $("#btn-autorizar-pedido").click(function() {
-            const cadena = $("#id_pedido_seleccionado").html();
+        $('#btn-autorizar-pedido').click(function() {
+            const cadena = $('#id_pedido_seleccionado').html();
             const id_pedido = cadena.substring(17, cadena.length);
-            const valores = { 'id_pedido': id_pedido, 'nb_estatus': 'Autorizado' }
+            const id_usr_cambia_estatus = $('#nav-id-usuario').html();
+            const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
+
+            const valores = { 
+                'id_pedido': id_pedido, 
+                'nb_estatus': 'Autorizado',
+                'id_usr_cambia_estatus': id_usr_cambia_estatus,
+                'tx_comentarios_estatus': tx_comentarios_estatus
+            }
+
+            console.log(valores);
+
             // aqui va el post
             $.post("/actualizapedido", valores, function(res) {
                 if(res === 'Autorizado') { 
@@ -712,7 +723,16 @@
         $("#btn-cancelar-pedido").click(function() {
             const cadena = $("#id_pedido_seleccionado").html();
             const id_pedido = cadena.substring(17, cadena.length);
-            const valores = { 'id_pedido': id_pedido, 'nb_estatus': 'Cancelado' }
+            const id_usr_cambia_estatus = $('#nav-id-usuario').html();
+            const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
+
+            const valores = { 
+                'id_pedido': id_pedido, 
+                'nb_estatus': 'Cancelado',
+                'id_usr_cambia_estatus': id_usr_cambia_estatus,
+                'tx_comentarios_estatus': tx_comentarios_estatus
+            }
+            
             // aqui va el post
             $.post("/actualizapedido", valores, function(res) {
                 if(res === 'Cancelado') { 
