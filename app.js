@@ -81,6 +81,7 @@ app.get("/main", IsLoggedIn, (req, res) => {
                             tabledata: [], 
                             tabledata2: [], 
                             tabledata3: [], 
+                            tabledata4: [], 
                             vistaUsuarios: "d-none",  
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -117,6 +118,7 @@ app.get("/usuarios", IsLoggedIn, (req, res) => {
                             tabledata: tabledata, 
                             tabledata2: [], 
                             tabledata3: [], 
+                            tabledata4: [], 
                             vistaUsuarios: "", 
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",
@@ -145,6 +147,7 @@ app.get("/profile", IsLoggedIn, (req, res ) => {
             tabledata: [], 
             tabledata2: [], 
             tabledata3: [], 
+            tabledata4: [], 
             vistaUsuarios: "d-none", 
             vistaMateriales: "d-none",
             vistaCompras: "d-none" ,
@@ -177,6 +180,7 @@ app.get("/materiales", IsLoggedIn, (req, res) => {
                                         tabledata: [], 
                                         tabledata2: tabledata2, 
                                         tabledata3: [], 
+                                        tabledata4: [], 
                                         vistaUsuarios: "d-none", 
                                         vistaMateriales: "",
                                         vistaCompras: "d-none",
@@ -205,6 +209,7 @@ app.get("/compras", IsLoggedIn, (req, res) => {
                             tabledata: [], 
                             tabledata2: [], 
                             tabledata3: [], 
+                            tabledata4: [], 
                             vistaUsuarios: "d-none", 
                             vistaMateriales: "d-none",
                             vistaCompras: "",
@@ -236,6 +241,7 @@ app.get("/listapedidos", IsLoggedIn, (req, res) => {
                                         tabledata: [], 
                                         tabledata2: [], 
                                         tabledata3: tabledata3, 
+                                        tabledata4: [], 
                                         vistaUsuarios: "d-none", 
                                         vistaMateriales: "d-none",
                                         vistaCompras: "d-none",
@@ -309,24 +315,46 @@ app.post("/actualizapedido", (req, res) => {
 /* Vista Almacén */
 app.get("/almacen", IsLoggedIn, (req, res) => {
 
-    if (req.user) {
-        res.render('inicio', {
-                            tabledata: [], 
-                            tabledata2: [],
-                            tabledata3: [],  
-                            vistaUsuarios: "d-none", 
-                            vistaMateriales: "d-none",
-                            vistaCompras: "d-none",
-                            vistaProfile: "d-none",
-                            vistaInicio: "d-none",
-                            vistaListaPedidos: "d-none",
-                            vistaAlmacen: "",
-                            usuario: req.user
-                        } 
-        );  
-    } else {
-        res.redirect("/");
-    }
+    const sql = "select a.nu_orden_compra, " 
+        + "a.id_pedido, " 
+        + "a.nb_proveedor, " 
+        + "a.nb_estatus, " 
+        + "b.id_producto, " 
+        + "b.nb_producto, " 
+        + "b.nu_cantidad, " 
+        + "b.cd_articulo " 
+        + "from pedidos as a " 
+        + "inner join  prodpedidos as b " 
+        + "on a.id_pedido = b.id_pedido " 
+        + "where a.nb_estatus = 'Autorizado' ";
+
+   if (req.user) {
+       connection.query(sql, function(err, results) {
+           if (err) {
+               console.log(err);
+           } else { 
+               // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
+               const datos = JSON.parse(JSON.stringify(results));
+               res.render('inicio', {
+                                       tabledata: [], 
+                                       tabledata2: [], 
+                                       tabledata3: [],
+                                       tabledata4: datos, 
+                                       vistaUsuarios: "d-none", 
+                                       vistaMateriales: "d-none",
+                                       vistaCompras: "d-none",
+                                       vistaProfile: "d-none",
+                                       vistaInicio: "d-none",
+                                       vistaListaPedidos: "d-none",
+                                       vistaAlmacen: "",
+                                       usuario: req.user
+                                   } 
+               );
+           } 
+       });
+   } else {
+       res.redirect("/");
+   }
 });
 
 
@@ -628,6 +656,7 @@ app.post("/login", async (req, res) => {
                             tabledata: [], 
                             tabledata2: [], 
                             tabledata3: [], 
+                            tabledata4: [], 
                             vistaUsuarios: "d-none",  
                             vistaMateriales: "d-none",
                             vistaCompras: "d-none",

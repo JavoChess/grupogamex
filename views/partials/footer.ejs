@@ -182,7 +182,8 @@
         let tabledataProductosPedidos = []; 
         let tabledataListaPedidos = <%- JSON.stringify(tabledata3) %>; 
         let tabledataListaProdPedidos = []; 
-
+        let tabledataListaProdPedidosAlmacen = <%- JSON.stringify(tabledata4) %>; 
+        
         let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
         let vistaCompras = <%- JSON.stringify(vistaCompras) %>; 
@@ -404,16 +405,17 @@
             selectable: 1,
             columns: [ //Define Table Columns 
                 {title:"Id de pedido",     field:"id_pedido",           sorter:"string", hozAlign:"left" },
-                {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left"}, 
+                {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left" }, 
                 {title:"Orden de compra",  field:"nu_orden_compra",     sorter:"string", hozAlign:"left" }, 
                 {title:"Estatus",          field:"nb_estatus",          sorter:"string", hozAlign:"left" }, 
                 {title:"Proveedor",        field:"nb_proveedor",        sorter:"string", hozAlign:"left" },
                 {title:"Fecha de pedido",  field:"fh_pedido",           sorter:"date",   hozAlign:"left" },
                 {title:"Términos",         field:"tx_terminos",         sorter:"string", hozAlign:"left" },
                 {title:"Entregar en",      field:"tx_entregar_en",      sorter:"string", hozAlign:"left" },
-                {title:"Horario",          field:"nu_horario",          sorter: "string",hozAlign:"left"},
-                {title:"Contacto",         field:"nb_contacto",         sorter:"string", hozAlign:"left"},
-                {title:"Especificaciones", field:"tx_especificaciones", sorter:"string", hozAlign:"left"},
+                {title:"Horario",          field:"nu_horario",          sorter: "string",hozAlign:"left" },
+                {title:"Contacto",         field:"nb_contacto",         sorter:"string", hozAlign:"left" },
+                {title:"Especificaciones", field:"tx_especificaciones", sorter:"string", hozAlign:"left" },
+                {title:"Comentarios",      field:"tx_comentarios_estatus", sorter:"string", hozAlign:"left" },
                 
             ],
         }); 
@@ -445,6 +447,31 @@
             ],
         }); 
 
+
+
+        // ------------------------------
+        // tabla con la lista para el Almacén
+        // ------------------------------
+        let tableListaProdPedidosAlmacen = new Tabulator("#tabla-lista-almacen", { 
+            height: 280,               // set height of table to enable virtual DOM
+            data: tabledataListaProdPedidosAlmacen,          //load initial data into table
+            layout: "fitColumns", //fit columns to width of table (optional)
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            selectable: 1,
+            columns: [ //Define Table Columns 
+                {title:"Orden de compra",    field:"nu_orden_compra", sorter:"string", hozAlign:"left" },
+                {title:"Id de Pedido",       field:"id_pedido",       sorter:"string", hozAlign:"left" }, 
+                {title:"Proveedor",          field:"nb_proveedor",    sorter:"string", hozAlign:"left" }, 
+                {title:"Estatus",            field:"nb_estatus",      sorter:"string", hozAlign:"left" }, 
+                {title:"Id de producto",     field:"id_producto",     sorter:"string", hozAlign:"left" },
+                {title:"Producto a recibir", field:"nb_producto",     sorter:"date",   hozAlign:"left" },
+                {title:"Cantidad",           field:"nu_cantidad",     sorter:"string", hozAlign:"left" },
+                {title:"Código de artículo", field:"cd_articulo",     sorter:"string", hozAlign:"left" },
+                
+            ],
+        }); 
 
 
         // SELECCION DE UN ELELEMTO
@@ -732,7 +759,7 @@
                 'id_usr_cambia_estatus': id_usr_cambia_estatus,
                 'tx_comentarios_estatus': tx_comentarios_estatus
             }
-            
+
             // aqui va el post
             $.post("/actualizapedido", valores, function(res) {
                 if(res === 'Cancelado') { 
