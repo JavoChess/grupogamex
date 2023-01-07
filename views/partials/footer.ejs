@@ -453,14 +453,15 @@
         // tabla con la lista para el Almacén
         // ------------------------------
         let tableListaProdPedidosAlmacen = new Tabulator("#tabla-lista-almacen", { 
-            height: 280,               // set height of table to enable virtual DOM
-            data: tabledataListaProdPedidosAlmacen,          //load initial data into table
+            height: 280,               // set height of table to enable virtual DOM 
+            data: tabledataListaProdPedidosAlmacen,          //load initial data into table 
             layout: "fitColumns", //fit columns to width of table (optional)
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
-            selectable: 1,
+            selectable: 1, 
             columns: [ //Define Table Columns 
+                {title:"Id prod pedido",     field:"id_prodpedidos", sorter:"string", hozAlign:"left" },
                 {title:"Orden de compra",    field:"nu_orden_compra", sorter:"string", hozAlign:"left" },
                 {title:"Id de Pedido",       field:"id_pedido",       sorter:"string", hozAlign:"left" }, 
                 {title:"Proveedor",          field:"nb_proveedor",    sorter:"string", hozAlign:"left" }, 
@@ -686,7 +687,10 @@
         });
 
 
+        /* ------------------------ */
         /* VISTA - LISTA DE PEDIDOS */
+        /* ------------------------ */
+
 
         // Obtiene el Id del registro seleccionado
         tableListaPedidos.on("rowSelected", function(row) { 
@@ -770,7 +774,46 @@
             });
         });
 
+        /* -------------------------------- */
         /* TERMINA VISTA - LISTA DE PEDIDOS */
+        /* -------------------------------- */
+
+
+
+
+        /* ------------------------ */
+        /* VISTA - LISTA DE ALMACEN */
+        /* ------------------------ */
+
+        // Obtiene el Id del registro seleccionado
+        tableListaProdPedidosAlmacen.on("rowSelected", function(row) { 
+            const id_pedido_seleccionado = row._row.data.id_prodpedidos;
+            let valores = {};
+            valores['id_prodpedidos'] = id_pedido_seleccionado;
+            $("#alm-id-pedido-sel").html("Id seleccionado: " + id_pedido_seleccionado); 
+        });
+
+
+
+        /*  */ 
+        $( "#frm-recepcion" ).submit(function( event ) { 
+
+            validaFormulario("frm-recepcion") ? alert("ok amigo") : alert("Uno o más campos requeridos faltan de completar.");
+            event.preventDefault();
+        });
+
+
+
+
+        /* -------------------------------- */
+        /* TERMINA VISTA - LISTA DE ALMACEN */
+        /* -------------------------------- */
+
+
+
+
+
+
 
 
         /* boton de prueba temporal */

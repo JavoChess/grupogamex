@@ -3,7 +3,7 @@
     
     <div class="row"> 
         <div class="col-md-12"> 
-            <h2>Recepción para Almacén</h2> 
+            <h2>Recepción de Materiales</h2> 
         </div> 
     </div> 
 
@@ -17,72 +17,71 @@
 
     <div class="row">
         <div class="col-md-12">
-            <p id="id_pedido_seleccionado">Id seleccionado: </p>
+            <p id="alm-id-pedido-sel">Id seleccionado: </p>
         </div>
     </div>
 
+    <div class="row">&nbsp;</div> 
+
+    <div class="row"> 
+        <div class="col-md-12"> 
+            <h3>Características de la recepción</h3> 
+        </div> 
+    </div> 
+    
     <div class="row">&nbsp;</div>
 
 
-    <div class="row">
-        <form class="row g-3 needs-validation" novalidate>
-            <div class="col-md-4">
-              <label for="validationCustom01" class="form-label">Cantidad de piezas recibidas</label>
-              <input type="text" class="form-control" id="validationCustom01" required>
-              <div class="valid-feedback">
-                Looks good!
-              </div>
+    <form class="row g-3 needs-validation" id="frm-recepcion" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">Cantidad de piezas recibidas</label>
+          <input type="text" class="form-control" id="validationCustom01" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Vehículo</label>
+          <input type="text" class="form-control" id="validationCustom02" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom03" class="form-label">Chofer</label>
+            <input type="text" class="form-control" id="validationCustom03" required>
+            <div class="valid-feedback">
+              Looks good!
             </div>
-            <div class="col-md-4">
-              <label for="validationCustom02" class="form-label">Vehículo</label>
-              <input type="text" class="form-control" id="validationCustom02" required>
-              <div class="valid-feedback">
-                Looks good!
-              </div>
-            </div>
-            <div class="col-md-4">
-                <label for="validationCustom03" class="form-label">Chofer</label>
-                <input type="text" class="form-control" id="validationCustom03" required>
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-              </div>
-            <div class="col-md-4">
-              <label for="validationCustom04" class="form-label">Fecha de recepción</label>
-              <input type="date" class="form-control" id="validationCustom04" required>
-              <div class="invalid-feedback">
-                Please provide a valid city.
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="validationCustom04" class="form-label">Usuario que recibe</label>
-              <select class="form-select" id="validationCustom05" required>
-                <option selected disabled value="">Choose...</option>
-                <option>...</option>
-              </select>
-              <div class="invalid-feedback">
-                Please select a valid state.
-              </div>
-            </div>
-            <div class="col-md-4">
-              
-            </div>
+          </div>
+        <div class="col-md-4">
+          <label for="validationCustom04" class="form-label">Fecha de recepción</label>
+          <input type="date" class="form-control" id="validationCustom04" required>
+          <div class="invalid-feedback">
+            Please provide a valid city.
+          </div>
+        </div>
 
-            <div class="col-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                <label class="form-check-label" for="invalidCheck">
-                  Se revisó detenidamente lo recibido
-                </label>
-                <div class="invalid-feedback">
-                  You must agree before submitting.
-                </div>
-              </div>
+        <div class="col-md-8"></div>
+
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-check-label" for="invalidCheck">
+              Se revisó detenidamente lo recibido
+            </label>
+            <div class="invalid-feedback">
+              You must agree before submitting.
             </div>
-            <div class="col-12">
-              <button class="btn btn-primary" type="submit">Guardar datos de recepción</button>
-            </div>
-          </form>
-    </div>
+          </div>
+        </div>
+        
+        <div class="row">&nbsp;</div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Guardar datos de recepción</button>
+        </div>
+      </form>
+    
 
 </div>

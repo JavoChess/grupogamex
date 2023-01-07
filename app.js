@@ -316,6 +316,7 @@ app.post("/actualizapedido", (req, res) => {
 app.get("/almacen", IsLoggedIn, (req, res) => {
 
     const sql = "select a.nu_orden_compra, " 
+        + "b.id_prodpedidos, " 
         + "a.id_pedido, " 
         + "a.nb_proveedor, " 
         + "a.nb_estatus, " 
