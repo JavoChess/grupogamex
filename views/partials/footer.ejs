@@ -212,6 +212,7 @@
             pagination: "local",       //paginate the data
             paginationSize: 10,         //allow 7 rows per page of data
             paginationCounter: "rows", //display count of paginated rows in footer
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns
 
                 {title:"Id",      field:"id_usuario", sorter:"string", hozAlign:"left"},
@@ -284,12 +285,14 @@
             data: tabledataMateriales,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
+            layout: "fitColumns", //fit columns to width of table (optional)
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
             keybindings:{ 
                         "redo" : "ctrl + r", //bind redo function to ctrl + r 
                         }, 
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
                 {title:"Id",              field:"material_id",    sorter:"string", hozAlign:"left"},
                 {title:"Nombre",          field:"nombre",         sorter:"string", hozAlign:"left", editor: true}, 
@@ -371,12 +374,14 @@
             data: tabledataProductosPedidos,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
+            layout: "fitColumns", //fit columns to width of table (optional)
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
             keybindings:{ 
                         "redo" : "ctrl + r", //bind redo function to ctrl + r 
                         }, 
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
                 {title:"Id de producto",     field:"id_producto",       sorter:"string", hozAlign:"left" },
                 {title:"Nombre de producto", field:"nb_producto",       sorter:"string", hozAlign:"left" }, 
@@ -400,9 +405,11 @@
             height: 280,               // set height of table to enable virtual DOM
             data: tabledataListaPedidos,          //load initial data into table
             pagination: "local",       //paginate the data 
+            layout: "fitColumns", //fit columns to width of table (optional)
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
             selectable: 1,
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
                 {title:"Id de pedido",     field:"id_pedido",           sorter:"string", hozAlign:"left" },
                 {title:"Id usuario",       field:"id_usuario",          sorter:"string", hozAlign:"left" }, 
@@ -428,11 +435,13 @@
             height: 280,               // set height of table to enable virtual DOM
             data: tabledataListaProdPedidos,          //load initial data into table
             pagination: "local",       //paginate the data 
+            layout: "fitColumns", //fit columns to width of table (optional)
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
             selectable: 1,
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
-                {title:"Id",                    field:"id_prodpedidos",    sorter:"string", hozAlign:"left" },
+                {title:"Id",                    field:"id_prodpedido",    sorter:"string", hozAlign:"left" },
                 {title:"Id de Pedido",          field:"id_pedido",         sorter:"string", hozAlign:"left" }, 
                 {title:"Id de producto",        field:"id_producto",       sorter:"string", hozAlign:"left" }, 
                 {title:"Producto",              field:"nb_producto",       sorter:"string", hozAlign:"left" }, 
@@ -455,21 +464,23 @@
         let tableListaProdPedidosAlmacen = new Tabulator("#tabla-lista-almacen", { 
             height: 280,               // set height of table to enable virtual DOM 
             data: tabledataListaProdPedidosAlmacen,          //load initial data into table 
-            layout: "fitColumns", //fit columns to width of table (optional)
+            layout: "fitColumns", //fit columns to width of table (optional)6
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
             paginationCounter: "rows", //display count of paginated rows in footer 
             selectable: 1, 
+            columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
-                {title:"Id prod pedido",     field:"id_prodpedidos", sorter:"string", hozAlign:"left" },
+                {title:"Id prod pedido",     field:"id_prodpedido", sorter:"string",  hozAlign:"left" },
                 {title:"Orden de compra",    field:"nu_orden_compra", sorter:"string", hozAlign:"left" },
                 {title:"Id de Pedido",       field:"id_pedido",       sorter:"string", hozAlign:"left" }, 
-                {title:"Proveedor",          field:"nb_proveedor",    sorter:"string", hozAlign:"left" }, 
+                {title:"Proveedor",          field:"nb_proveedor",    sorter:"string", hozAlign:"left", tooltip:true }, 
                 {title:"Estatus",            field:"nb_estatus",      sorter:"string", hozAlign:"left" }, 
                 {title:"Id de producto",     field:"id_producto",     sorter:"string", hozAlign:"left" },
-                {title:"Producto a recibir", field:"nb_producto",     sorter:"date",   hozAlign:"left" },
+                {title:"Producto a recibir", field:"nb_producto",     sorter:"date",   hozAlign:"left", tooltip:true },
                 {title:"Cantidad",           field:"nu_cantidad",     sorter:"string", hozAlign:"left" },
                 {title:"Código de artículo", field:"cd_articulo",     sorter:"string", hozAlign:"left" },
+                {title:"Estatus recepción", field:"nb_prodpedido_estatus",     sorter:"string", hozAlign:"left" },
                 
             ],
         }); 
@@ -675,7 +686,13 @@
             valores.id_producto = idConProd.substring(pos+2, largo);
             valores.nb_producto = idConProd.substring(0, pos);
             tableProductosPedidos.addRow( valores, true);
+
+            let element = document.getElementById("frm-modal-productos-pedidos");
+            element.reset();
+            element.classList.remove('was-validated');
+
             $("#modal-ppedidos-cancelar").click();
+
 
         }
 
@@ -787,20 +804,68 @@
 
         // Obtiene el Id del registro seleccionado
         tableListaProdPedidosAlmacen.on("rowSelected", function(row) { 
-            const id_pedido_seleccionado = row._row.data.id_prodpedidos;
-            let valores = {};
-            valores['id_prodpedidos'] = id_pedido_seleccionado;
-            $("#alm-id-pedido-sel").html("Id seleccionado: " + id_pedido_seleccionado); 
+            const id_prodpedido = row._row.data.id_prodpedido;
+            const id_pedido = row._row.data.id_pedido;
+            $("#alm-id-pedido-sel").html("Id Pedido: " + id_pedido); 
+            $("#alm-id-prodpedido-sel").html("Id Prod. pedido: " + id_prodpedido); 
+
         });
 
 
+        /* Agrega un registro a almacen */
+        function nuevaRecepcion() { 
+            const valores = arrayObjetosEnForm("frm-recepcion");
+            valores["id_usuario"] = parseInt($('#nav-id-usuario').html());
+            
+            const strIdPedido = $("#alm-id-pedido-sel").html();
+            const id_pedido = strIdPedido.substring(11, strIdPedido.length);
 
-        /*  */ 
+            const strIdProdPedido = $("#alm-id-prodpedido-sel").html();
+            const id_prodpedido = strIdProdPedido.substring(16, strIdProdPedido.length);
+
+            valores["id_pedido"] = parseInt(id_pedido);
+            valores["id_prodpedido"] = parseInt(id_prodpedido);
+
+
+            /* 1. Agrega un registro en la tabla almacen 
+               2. cambia estatus a 'Recibido' en prodpedidos 
+               3. Actualiza la tabla con nuevo query */
+            
+            /* 1. */
+            $.post("/registraRecepcion", valores, (res) => { 
+                
+                if (parseInt(res) > 0) {
+                    alert("Insert correcto en tbl almacen. Ahora update en tbl prodpedidos");
+
+                    /* 2. */
+                    $.post("/editaProdPedido", {'id_prodpedido': id_prodpedido}, (res2) => {
+                        if (res2 === 'ok') {
+                            alert("Editado correctamente en tbl prodpedidos");
+                            /* 3. */
+                            $.get("/prodPedidosRequery", (res) => {
+                                tableListaProdPedidosAlmacen.replaceData(res);
+                                let element = document.getElementById("frm-recepcion");
+                                element.reset();
+                                element.classList.remove('was-validated');
+                            });
+                        } else {
+                            alert("Error al actualizar en tbl prodpedidos");
+                        }
+                    });
+                } else { 
+                    alert("Error al insertar en tbl almacen");
+                }
+            });
+
+            
+        }
+
+        /* Validacion del form recepcion de materiales */ 
         $( "#frm-recepcion" ).submit(function( event ) { 
 
-            validaFormulario("frm-recepcion") ? alert("ok amigo") : alert("Uno o más campos requeridos faltan de completar.");
-            event.preventDefault();
-        });
+            validaFormulario("frm-recepcion") ? nuevaRecepcion() : alert("Uno o más campos requeridos faltan de completar.");
+            event.preventDefault(); 
+        }); 
 
 
 

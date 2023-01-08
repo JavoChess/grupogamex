@@ -316,18 +316,20 @@ app.post("/actualizapedido", (req, res) => {
 app.get("/almacen", IsLoggedIn, (req, res) => {
 
     const sql = "select a.nu_orden_compra, " 
-        + "b.id_prodpedidos, " 
-        + "a.id_pedido, " 
-        + "a.nb_proveedor, " 
-        + "a.nb_estatus, " 
-        + "b.id_producto, " 
-        + "b.nb_producto, " 
-        + "b.nu_cantidad, " 
-        + "b.cd_articulo " 
+            + "b.id_prodpedido, "
+            + "a.id_pedido, " 
+            + "a.nb_proveedor, " 
+            + "a.nb_estatus, " 
+            + "b.id_producto, " 
+            + "b.nb_producto, " 
+            + "b.nu_cantidad, " 
+            + "b.cd_articulo, " 
+            + "b.nb_prodpedido_estatus "
         + "from pedidos as a " 
         + "inner join  prodpedidos as b " 
         + "on a.id_pedido = b.id_pedido " 
-        + "where a.nb_estatus = 'Autorizado' ";
+        + "where a.nb_estatus = 'Autorizado' "
+            + "and b.nb_prodpedido_estatus = 'Pendiente' ";
 
    if (req.user) {
        connection.query(sql, function(err, results) {
@@ -357,6 +359,70 @@ app.get("/almacen", IsLoggedIn, (req, res) => {
        res.redirect("/");
    }
 });
+
+
+/* Viene de la vista de almacen cuando registran una recepción.
+   El req.body trae los valores  */
+app.post("/registraRecepcion", (req, res) => {
+    
+    const valores = req.body;
+    delete valores.id_prodpedido;
+    const sql = "insert into almacen set ?";
+
+    connection.query(sql, [valores],  function(err, results) {  /* retorna el nuevo id  */
+        //console.log(results.insertId);
+        const nuevoId = results.insertId;
+        //err ? res.end(err) : res.end(results);
+        err ? res.end('0') : res.end(String(nuevoId)); 
+    });
+
+});
+
+
+/* Posterior al insert nuevo en tbl almacen, edita el estatus en tbl prodpedidos
+   a 'Recibido' */
+app.post("/editaProdPedido", (req, res) => {
+    
+    const id_prodpedido = req.body.id_prodpedido;
+    const sql = "update prodpedidos set nb_prodpedido_estatus = 'Recibido' where id_prodpedido = ? ";
+
+    connection.query(sql, [id_prodpedido],  function(err, results) { 
+        err ? res.end('0') : res.end('ok'); 
+    });
+
+});
+
+/* Posterior a la edición en prodpedidos, hace un 'requery' */
+app.get("/prodPedidosRequery", (req, res) => {
+    
+    const sql = "select a.nu_orden_compra, " 
+            + "b.id_prodpedido, "
+            + "a.id_pedido, " 
+            + "a.nb_proveedor, " 
+            + "a.nb_estatus, " 
+            + "b.id_producto, " 
+            + "b.nb_producto, " 
+            + "b.nu_cantidad, " 
+            + "b.cd_articulo, " 
+            + "b.nb_prodpedido_estatus "
+        + "from pedidos as a " 
+        + "inner join  prodpedidos as b " 
+        + "on a.id_pedido = b.id_pedido " 
+        + "where a.nb_estatus = 'Autorizado' "
+            + "and b.nb_prodpedido_estatus = 'Pendiente' ";
+
+    connection.query(sql, function(err, results) {
+        err ? res.send(err) : res.send(JSON.parse(JSON.stringify(results)));
+    });
+
+
+
+});
+
+
+
+
+
 
 
 
@@ -428,12 +494,13 @@ app.post("/pedidos/prodpedidos/", (req, res) => {
                 ,prodPedidos[i].fh_entrega
                 ,prodPedidos[i].id_producto
                 ,prodPedidos[i].id_pedido
+                ,'Pendiente'
             ]
         );
     }
     
     //console.log(regArray);
-    const cols = '(nb_producto,nu_cantidad,im_unidad,cd_moneda,im_tipo_de_cambio,im_pedido,cd_articulo,fh_entrega,id_producto,id_pedido)';
+    const cols = '(nb_producto,nu_cantidad,im_unidad,cd_moneda,im_tipo_de_cambio,im_pedido,cd_articulo,fh_entrega,id_producto,id_pedido,nb_prodpedido_estatus)';
     const sql = 'insert into prodpedidos ' + cols + ' values ?';
     
     connection.query(sql, [regArray],  function(err, results) { 
