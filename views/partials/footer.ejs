@@ -712,16 +712,16 @@
         // Obtiene el Id del registro seleccionado
         tableListaPedidos.on("rowSelected", function(row) { 
 
-            const id_pedido_seleccionado = row._row.data.id_pedido;
+            const idPedidoSeleccionado = row._row.data.id_pedido;
             let valores = {};
-            valores['id_pedido'] = id_pedido_seleccionado;
+            valores['id_pedido'] = idPedidoSeleccionado;
 
-            $("#id_pedido_seleccionado").html("Id seleccionado: " + id_pedido_seleccionado); 
+            $("#id_pedido_seleccionado").html("Id seleccionado: " + idPedidoSeleccionado); 
 
             //tableListaPedidos.deselectRow(row);
 
             // actualiza el segundo grid con la query
-            // select * from prodpedidos where id_pedido = id_pedido_seleccionado
+            // select * from prodpedidos where id_pedido = idPedidoSeleccionado
             $.post("/listapedidosfiltradaproductos", valores, (res) => {
                 tableListaProdPedidos.replaceData(res);
             });
@@ -731,12 +731,33 @@
         // Cuando cambia el select del form
         $("#lista_pedidos_combo").change(function() { 
             let valores = {};
-            valores['nb_estatus'] = $( "#lista_pedidos_combo option:selected" ).text();
+            let nb_estatus = $( "#lista_pedidos_combo option:selected" ).text();
+            console.log(nb_estatus);
+
+            valores['nb_estatus'] = nb_estatus;
             $("#id_pedido_seleccionado").html("Id seleccionado: "); 
+
+            /* Dependiendo de la seleccion se activan o desactivan los botones */
+            if (nb_estatus === 'Autorizado') {
+                
+                $('#btn-autorizar-pedido').attr("disabled", true);
+                $('#btn-cancelar-pedido').attr('disabled', false);
+                
+            } else if (nb_estatus === 'Cancelado') {
+                
+                $('#btn-autorizar-pedido').attr("disabled", false);
+                $('#btn-cancelar-pedido').attr('disabled', true);
+            } else { // Pendiente:
+                
+                $('#btn-autorizar-pedido').attr("disabled", false);
+                $('#btn-cancelar-pedido').attr('disabled', false);
+            }
 
             $.post("/listapedidosfiltrada", valores, (res) => {
                 tableListaPedidos.replaceData(res);
             });
+
+
 
         });
 
@@ -838,8 +859,8 @@
                     alert("Insert correcto en tbl almacen. Ahora update en tbl prodpedidos");
 
                     /* 2. */
-                    $.post("/editaProdPedido", {'id_prodpedido': id_prodpedido}, (res2) => {
-                        if (res2 === 'ok') {
+                    $.post("/editaProdPedido", {'id_prodpedido': id_prodpedido}, (res2) => { 
+                        if (res2 === 'ok') { 
                             alert("Editado correctamente en tbl prodpedidos");
                             /* 3. */
                             $.get("/prodPedidosRequery", (res) => {
