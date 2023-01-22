@@ -1,0 +1,93 @@
+
+<div class="container-fluid" id="vista-facturacion">
+    
+    <div class="row"> 
+        <div class="col-md-12"> 
+            <h2>Registro de factura</h2> 
+        </div> 
+    </div> 
+
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="tabla-lista-almacen-facturacion"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="fact-id-prodpedido-sel">Id Prod pedido: </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="fact-id-pedido-sel">Id pedido: </p>
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div> 
+
+    <div class="row"> 
+        <div class="col-md-12"> 
+            <h3>Criterios de la factura</h3> 
+        </div> 
+    </div> 
+    
+    <div class="row">&nbsp;</div>
+
+
+    <form class="row g-3 needs-validation" id="frm-facturacion" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">Cantidad de piezas recibidas</label>
+          <input type="text" class="form-control" id="validationCustom01" name="nu_pzs_recibidas" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Vehículo</label>
+          <input type="text" class="form-control" id="validationCustom02" name="tx_vehiculo" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom03" class="form-label">Chofer</label>
+            <input type="text" class="form-control" id="validationCustom03" name="nb_chofer" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+          </div>
+        <div class="col-md-4">
+          <label for="validationCustom04" class="form-label">Fecha de recepción</label>
+          <input type="date" class="form-control" id="validationCustom04" name="fh_recepcion" required>
+          <div class="invalid-feedback">
+            Please provide a valid city.
+          </div>
+        </div>
+
+        <div class="col-md-8"></div>
+
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="invalidCheck" name="cd_valida" required>
+            <label class="form-check-label" for="invalidCheck">
+              Se revisó detenidamente lo recibido
+            </label>
+            <div class="invalid-feedback">
+              You must agree before submitting.
+            </div>
+          </div>
+        </div>
+
+        <div class="row">&nbsp;</div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Guardar datos de la factura</button>
+        </div>
+      </form>
+    
+
+</div>

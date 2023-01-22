@@ -848,6 +848,7 @@
             valores["id_prodpedido"] = parseInt(id_prodpedido);
 
 
+
             /* 1. Agrega un registro en la tabla almacen 
                2. cambia estatus a 'Recibido' en prodpedidos 
                3. Actualiza la tabla con nuevo query */
@@ -857,18 +858,17 @@
                 
                 if (parseInt(res) > 0) {
                     alert("Insert correcto en tbl almacen. Ahora update en tbl prodpedidos");
-
-                    /* 2. */
+                    /* 2. */ 
                     $.post("/editaProdPedido", {'id_prodpedido': id_prodpedido}, (res2) => { 
                         if (res2 === 'ok') { 
-                            alert("Editado correctamente en tbl prodpedidos");
-                            /* 3. */
+                            alert("Editado correctamente en tbl prodpedidos"); 
+                            /* 3. */ 
                             $.get("/prodPedidosRequery", (res) => {
                                 tableListaProdPedidosAlmacen.replaceData(res);
-                                let element = document.getElementById("frm-recepcion");
-                                element.reset();
-                                element.classList.remove('was-validated');
-                            });
+                                let element = document.getElementById("frm-recepcion"); 
+                                element.reset(); 
+                                element.classList.remove('was-validated'); 
+                            }); 
                         } else {
                             alert("Error al actualizar en tbl prodpedidos");
                         }
@@ -894,9 +894,6 @@
         /* -------------------------------- */
         /* TERMINA VISTA - LISTA DE ALMACEN */
         /* -------------------------------- */
-
-
-
 
 
 

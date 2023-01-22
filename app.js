@@ -68,55 +68,57 @@ IsLoggedIn = async (req, res, next) => {
   }
 };
 
+
+/* define el rendering de parámetros del main */
+function mainRendering (valores) {
+
+  const objRender = {};  
+  objRender.tabledata = valores[0] === 0 ? [] : valores[0];
+  objRender.tabledata2 = valores[1] === 0 ? [] : valores[1];
+  objRender.tabledata3 = valores[2] === 0 ? [] : valores[2];
+  objRender.tabledata4 = valores[3] === 0 ? [] : valores[3];
+  objRender.vistaUsuarios = valores[4] === 0 ? 'd-none' : '';
+  objRender.vistaMateriales = valores[5] === 0 ? 'd-none' : '';
+  objRender.vistaCompras = valores[6] === 0 ? 'd-none' : '';
+  objRender.vistaProfile = valores[7] === 0 ? 'd-none' : '';
+  objRender.vistaInicio = valores[8] === 0 ? 'd-none' : '';
+  objRender.vistaListaPedidos = valores[9] === 0 ? 'd-none' : '';
+  objRender.vistaAlmacen = valores[10] === 0 ? 'd-none' : '';
+  objRender.vistaFacturacion = valores[11] === 0 ? 'd-none' : '';
+  objRender.usuario = valores[12] ;
+  return objRender;
+}
+
+
 // Pantalla de inicio
 app.get('/main', IsLoggedIn, (req, res) => {
+
   if (req.user) {
-    res.render('inicio', {
-      tabledata: [],
-      tabledata2: [],
-      tabledata3: [],
-      tabledata4: [],
-      vistaUsuarios: 'd-none',
-      vistaMateriales: 'd-none',
-      vistaCompras: 'd-none',
-      vistaProfile: 'd-none',
-      vistaInicio: '',
-      vistaListaPedidos: 'd-none',
-      vistaAlmacen: 'd-none',
-      usuario: req.user,
-    });
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user]);
+    res.render('inicio', renderDef);
   } else {
     res.redirect('/');
   }
 });
 
-// Vista administración de usuarios
-// REVISAR EL SQL
-app.get('/usuarios', IsLoggedIn, (req, res) => {
+
+/* ----------------- */
+/* VISTA FACTURACION */
+/* ----------------- */
+
+/* Vista Almacén */
+app.get('/facturacion', IsLoggedIn, (req, res) => {
+  const sql ='select * from usuarios';
+
   if (req.user) {
-    //const sql = "select usuario_id, nombre, apellido, usuario, tipo_usuario from usuarios";
-    const sql =
-      'select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios';
     connection.query(sql, function (err, results) {
       if (err) {
         console.log(err);
       } else {
-        // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
-        const tabledata = JSON.parse(JSON.stringify(results));
-        res.render('inicio', {
-          tabledata: tabledata,
-          tabledata2: [],
-          tabledata3: [],
-          tabledata4: [],
-          vistaUsuarios: '',
-          vistaMateriales: 'd-none',
-          vistaCompras: 'd-none',
-          vistaProfile: 'd-none',
-          vistaInicio: 'd-none',
-          vistaListaPedidos: 'd-none',
-          vistaAlmacen: 'd-none',
-          usuario: req.user,
-        });
+        //const datos = JSON.parse(JSON.stringify(results));
+
+        const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, req.user]);
+        res.render('inicio', renderDef);
       }
     });
   } else {
@@ -124,30 +126,45 @@ app.get('/usuarios', IsLoggedIn, (req, res) => {
   }
 });
 
+/* ------------------------- */
+/* TERMINA VISTA FACTURACION */
+/* ------------------------- */
+
+
+// Vista administración de usuarios
+// REVISAR EL SQL
+app.get('/usuarios', IsLoggedIn, (req, res) => {
+  if (req.user) {
+    
+    const sql = 'select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios';
+    connection.query(sql, function (err, results) {
+      if (err) {
+        console.log(err);
+      } else {
+        const tabledata = JSON.parse(JSON.stringify(results));
+        const renderDef = mainRendering([tabledata, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, req.user]);
+        res.render('inicio', renderDef);
+      }
+    });
+  } else {
+    res.redirect('/');
+  }
+});
+
+
+
 /* profile */
 app.get('/profile', IsLoggedIn, (req, res) => {
   if (req.user) {
-    //console.log(req.user);
-
-    res.render('inicio', {
-      tabledata: [],
-      tabledata2: [],
-      tabledata3: [],
-      tabledata4: [],
-      vistaUsuarios: 'd-none',
-      vistaMateriales: 'd-none',
-      vistaCompras: 'd-none',
-      vistaProfile: '',
-      vistaInicio: 'd-none',
-      vistaListaPedidos: 'd-none',
-      vistaAlmacen: 'd-none',
-      usuario: req.user,
-    });
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, req.user]);
+    res.render('inicio', renderDef);
   } else {
     // lo manda al login
     res.redirect('/');
   }
 });
+
+
 
 /* Vista catalogo de materiales */
 app.get('/materiales', IsLoggedIn, (req, res) => {
@@ -157,22 +174,9 @@ app.get('/materiales', IsLoggedIn, (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
         const tabledata2 = JSON.parse(JSON.stringify(results));
-        res.render('inicio', {
-          tabledata: [],
-          tabledata2: tabledata2,
-          tabledata3: [],
-          tabledata4: [],
-          vistaUsuarios: 'd-none',
-          vistaMateriales: '',
-          vistaCompras: 'd-none',
-          vistaProfile: 'd-none',
-          vistaInicio: 'd-none',
-          vistaListaPedidos: 'd-none',
-          vistaAlmacen: 'd-none',
-          usuario: req.user,
-        });
+        const renderDef = mainRendering([0, tabledata2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, req.user]);
+        res.render('inicio', renderDef); 
       }
     });
   } else {
@@ -180,27 +184,18 @@ app.get('/materiales', IsLoggedIn, (req, res) => {
   }
 });
 
+
+
 /* Vista compras. El usuario de Compras puede hacer pedidos en esta vista */
 app.get('/compras', IsLoggedIn, (req, res) => {
-  if (req.user) {
-    res.render('inicio', {
-      tabledata: [],
-      tabledata2: [],
-      tabledata3: [],
-      tabledata4: [],
-      vistaUsuarios: 'd-none',
-      vistaMateriales: 'd-none',
-      vistaCompras: '',
-      vistaProfile: 'd-none',
-      vistaInicio: 'd-none',
-      vistaListaPedidos: 'd-none',
-      vistaAlmacen: 'd-none',
-      usuario: req.user,
-    });
+  if (req.user) { 
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, req.user]);
+    res.render('inicio', renderDef);
   } else {
     res.redirect('/');
   }
 });
+
 
 /* Vista lista de pedidos */
 app.get('/listapedidos', IsLoggedIn, (req, res) => {
@@ -210,28 +205,17 @@ app.get('/listapedidos', IsLoggedIn, (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
         const tabledata3 = JSON.parse(JSON.stringify(results));
-        res.render('inicio', {
-          tabledata: [],
-          tabledata2: [],
-          tabledata3: tabledata3,
-          tabledata4: [],
-          vistaUsuarios: 'd-none',
-          vistaMateriales: 'd-none',
-          vistaCompras: 'd-none',
-          vistaProfile: 'd-none',
-          vistaInicio: 'd-none',
-          vistaListaPedidos: '',
-          vistaAlmacen: 'd-none',
-          usuario: req.user,
-        });
+        const renderDef = mainRendering([0, 0, tabledata3, 0, 0, 0, 0, 0, 0, 1, 0, 0, req.user]);
+        res.render('inicio', renderDef);
       }
     });
   } else {
     res.redirect('/');
   }
 });
+
+
 
 /* Vista lista de pedidos filtrada */
 app.post('/listapedidosfiltrada', (req, res) => {
@@ -247,6 +231,8 @@ app.post('/listapedidosfiltrada', (req, res) => {
     }
   });
 });
+
+
 
 /* Vista lista de los productos pedidos filtrada (cuando da clic en un elemento, de los pedidos, 
     se lanza este subquery y manda los productos asociados a dicho pedido) */
@@ -264,6 +250,7 @@ app.post('/listapedidosfiltradaproductos', (req, res) => {
   });
 });
 
+
 /* boton de autorizar/Cancelar un pedido */
 app.post('/actualizapedido', (req, res) => {
   const {
@@ -272,8 +259,8 @@ app.post('/actualizapedido', (req, res) => {
     id_usr_cambia_estatus,
     tx_comentarios_estatus,
   } = req.body;
-  const sql =
-    'update pedidos set nb_estatus = ?, id_usr_cambia_estatus = ?, tx_comentarios_estatus = ? where id_pedido = ?';
+
+  const sql = 'update pedidos set nb_estatus = ?, id_usr_cambia_estatus = ?, tx_comentarios_estatus = ? where id_pedido = ?';
   connection.query(
     sql,
     [nb_estatus, id_usr_cambia_estatus, tx_comentarios_estatus, id_pedido],
@@ -282,6 +269,7 @@ app.post('/actualizapedido', (req, res) => {
     }
   );
 });
+
 
 /* Vista Almacén */
 app.get('/almacen', IsLoggedIn, (req, res) => {
@@ -307,28 +295,17 @@ app.get('/almacen', IsLoggedIn, (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        // source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object
         const datos = JSON.parse(JSON.stringify(results));
-        res.render('inicio', {
-          tabledata: [],
-          tabledata2: [],
-          tabledata3: [],
-          tabledata4: datos,
-          vistaUsuarios: 'd-none',
-          vistaMateriales: 'd-none',
-          vistaCompras: 'd-none',
-          vistaProfile: 'd-none',
-          vistaInicio: 'd-none',
-          vistaListaPedidos: 'd-none',
-          vistaAlmacen: '',
-          usuario: req.user,
-        });
+        const renderDef = mainRendering([0, 0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, req.user]);
+        res.render('inicio', renderDef);
       }
     });
   } else {
     res.redirect('/');
   }
 });
+
+
 
 /* Viene de la vista de almacen cuando registran una recepción.
    El req.body trae los valores  */
@@ -345,6 +322,8 @@ app.post('/registraRecepcion', (req, res) => {
   });
 });
 
+
+
 /* Posterior al insert nuevo en tbl almacen, edita el estatus en tbl prodpedidos
    a 'Recibido' */
 app.post('/editaProdPedido', (req, res) => {
@@ -356,6 +335,8 @@ app.post('/editaProdPedido', (req, res) => {
     err ? res.end('0') : res.end('ok');
   });
 });
+
+
 
 /* Posterior a la edición en prodpedidos, hace un 'requery' */
 app.get('/prodPedidosRequery', (req, res) => {
@@ -376,11 +357,12 @@ app.get('/prodPedidosRequery', (req, res) => {
     "where a.nb_estatus = 'Autorizado' " +
     "and b.nb_prodpedido_estatus = 'Pendiente' ";
 
-
   connection.query(sql, function (err, results) {
     err ? res.send(err) : res.send(JSON.parse(JSON.stringify(results)));
   });
 });
+
+
 
 /* cuando abre el modal de prod pedidos le envía la lista de productos unicos */
 app.get('/compras/listaprod', (req, res) => {
@@ -395,20 +377,19 @@ app.get('/compras/listaprod', (req, res) => {
   });
 });
 
+
 // TABLA PEDIDOS
 /* Agrega un nuevo registro a la tabla pedidos */
-app.post('/pedidos/guardar', (req, res) => {
+app.post('/pedidos/guardar', (req, res) => { 
   const valores = req.body;
   const sql = 'insert into pedidos set ?';
-  /* console.log(valores);  */
-
   connection.query(sql, [valores], function (err, results) {
     /* retorna el nuevo id  */ //console.log(results.insertId);
     const nuevoId = results.insertId;
-    //err ? res.end(err) : res.end(results);
     err ? res.end(err) : res.end(String(nuevoId));
   });
 });
+
 
 // TABLA PRODPEDIDOS
 /* Recibe los rows, y recorre para armar el sql insert */
@@ -486,6 +467,8 @@ app.post('/usuarios/guardar', (req, res) => {
     err ? res.end(err) : res.end('Registro correcto');
   });
 });
+
+
 
 // TABLA MATERIALES
 
@@ -641,20 +624,8 @@ app.post('/login', async (req, res) => {
           //console.log(cookieOptions);
           res.cookie('jwt', token, cookieOptions);
           req.user = results[0];
-          res.render('inicio', {
-            tabledata: [],
-            tabledata2: [],
-            tabledata3: [],
-            tabledata4: [],
-            vistaUsuarios: 'd-none',
-            vistaMateriales: 'd-none',
-            vistaCompras: 'd-none',
-            vistaProfile: 'd-none',
-            vistaInicio: '',
-            vistaListaPedidos: 'd-none',
-            vistaAlmacen: 'd-none',
-            usuario: req.user,
-          });
+          const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user]);
+          res.render('inicio', renderDef);
         }
       } else {
         res.status(401).render('login', {
@@ -672,3 +643,8 @@ app.post('/login', async (req, res) => {
 app.listen(port, () => {
   console.log('Server running on port ' + port);
 });
+
+
+
+
+// source: https://stackoverflow.com/questions/31221980/how-to-access-a-rowdatapacket-object

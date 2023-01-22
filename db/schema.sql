@@ -34,7 +34,6 @@ create table tipo_usuarios (
     puesto varchar(150) 
 );
 
-
 /* crea tabla de productos */
 drop table productos;
 

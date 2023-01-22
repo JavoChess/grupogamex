@@ -42,6 +42,7 @@
             <li class="nav-item"><a class="nav-link" href="/compras">Nuevo pedido</a></li>
             <li class="nav-item"><a class="nav-link" href="/listapedidos">Lista de pedidos</a></li>
             <li class="nav-item"><a class="nav-link" href="/almacen">Almacén</a></li>
+            <li class="nav-item"><a class="nav-link" href="/facturacion">Facturación</a></li>
 
             <!-- SECCION ADMIN -->
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -67,6 +68,7 @@
             </h6>
             <li class="nav-item"><a class="nav-link" href="/compras">Nuevo pedido</a></li>
             <li class="nav-item"><a class="nav-link" href="listapedidos">Lista de pedidos</a></li>
+            <li class="nav-item"><a class="nav-link" href="/facturacion">Facturación</a></li>
 
           <%} else if (usuario.tp_usuario ==='Almacén') { %>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -102,6 +104,10 @@
 
         <div id ="vista-home-almacen" class=<%= vistaAlmacen %>>
           <%- include('almacen') %>
+        </div>
+
+        <div id ="vista-home-facturacion" class=<%= vistaFacturacion %>>
+          <%- include('facturacion') %>
         </div>
 
         <div  id="vista-admin-materiales" class=<%= vistaMateriales %>>
