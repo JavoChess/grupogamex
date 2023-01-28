@@ -10,7 +10,11 @@
 
 
     <!-- JavaScript JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+
     <!-- JavaScript Boostrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 
@@ -28,147 +32,32 @@
 
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (function () {
-        'use strict'
-
+        
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
+            let forms = document.querySelectorAll('.needs-validation')
 
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                    }
+                    form.addEventListener('submit', function (event) { 
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
 
-                    form.classList.add('was-validated')
-                }, false)
+                        form.classList.add('was-validated')
+                    }, false)
                 })
         })()
 
         /* Modal de pedidos */
-        var exampleModal = document.getElementById('modal-productos-pedidos');
-        exampleModal.addEventListener('show.bs.modal', function (event) {
-            // Button that triggered the modal
-            var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            //var recipient = button.getAttribute('data-bs-whatever')
-            // If necessary, you could initiate an AJAX request here
-            // and then do the updating in a callback.
-            //
-            // Update the modal's content.
-            var modalTitle = exampleModal.querySelector('.modal-title')
-            var modalBodyInput = exampleModal.querySelector('.modal-body input')
-
+        let exampleModal = document.getElementById('modal-productos-pedidos');
+        exampleModal.addEventListener('show.bs.modal', (event) => {
+            let button = event.relatedTarget
+            let modalTitle = exampleModal.querySelector('.modal-title')
+            let modalBodyInput = exampleModal.querySelector('.modal-body input')
             //modalTitle.textContent = 'Seleccionar productos' 
-            //modalBodyInput.value = recipient
         });
-
-
-        /* Funciones del autocomplete */
-
-
-            function autocomplete(inp, arr) {
-                /*the autocomplete function takes two arguments,
-                the text field element and an array of possible autocompleted values:*/
-                var currentFocus;
-                /*execute a function when someone writes in the text field:*/
-                inp.addEventListener("input", function(e) {
-                    var a, b, i, val = this.value;
-                    /*close any already open lists of autocompleted values*/
-                    closeAllLists();
-                    if (!val) { return false;}
-                    currentFocus = -1;
-                    /*create a DIV element that will contain the items (values):*/
-                    a = document.createElement("DIV");
-                    a.setAttribute("id", this.id + "autocomplete-list");
-                    a.setAttribute("class", "autocomplete-items");
-                    /*append the DIV element as a child of the autocomplete container:*/
-                    this.parentNode.appendChild(a);
-                    /*for each item in the array...*/
-                    for (i = 0; i < arr.length; i++) {
-                        /*check if the item starts with the same letters as the text field value:*/
-                        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                            /*create a DIV element for each matching element:*/
-                            b = document.createElement("DIV");
-                            /*make the matching letters bold:*/
-                            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                            b.innerHTML += arr[i].substr(val.length);
-                            /*insert a input field that will hold the current array item's value:*/
-                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                            /*execute a function when someone clicks on the item value (DIV element):*/
-                            b.addEventListener("click", function(e) {
-                                /*insert the value for the autocomplete text field:*/
-                                inp.value = this.getElementsByTagName("input")[0].value;
-                                /*close the list of autocompleted values,
-                                (or any other open lists of autocompleted values:*/
-                                closeAllLists();
-                            });
-                            a.appendChild(b);
-                        }
-                    }
-                });
-                /*execute a function presses a key on the keyboard:*/
-                inp.addEventListener("keydown", function(e) {
-                    var x = document.getElementById(this.id + "autocomplete-list");
-                    if (x) x = x.getElementsByTagName("div");
-                    if (e.keyCode == 40) {
-                        /*If the arrow DOWN key is pressed,
-                        increase the currentFocus variable:*/
-                        currentFocus++;
-                        /*and and make the current item more visible:*/
-                        addActive(x);
-                    } else if (e.keyCode == 38) { //up
-                        /*If the arrow UP key is pressed,
-                        decrease the currentFocus variable:*/
-                        currentFocus--;
-                        /*and and make the current item more visible:*/
-                        addActive(x);
-                    } else if (e.keyCode == 13) {
-                        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-                        e.preventDefault();
-                        if (currentFocus > -1) {
-                            /*and simulate a click on the "active" item:*/
-                            if (x) x[currentFocus].click();
-                        }
-                    }
-                });
-                function addActive(x) {
-                    /*a function to classify an item as "active":*/
-                    if (!x) return false;
-                    /*start by removing the "active" class on all items:*/
-                    removeActive(x);
-                    if (currentFocus >= x.length) currentFocus = 0;
-                    if (currentFocus < 0) currentFocus = (x.length - 1);
-                    /*add class "autocomplete-active":*/
-                    x[currentFocus].classList.add("autocomplete-active");
-                }
-                function removeActive(x) {
-                    /*a function to remove the "active" class from all autocomplete items:*/
-                    for (var i = 0; i < x.length; i++) {
-                        x[i].classList.remove("autocomplete-active");
-                    }
-                }
-                function closeAllLists(elmnt) {
-                    /*close all autocomplete lists in the document, except the one passed as an argument:*/
-                    var x = document.getElementsByClassName("autocomplete-items");
-                    for (var i = 0; i < x.length; i++) {
-                        if (elmnt != x[i] && elmnt != inp) {
-                            x[i].parentNode.removeChild(x[i]);
-                        }
-                    }
-                }
-                /*execute a function when someone clicks in the document:*/
-                document.addEventListener("click", function (e) {
-                    closeAllLists(e.target);
-                });
-            }
-
-            /* Aquí va el id del input ppedidos */
-            //autocomplete(document.getElementById("modal-ppedidos-1"), arr_productos);
-
-        /* Termina Funciones del autocomplete */
 
         /* ------------------------------------- */
         /* TERMINA OTRAS FUNCIONES */
@@ -190,15 +79,15 @@
 
 
         //Generate print icon
-        let iconoElimina = function(cell, formatterParams) { //plain text value
+        let iconoElimina = (cell, formatterParams) => { //plain text value
             return "<span class='material-icons md-dark md-inactive md-18'>remove</span>";
         };
 
-        let iconoEdita = function(cell, formatterParams) { //plain text value
+        let iconoEdita = (cell, formatterParams) => { //plain text value
             return "<span class='material-icons md-dark md-inactive md-18'>edit</span>";
         };
 
-        let iconoGuarda = function(cell, formatterParams) { //plain text value
+        let iconoGuarda = (cell, formatterParams) => { //plain text value
             return "<span class='material-icons md-dark md-inactive md-18'>save</span>";
         };
 
@@ -220,7 +109,7 @@
                 {title:"Nombre",  field:"nb_usuario", sorter:"string", hozAlign:"left", editor: true},
                 {title:"Área",    field:"nb_area",    sorter:"string", hozAlign:"left", editor: true},
                 {title:"Tipo",    field:"tp_usuario", sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Admin", "Compras", "Almacén"]}},
-                {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
+                {formatter: iconoElimina, width:40, hozAlign:"center", cellClick: function(e, cell) { 
                         const id = cell.getRow().getData().usuario_id;
                         let ejecutar = confirm("Se va a eliminar el registro: " + id);
                         if (ejecutar) {
@@ -397,9 +286,9 @@
         }); 
 
 
-        // ------------------------------
+        // -----------------------------------------------------
         // tabla con la lista de los pedidos (Lista de Pedidos )
-        // ------------------------------
+        // -----------------------------------------------------
 
         let tableListaPedidos = new Tabulator("#tabla-lista-pedidos", { 
             height: 280,               // set height of table to enable virtual DOM
@@ -486,39 +375,6 @@
         }); 
 
 
-        // SELECCION DE UN ELELEMTO
-        // Guarda el Id del registro seleccionado
-/*         let table2ItemSeleccionado=0;
-
-        table2.on("rowSelected", function(row) { 
-            table2ItemSeleccionado = row._row.data.material_id; 
-            $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado); 
-        });
-        
-        table2.on("rowSelectionChanged", function(data, rows) {
-            //document.getElementById("#tabla-materiales-lower-label").innerHTML = data.length;
-            if (data.length === 0 ) {
-                table2ItemSeleccionado = 0;
-                $("#tabla-materiales-lower-label").html("Selección: " + table2ItemSeleccionado);
-            }
-        }); */
-
-        /*
-        // agrega Fila en table2 (materiales)
-        $("#materiales-nuevo").click(function() { 
-            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId
-            const nuevoId = 0;
-            table2.addRow( {material_id: nuevoId }, true);
-        }); 
-        
-        // agrega Fila en table2 (materiales) 
-        $("#usuarios-nuevo").click(function() { 
-            // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId 
-            const nuevoId = 0;
-            table.addRow( {material_id: nuevoId }, true);
-        }); 
-
-        */
         
         
         $("#pedidos-nuevo-producto").click(function() { 
@@ -533,60 +389,33 @@
         // General FE script
         // ------------------------------
 
-/* 
-        $("#pedidos-encabezados").attr("class", "row");
-        $("#pedidos-lista").attr("class", "row d-none");
-        $("#pedidos-form").attr("class", "row d-none");
-
-        $("#btn-nuevo-pedido").click( function () {  
-            //alert("nuevo pedido");
-            $("#pedidos-lista").attr("class", "row d-none");
-            $("#pedidos-encabezados").attr("class", "row d-none");
-            $("#pedidos-form").attr("class", "row"); 
-        });
-
-        $("#btn-lista-pedidos").click( function () { 
-            //alert("muestra la lista de pedidos");
-            $("#pedidos-encabezados").attr("class", "row d-none");
-            $("#pedidos-lista").attr("class", "row");
-            $("#pedidos-form").attr("class", "row d-none");
-        }); 
-         */
-
-        
-        // btn enviar pedido (simula el submit) 
-        /* 
-        $("#btn-enviar-pedido").submit(function() { 
-            alert("procedimiento para el envio de pedido"); 
-        }); 
-        */ 
+        const MENSAJE_FALTAN = 'Uno o más campos requeridos faltan de completar.';
 
         /* Valida si el form está completo */ 
-        function validaFormulario(frm) { 
+        const validaFormulario = (frm) => { 
             let res;
             $('#' + frm)[0].checkValidity() ? res=true : res=false;
             return res;
         } 
 
-        /* Subrutina para Llenar el select obj con los datos del array datosArr */ 
-        function llenaSelect(idSelect, datosArr) { 
-            
-            $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
-            datosArr.forEach((item, index) => { 
-                $('#' + idSelect).append('<option>' + item + '</option>')  
-            }); 
-        } 
+        /* Funcion para Llenar un select con los datos de un array */ 
+        const llenaSelect = (selectId, optionsArray) => {
+            $(`#${selectId}`).empty();
+            optionsArray.forEach(option => {
+                $(`<option>${option}</option>`).appendTo(`#${selectId}`);
+            });
+        }
+
         
         /* Limpia los objetos de un form */ 
-        function limpiaObjetosEnForm(frm) {
-            // 'function' is needed here 
-            $("#" + frm).find(":input").each(function () {  
+        const limpiaObjetosEnForm = (frm) => {
+            $("#" + frm).find(":input").each(function () {  // 'function' is needed here 
                 $(this).val("");
             });
         }
 
         /* Construye un objeto con los inputs de un form */ 
-        function arrayObjetosEnForm(frm) {
+        const arrayObjetosEnForm = (frm) => {
             
             let valores = {};
             $("#" + frm).find(":input").each(function () {  /* 'function' is needed here */
@@ -596,9 +425,33 @@
             /*Source: https://stackoverflow.com/questions/5603117/jquery-create-object-from-form-fields */
         }
         
-        
+        /* En caso de que arrayObjetosEnForm no funcione */
+        const getFormData = (form) => {
+            let formData = {};
+            for (let i = 0; i < form.elements.length; i++) {
+                let element = form.elements[i];
+                if (element.name) {
+                    formData[element.name] = element.value;
+                }
+            }
+            return formData;
+        }
+
+
+        const autocompleteInput = (inputId, array) => {
+            const suggestions = document.getElementById("suggestions");
+            suggestions.innerHTML='';
+
+            array.forEach(function(item) {
+                const option = document.createElement("option");
+                option.value = item;
+                suggestions.appendChild(option);
+            });
+            document.getElementById(inputId).setAttribute("list", "suggestions");
+        }
+
         /* Recorre el form form-nuevo-pedido y crea el array de datos luego manda el post para agregar el nuevo registro*/
-        function enviaNuevoPedido() {
+        const enviaNuevoPedido = () => {
             
             let valores = arrayObjetosEnForm("form-nuevo-pedido");
             delete valores.id_pedido;
@@ -621,15 +474,22 @@
                             alert("Pedido y productos registrados con éxito");
                             location.reload();
                         }
-                    });                     
+                    }); 
                 } 
             }); 
         }
 
-        /* Agrega un nuevo pedido (si esta completo el form) */ 
-        $( "#form-nuevo-pedido" ).submit(function( event ) { 
+        /* resetea un form y le quita was-validated */
+        const reseteaForm = (frm) => {
+            const el = document.getElementById(frm);
+            el.reset();
+            el.classList.remove('was-validated');
+        }
 
-            validaFormulario("form-nuevo-pedido") ? enviaNuevoPedido() : alert("Uno o más campos requeridos faltan de completar.");
+        /* Agrega un nuevo pedido (si esta completo el form) */ 
+        $( "#form-nuevo-pedido" ).submit( (event) => { 
+            const frm = "form-nuevo-pedido";
+            validaFormulario(frm) ? enviaNuevoPedido() : alert(MENSAJE_FALTAN);
             event.preventDefault();
         });
 
@@ -638,68 +498,49 @@
 
             limpiaObjetosEnForm('frm-modal-productos-pedidos');
             $.get("/compras/listaprod", (res) => { 
-                // el res es de la forma {{ id_producto: x1, nb_producto: a1}...{ id_producto: xn, nb_producto: a}}
-                // PARA LLENAR UN SELECT
-                // Llena el select con el id de producto y el nombre
-                /* let idSelect = "modal-ppedidos-1";
-                $('#' + idSelect).find("option").remove().end().append('<option value="">Choose...</option>');
-                res.forEach((item, index) => { 
-                    $('#' + idSelect).append('<option>' + item.id_producto + '-' + item.nb_producto + '</option>')  
-                }); */
-
-                // PARA HABILITAR EL AUTOCOMPLETE
+                // el res es de la forma {{ id_producto: x1, nb_producto: a1}...{ id_producto: xn, nb_producto: a}}               
                 let arr_productos=[];
                 res.forEach((item, index) => { 
                     arr_productos.push(item.nb_producto + '--' + item.id_producto);
                 });
-                autocomplete(document.getElementById("modal-ppedidos-1"), arr_productos);
-
+                autocompleteInput("modal-ppedidos-1", arr_productos);
             });
         });
 
 
-        /* Modal - Pedidos - Botón Agregar */
-        $("#modal-ppedidos-agregar").click(function() {
-            // aplica el submit del boton
-        });
-
         /* Modal - Pedidos - Calcula el Importe del pedido cuando el tipo de cambio pierde el foco */
-        $("#modal-ppedidos-8").focusout(function() {
-            // modal-ppedidos-2 * modal-ppedidos-3
-            let cantidad = parseFloat($("#modal-ppedidos-2").val());
-            let precio_unitario = parseFloat($("#modal-ppedidos-3").val());
-            let tipo_de_cambio = parseFloat($("#modal-ppedidos-8").val());
-            let importe = cantidad * precio_unitario * tipo_de_cambio; 
-            $("#modal-ppedidos-4").val( Math.round(importe * 100) / 100 ) ;
-            
+        $("#modal-ppedidos-8").focusout( () => {
+            const cantidad = parseFloat($("#modal-ppedidos-2").val());
+            const precioUnitario = parseFloat($("#modal-ppedidos-3").val());
+            const tipoDeCambio = parseFloat($("#modal-ppedidos-8").val());
+            const importe = cantidad * precioUnitario * tipoDeCambio; 
+            const importeRedondeado = Math.round(importe * 100) / 100;
+            $("#modal-ppedidos-4").val( importeRedondeado ) ;
         });
 
         /* Recorre el form frm-modal-productos-pedidos y crea el array de datos luego manda el post para agregar el nuevo producto */
         /* Modal - Pedidos - Agrega un nuevo producto */ 
-        function agregaNuevoProductoEnTabla() {
+        const agregaNuevoProductoEnTabla = () => {
             
-            let valores = arrayObjetosEnForm("frm-modal-productos-pedidos");
-            let idConProd = valores.nb_producto;
-            let pos = idConProd.indexOf('--');
-            let largo = idConProd.length;
+            const valores = arrayObjetosEnForm("frm-modal-productos-pedidos");
+            const idConProd = valores.nb_producto;
             // los dos guiones apoyan para identificar el id al final del string
+            const pos = idConProd.indexOf('--');
+            const largo = idConProd.length;
+
             valores.id_producto = idConProd.substring(pos+2, largo);
             valores.nb_producto = idConProd.substring(0, pos);
+
             tableProductosPedidos.addRow( valores, true);
-
-            let element = document.getElementById("frm-modal-productos-pedidos");
-            element.reset();
-            element.classList.remove('was-validated');
-
+            reseteaForm("frm-modal-productos-pedidos");
             $("#modal-ppedidos-cancelar").click();
-
 
         }
 
         /* Modal - Pedidos - Agrega un nuevo producto */ 
-        $( "#frm-modal-productos-pedidos" ).submit(function( event ) { 
-
-            validaFormulario("frm-modal-productos-pedidos") ? agregaNuevoProductoEnTabla() : alert("Uno o más campos requeridos faltan de completar.");
+        $( "#frm-modal-productos-pedidos" ).submit( ( event ) => { 
+            const frm = "frm-modal-productos-pedidos";
+            validaFormulario(frm) ? agregaNuevoProductoEnTabla() : alert(MENSAJE_FALTAN);
             event.preventDefault();
         });
 
@@ -715,13 +556,10 @@
             const idPedidoSeleccionado = row._row.data.id_pedido;
             let valores = {};
             valores['id_pedido'] = idPedidoSeleccionado;
-
             $("#id_pedido_seleccionado").html("Id seleccionado: " + idPedidoSeleccionado); 
-
             //tableListaPedidos.deselectRow(row);
 
             // actualiza el segundo grid con la query
-            // select * from prodpedidos where id_pedido = idPedidoSeleccionado
             $.post("/listapedidosfiltradaproductos", valores, (res) => {
                 tableListaProdPedidos.replaceData(res);
             });
@@ -731,9 +569,7 @@
         // Cuando cambia el select del form
         $("#lista_pedidos_combo").change(function() { 
             let valores = {};
-            let nb_estatus = $( "#lista_pedidos_combo option:selected" ).text();
-            console.log(nb_estatus);
-
+            const nb_estatus = $( "#lista_pedidos_combo option:selected" ).text();
             valores['nb_estatus'] = nb_estatus;
             $("#id_pedido_seleccionado").html("Id seleccionado: "); 
 
@@ -834,7 +670,7 @@
 
 
         /* Agrega un registro a almacen */
-        function nuevaRecepcion() { 
+        const nuevaRecepcion = () => { 
             const valores = arrayObjetosEnForm("frm-recepcion");
             valores["id_usuario"] = parseInt($('#nav-id-usuario').html());
             
@@ -883,8 +719,8 @@
 
         /* Validacion del form recepcion de materiales */ 
         $( "#frm-recepcion" ).submit(function( event ) { 
-
-            validaFormulario("frm-recepcion") ? nuevaRecepcion() : alert("Uno o más campos requeridos faltan de completar.");
+            const frm = "frm-recepcion";
+            validaFormulario(frm) ? nuevaRecepcion() : alert(MENSAJE_FALTAN);
             event.preventDefault(); 
         }); 
 
@@ -896,21 +732,6 @@
         /* -------------------------------- */
 
 
-
-
-
-        /* boton de prueba temporal */
-        $("#btn-editar-pedido").click(function() {
-            const rows = tableProductosPedidos.getRows();
-            const rowCount = tableProductosPedidos.getDataCount();
-
-            console.log( 'Rows: ' + rowCount);
-            
-            for(let i = 0; i<rowCount; i++) {
-                console.log(rows[i]._row.data);
-            }
-            
-        });
 
     </script>
 

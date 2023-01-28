@@ -41,7 +41,7 @@ IsLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
       // Verifica el token, para ver que usuario es
-      const decoded = await promisify(jwt.verify)(
+      const decoded = await promisify(jwt.verify)(  
         req.cookies.jwt,
         process.env.JWT_SECRET
       );
@@ -59,7 +59,7 @@ IsLoggedIn = async (req, res, next) => {
           return next();
         }
       );
-    } catch (err) {
+    } catch (err) { 
       console.log(err);
       return next();
     }
@@ -69,10 +69,10 @@ IsLoggedIn = async (req, res, next) => {
 };
 
 
-/* define el rendering de parámetros del main */
-function mainRendering (valores) {
+/* define el rendering de varaibles dependiendo de los parámetros en valores */
+const mainRendering = valores => {
 
-  const objRender = {};  
+  let objRender = {}; 
   objRender.tabledata = valores[0] === 0 ? [] : valores[0];
   objRender.tabledata2 = valores[1] === 0 ? [] : valores[1];
   objRender.tabledata3 = valores[2] === 0 ? [] : valores[2];
@@ -87,7 +87,7 @@ function mainRendering (valores) {
   objRender.vistaFacturacion = valores[11] === 0 ? 'd-none' : '';
   objRender.usuario = valores[12] ;
   return objRender;
-}
+} 
 
 
 // Pantalla de inicio
@@ -111,7 +111,7 @@ app.get('/facturacion', IsLoggedIn, (req, res) => {
   const sql ='select * from usuarios';
 
   if (req.user) {
-    connection.query(sql, function (err, results) {
+    connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
@@ -131,18 +131,19 @@ app.get('/facturacion', IsLoggedIn, (req, res) => {
 /* ------------------------- */
 
 
+
 // Vista administración de usuarios
 // REVISAR EL SQL
 app.get('/usuarios', IsLoggedIn, (req, res) => {
   if (req.user) {
     
     const sql = 'select id_usuario, nb_usuario, cd_usuario, nb_area, tp_usuario from usuarios';
-    connection.query(sql, function (err, results) {
+    connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        const tabledata = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([tabledata, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, req.user]);
+        const datos = JSON.parse(JSON.stringify(results));
+        const renderDef = mainRendering([datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, req.user]);
         res.render('inicio', renderDef);
       }
     });
@@ -170,12 +171,12 @@ app.get('/profile', IsLoggedIn, (req, res) => {
 app.get('/materiales', IsLoggedIn, (req, res) => {
   const sql = 'select * from materiales';
   if (req.user) {
-    connection.query(sql, function (err, results) {
+    connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        const tabledata2 = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([0, tabledata2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, req.user]);
+        const datos = JSON.parse(JSON.stringify(results));
+        const renderDef = mainRendering([0, datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, req.user]);
         res.render('inicio', renderDef); 
       }
     });
@@ -201,12 +202,12 @@ app.get('/compras', IsLoggedIn, (req, res) => {
 app.get('/listapedidos', IsLoggedIn, (req, res) => {
   const sql = "select * from pedidos where nb_estatus = 'Pendiente' ";
   if (req.user) {
-    connection.query(sql, function (err, results) {
+    connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        const tabledata3 = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([0, 0, tabledata3, 0, 0, 0, 0, 0, 0, 1, 0, 0, req.user]);
+        const datos = JSON.parse(JSON.stringify(results));
+        const renderDef = mainRendering([0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, 0, req.user]);
         res.render('inicio', renderDef);
       }
     });
@@ -219,10 +220,10 @@ app.get('/listapedidos', IsLoggedIn, (req, res) => {
 
 /* Vista lista de pedidos filtrada */
 app.post('/listapedidosfiltrada', (req, res) => {
-  let estatus = req.body.nb_estatus;
+  const estatus = req.body.nb_estatus;
   const sql = 'select * from pedidos where nb_estatus = ?';
 
-  connection.query(sql, [estatus], function (err, results) {
+  connection.query(sql, [estatus], (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -240,7 +241,7 @@ app.post('/listapedidosfiltradaproductos', (req, res) => {
   const id_pedido = req.body.id_pedido;
   const sql = 'select * from prodpedidos where id_pedido = ?';
 
-  connection.query(sql, [id_pedido], function (err, results) {
+  connection.query(sql, [id_pedido], (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -253,18 +254,13 @@ app.post('/listapedidosfiltradaproductos', (req, res) => {
 
 /* boton de autorizar/Cancelar un pedido */
 app.post('/actualizapedido', (req, res) => {
-  const {
-    nb_estatus,
-    id_pedido,
-    id_usr_cambia_estatus,
-    tx_comentarios_estatus,
-  } = req.body;
-
+  const { nb_estatus, id_pedido, id_usr_cambia_estatus, tx_comentarios_estatus } = req.body;
   const sql = 'update pedidos set nb_estatus = ?, id_usr_cambia_estatus = ?, tx_comentarios_estatus = ? where id_pedido = ?';
+
   connection.query(
     sql,
     [nb_estatus, id_usr_cambia_estatus, tx_comentarios_estatus, id_pedido],
-    function (err, results) {
+    (err, results) => {
       err ? console.log(err) : res.end(nb_estatus);
     }
   );
@@ -291,7 +287,7 @@ app.get('/almacen', IsLoggedIn, (req, res) => {
     "and b.nb_prodpedido_estatus = 'Pendiente' ";
 
   if (req.user) {
-    connection.query(sql, function (err, results) {
+    connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
@@ -314,10 +310,9 @@ app.post('/registraRecepcion', (req, res) => {
   delete valores.id_prodpedido;
   const sql = 'insert into almacen set ?';
 
-  connection.query(sql, [valores], function (err, results) {
+  connection.query(sql, [valores], (err, results) => {
     /* retorna el nuevo id  */ //console.log(results.insertId);
     const nuevoId = results.insertId;
-    //err ? res.end(err) : res.end(results);
     err ? res.end('0') : res.end(String(nuevoId));
   });
 });
@@ -328,10 +323,9 @@ app.post('/registraRecepcion', (req, res) => {
    a 'Recibido' */
 app.post('/editaProdPedido', (req, res) => {
   const id_prodpedido = req.body.id_prodpedido;
-  const sql =
-    "update prodpedidos set nb_prodpedido_estatus = 'Recibido' where id_prodpedido = ? ";
+  const sql = "update prodpedidos set nb_prodpedido_estatus = 'Recibido' where id_prodpedido = ? ";
 
-  connection.query(sql, [id_prodpedido], function (err, results) {
+  connection.query(sql, [id_prodpedido], (err, results) => {
     err ? res.end('0') : res.end('ok');
   });
 });
@@ -357,7 +351,7 @@ app.get('/prodPedidosRequery', (req, res) => {
     "where a.nb_estatus = 'Autorizado' " +
     "and b.nb_prodpedido_estatus = 'Pendiente' ";
 
-  connection.query(sql, function (err, results) {
+  connection.query(sql, (err, results) => {
     err ? res.send(err) : res.send(JSON.parse(JSON.stringify(results)));
   });
 });
@@ -367,7 +361,7 @@ app.get('/prodPedidosRequery', (req, res) => {
 /* cuando abre el modal de prod pedidos le envía la lista de productos unicos */
 app.get('/compras/listaprod', (req, res) => {
   const sql = 'select distinct id_producto, nb_producto from productos';
-  connection.query(sql, function (err, results) {
+  connection.query(sql, (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -383,7 +377,7 @@ app.get('/compras/listaprod', (req, res) => {
 app.post('/pedidos/guardar', (req, res) => { 
   const valores = req.body;
   const sql = 'insert into pedidos set ?';
-  connection.query(sql, [valores], function (err, results) {
+  connection.query(sql, [valores], (err, results) => {
     /* retorna el nuevo id  */ //console.log(results.insertId);
     const nuevoId = results.insertId;
     err ? res.end(err) : res.end(String(nuevoId));
@@ -432,7 +426,7 @@ app.post('/pedidos/prodpedidos/', (req, res) => {
     '(nb_producto,nu_cantidad,im_unidad,cd_moneda,im_tipo_de_cambio,im_pedido,cd_articulo,fh_entrega,id_producto,id_pedido,nb_prodpedido_estatus)';
   const sql = 'insert into prodpedidos ' + cols + ' values ?';
 
-  connection.query(sql, [regArray], function (err, results) {
+  connection.query(sql, [regArray], (err, results) => {
     err ? res.end(err) : res.end('ok');
   });
 });
@@ -443,7 +437,7 @@ app.post('/pedidos/prodpedidos/', (req, res) => {
 app.post('/usuarios/eliminar/:id', (req, res) => {
   const id = req.params.id;
   const sql = 'delete from usuarios where id_usuario = ?';
-  connection.query(sql, [id], function (err, results) {
+  connection.query(sql, [id], (err, results) => {
     err ? res.end(err) : res.end('eliminado');
   });
 });
@@ -453,7 +447,7 @@ app.post('/usuarios/editar/:id', (req, res) => {
   const valores = req.body;
   const id = req.params.id;
   const sql = 'update usuarios set ? where id_usuario = ?';
-  connection.query(sql, [valores, id], function (err, results) {
+  connection.query(sql, [valores, id], (err, results) => {
     err ? res.end(err) : res.end('editado');
   });
 });
@@ -463,7 +457,7 @@ app.post('/usuarios/guardar', (req, res) => {
   const valores = req.body;
   const sql = 'insert into usuarios set ?';
   //console.log(valores);
-  connection.query(sql, [valores], function (err, results) {
+  connection.query(sql, [valores], (err, results) => {
     err ? res.end(err) : res.end('Registro correcto');
   });
 });
@@ -476,7 +470,7 @@ app.post('/usuarios/guardar', (req, res) => {
 app.post('/materiales/eliminar/:id', (req, res) => {
   const id = req.params.id;
   const sql = 'delete from materiales where material_id = ?';
-  connection.query(sql, [id], function (err, results) {
+  connection.query(sql, [id], (err, results) => {
     err ? res.end(err) : res.end('eliminado');
   });
 });
@@ -485,7 +479,7 @@ app.post('/materiales/eliminar/:id', (req, res) => {
 app.post('/materiales/guardar', (req, res) => {
   const valores = req.body;
   const sql = 'insert into materiales set ?';
-  connection.query(sql, [valores], function (err, results) {
+  connection.query(sql, [valores], (err, results) => {
     err ? res.end(err) : res.end('Registro correcto');
   });
 });
@@ -495,7 +489,7 @@ app.post('/materiales/editar/:id', (req, res) => {
   const valores = req.body;
   const id = req.params.id;
   const sql = 'update materiales set ? where material_id = ?';
-  connection.query(sql, [valores, id], function (err, results) {
+  connection.query(sql, [valores, id], (err, results) => {
     err ? res.end(err) : res.end('editado');
   });
 });
@@ -541,10 +535,10 @@ app.get('/logout', (req, res) => {
     valores.cd_contrasena = passwordHash;
 
     const sql = "insert into usuarios set ?";
-    connection.query(sql, [valores],  function(err, results) {
-        if (err) {
-            console.log(err);
-        }
+    connection.query(sql, [valores],  (err, results) => {
+        if (err) { 
+            console.log(err); 
+        } 
         // si llega aqui es que se registró correctamente
         res.redirect("/main");
     });
@@ -580,8 +574,8 @@ app.post('/register', async (req, res) => {
     const sql_inserta = 'insert into usuarios set ?';
     valores.cd_contrasena = passwordHash;
 
-    connection.query(sql_inserta, [valores], function (err2, results2) {
-      if (err2) {
+    connection.query(sql_inserta, [valores], (err2, results2) => {
+      if (err2) { 
         console.log(err2);
       }
       // si llega aqui es que se registró correctamente
@@ -595,7 +589,7 @@ app.post('/login', async (req, res) => {
   try {
     const usuario = req.body.cd_usuario;
     const pass = req.body.cd_contrasena;
-    let sql = 'select * from usuarios where cd_usuario = ?';
+    const sql = 'select * from usuarios where cd_usuario = ?';
 
     connection.query(sql, [usuario], async (err, results) => {
       if (err) {
@@ -640,7 +634,7 @@ app.post('/login', async (req, res) => {
 });
 
 // PORT dinámico
-app.listen(port, () => {
+app.listen(port, () => { 
   console.log('Server running on port ' + port);
 });
 
