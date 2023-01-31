@@ -66,12 +66,13 @@
 
 
 
-        let tabledataUsuarios = <%- JSON.stringify(tabledata) %>; 
-        let tabledataMateriales = <%- JSON.stringify(tabledata2) %>; 
-        let tabledataProductosPedidos = []; 
-        let tabledataListaPedidos = <%- JSON.stringify(tabledata3) %>; 
-        let tabledataListaProdPedidos = []; 
-        let tabledataListaProdPedidosAlmacen = <%- JSON.stringify(tabledata4) %>; 
+        let tblUsuarios = <%- JSON.stringify(tabledata) %>; 
+        let tblMateriales = <%- JSON.stringify(tabledata2) %>; 
+        let tblProdPedidos = []; 
+        let tblListaPedidos = <%- JSON.stringify(tabledata3) %>; 
+        let tblProdAsociados = []; 
+        let tblAlmacen = <%- JSON.stringify(tabledata4) %>; 
+        let tblFacturacion = <%- JSON.stringify(tabledata5) %>; 
         
         let vistaUsuarios = <%- JSON.stringify(vistaUsuarios) %>; 
         let vistaMateriales = <%- JSON.stringify(vistaMateriales) %>; 
@@ -96,7 +97,7 @@
         // ------------------------------
         let tableUsuarios = new Tabulator("#tabla-usuarios", { 
             height: 380, // set height of table to enable virtual DOM
-            data: tabledataUsuarios, //load initial data into table
+            data: tblUsuarios, //load initial data into table
             layout: "fitColumns", //fit columns to width of table (optional)
             pagination: "local",       //paginate the data
             paginationSize: 10,         //allow 7 rows per page of data
@@ -171,7 +172,7 @@
 
         let tableMateriales = new Tabulator("#tabla-materiales", { 
             height: 380,               // set height of table to enable virtual DOM
-            data: tabledataMateriales,          //load initial data into table
+            data: tblMateriales,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
             layout: "fitColumns", //fit columns to width of table (optional)
@@ -254,13 +255,13 @@
         
 
 
-        // ------------------------------
-        // tabla de los productos pedidos (Compras - Pedidos nuevos)
-        // ------------------------------
+        // ------------------------------------------------------------------------------
+        // tabla de los productos pedidos (Compras - Pedidos nuevos) - Vista Nuevo Pedido
+        // ------------------------------------------------------------------------------
 
         let tableProductosPedidos = new Tabulator("#tabla-productos-pedidos", { 
             height: 280,               // set height of table to enable virtual DOM
-            data: tabledataProductosPedidos,          //load initial data into table
+            data: tblProdPedidos,          //load initial data into table
             history: true,             //allow undo and redo actions on the table
             //selectable:true,           //make rows selectable 
             layout: "fitColumns", //fit columns to width of table (optional)
@@ -292,7 +293,7 @@
 
         let tableListaPedidos = new Tabulator("#tabla-lista-pedidos", { 
             height: 280,               // set height of table to enable virtual DOM
-            data: tabledataListaPedidos,          //load initial data into table
+            data: tblListaPedidos,          //load initial data into table
             pagination: "local",       //paginate the data 
             layout: "fitColumns", //fit columns to width of table (optional)
             paginationSize: 10,        //allow 7 rows per page of data 
@@ -316,13 +317,13 @@
             ],
         }); 
 
-        // ------------------------------
-        // tabla con la lista de los productos pedidos (asociado con la Lista de Pedidos )
-        // ------------------------------
+        // ----------------------------------------------------------------------
+        // tabla con la lista de los productos pedidos - Vista Lista de Pedidos 
+        // ----------------------------------------------------------------------
 
         let tableListaProdPedidos = new Tabulator("#tabla-lista-prodpedidos", { 
             height: 280,               // set height of table to enable virtual DOM
-            data: tabledataListaProdPedidos,          //load initial data into table
+            data: tblProdAsociados,          //load initial data into table
             pagination: "local",       //paginate the data 
             layout: "fitColumns", //fit columns to width of table (optional)
             paginationSize: 10,        //allow 7 rows per page of data 
@@ -352,7 +353,7 @@
         // ----------------------------------
         let tableListaProdPedidosAlmacen = new Tabulator("#tabla-lista-almacen", { 
             height: 280,               // set height of table to enable virtual DOM 
-            data: tabledataListaProdPedidosAlmacen,          //load initial data into table 
+            data: tblAlmacen,          //load initial data into table 
             layout: "fitColumns", //fit columns to width of table (optional)6
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
@@ -380,7 +381,7 @@
         // ----------------------------------
         let tableFacturacion = new Tabulator("#tbl-list-almacen-fact", { 
             height: 280,               // set height of table to enable virtual DOM 
-            data: [],          //load initial data into table 
+            data: tblFacturacion,          //load initial data into table 
             layout: "fitColumns", //fit columns to width of table (optional)6
             pagination: "local",       //paginate the data 
             paginationSize: 10,        //allow 7 rows per page of data 
@@ -390,7 +391,7 @@
             columns: [ //Define Table Columns 
                 {title:"Id de recepcion",  field:"id_recepcion",     sorter:"string", hozAlign:"left", tooltip:true  },
                 {title:"Id de Pedido",     field:"id_pedido",        sorter:"string", hozAlign:"left", tooltip:true  }, 
-                {title:"Fecha recepción",  field:"fh_recepcion",     sorter:"date",   hozAlign:"left", tooltip:true  }, 
+                {title:"Fecha recepción",  field:"recepcion_created_at",     sorter:"date",   hozAlign:"left", tooltip:true  }, 
                 {title:"Vehículo",         field:"tx_vehiculo",      sorter:"string", hozAlign:"left", tooltip:true  }, 
                 {title:"Chofer",           field:"nb_chofer",        sorter:"string", hozAlign:"left", tooltip:true  },
                 {title:"Piezas recibidas", field:"nu_pzs_recibidas", sorter:"date",   hozAlign:"left", tooltip:true  },
@@ -408,7 +409,7 @@
         }); 
 
 
-        
+
         // ------------------------------
         // General FE script
         // ------------------------------
@@ -576,7 +577,7 @@
 
 
         // Obtiene el Id del registro seleccionado
-        tableListaPedidos.on("rowSelected", function(row) { 
+        tableListaPedidos.on("rowSelected", (row) => { 
 
             const idPedidoSeleccionado = row._row.data.id_pedido;
             let valores = {};
@@ -591,8 +592,8 @@
 
         });
 
-        // Cuando cambia el select del form
-        $("#lista_pedidos_combo").change(function() { 
+        // Cuando cambia el select del form (Lista de Pedidos)
+        $("#lista_pedidos_combo").change(() => { 
             let valores = {};
             const nb_estatus = $( "#lista_pedidos_combo option:selected" ).text();
             valores['nb_estatus'] = nb_estatus;
@@ -627,50 +628,62 @@
         $('#btn-autorizar-pedido').click(function() {
             const cadena = $('#id_pedido_seleccionado').html();
             const id_pedido = cadena.substring(17, cadena.length);
-            const id_usr_cambia_estatus = $('#nav-id-usuario').html();
-            const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
 
-            const valores = { 
-                'id_pedido': id_pedido, 
-                'nb_estatus': 'Autorizado',
-                'id_usr_cambia_estatus': id_usr_cambia_estatus,
-                'tx_comentarios_estatus': tx_comentarios_estatus
+            if (id_pedido) {
+                
+                const id_usr_cambia_estatus = $('#nav-id-usuario').html();
+                const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
+                const valores = { 
+                    id_pedido: id_pedido, 
+                    nb_estatus: 'Autorizado',
+                    id_usr_cambia_estatus: id_usr_cambia_estatus,
+                    tx_comentarios_estatus: tx_comentarios_estatus
+                }
+                //console.log(valores);
+
+                // aqui va el post
+                $.post("/actualizapedido", valores, function(res) {
+                    if(res === 'Autorizado') { 
+                        alert("¡Pedido autorizado!"); 
+                        $("#lista_pedidos_combo").change();
+                        tableListaProdPedidos.replaceData([]);
+                    }
+                }); 
+
+            } else {
+                alert("Ningún registro seleccionado");
             }
 
-            console.log(valores);
-
-            // aqui va el post
-            $.post("/actualizapedido", valores, function(res) {
-                if(res === 'Autorizado') { 
-                    alert("¡Pedido autorizado!"); 
-                    $("#lista_pedidos_combo").change();
-                    tableListaProdPedidos.replaceData([]);
-                }
-            });
         });
         
         // btn cancelar pedido
-        $("#btn-cancelar-pedido").click(function() {
+        $("#btn-cancelar-pedido").click(() => {
             const cadena = $("#id_pedido_seleccionado").html();
             const id_pedido = cadena.substring(17, cadena.length);
-            const id_usr_cambia_estatus = $('#nav-id-usuario').html();
-            const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
 
-            const valores = { 
-                'id_pedido': id_pedido, 
-                'nb_estatus': 'Cancelado',
-                'id_usr_cambia_estatus': id_usr_cambia_estatus,
-                'tx_comentarios_estatus': tx_comentarios_estatus
+            if (id_pedido) { 
+                const id_usr_cambia_estatus = $('#nav-id-usuario').html();
+                const tx_comentarios_estatus = prompt("¿Tienes comentarios sobre esta acción?");
+
+                const valores = { 
+                    'id_pedido': id_pedido, 
+                    'nb_estatus': 'Cancelado',
+                    'id_usr_cambia_estatus': id_usr_cambia_estatus,
+                    'tx_comentarios_estatus': tx_comentarios_estatus
+                }
+
+                // aqui va el post
+                $.post("/actualizapedido", valores, function(res) {
+                    if(res === 'Cancelado') { 
+                        alert("¡Pedido cancelado!"); 
+                        $("#lista_pedidos_combo").change();
+                        tableListaProdPedidos.replaceData([]);
+                    }
+                });
+            } else {
+                alert("Ningún registro seleccionado");
             }
 
-            // aqui va el post
-            $.post("/actualizapedido", valores, function(res) {
-                if(res === 'Cancelado') { 
-                    alert("¡Pedido cancelado!"); 
-                    $("#lista_pedidos_combo").change();
-                    tableListaProdPedidos.replaceData([]);
-                }
-            });
         });
 
         /* -------------------------------- */
@@ -755,6 +768,9 @@
         /* -------------------------------- */
         /* TERMINA VISTA - LISTA DE ALMACEN */
         /* -------------------------------- */
+
+
+        
 
 
 

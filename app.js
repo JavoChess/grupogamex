@@ -86,6 +86,7 @@ const mainRendering = valores => {
   objRender.vistaAlmacen = valores[10] === 0 ? 'd-none' : '';
   objRender.vistaFacturacion = valores[11] === 0 ? 'd-none' : '';
   objRender.usuario = valores[12] ;
+  objRender.tabledata5 = valores[13] === 0 ? [] : valores[13];
   return objRender;
 } 
 
@@ -94,7 +95,7 @@ const mainRendering = valores => {
 app.get('/main', IsLoggedIn, (req, res) => {
 
   if (req.user) {
-    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user]);
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user, 0]);
     res.render('inicio', renderDef);
   } else {
     res.redirect('/');
@@ -108,16 +109,25 @@ app.get('/main', IsLoggedIn, (req, res) => {
 
 /* Vista Almacén */
 app.get('/facturacion', IsLoggedIn, (req, res) => {
-  const sql ='select * from usuarios';
+  const sql =   'select '
+              +   'a.id_recepcion, '
+              +   'a.id_pedido, '
+              +   'a.recepcion_created_at, '
+              +   'a.tx_vehiculo, '
+              +   'a.nb_chofer, '
+              +   'a.nu_pzs_recibidas '
+              + 'from almacen a '
+              + 'left join facturacion b '
+              + 'on a.id_recepcion = b.id_recepcion '
+              + 'where b.id_recepcion is null' ;
 
   if (req.user) {
     connection.query(sql, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        //const datos = JSON.parse(JSON.stringify(results));
-
-        const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, req.user]);
+        const datos = JSON.parse(JSON.stringify(results));
+        const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, req.user, datos]);
         res.render('inicio', renderDef);
       }
     });
@@ -125,6 +135,7 @@ app.get('/facturacion', IsLoggedIn, (req, res) => {
     res.redirect('/');
   }
 });
+
 
 /* ------------------------- */
 /* TERMINA VISTA FACTURACION */
@@ -143,7 +154,7 @@ app.get('/usuarios', IsLoggedIn, (req, res) => {
         console.log(err);
       } else {
         const datos = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, req.user]);
+        const renderDef = mainRendering([datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, req.user, 0]);
         res.render('inicio', renderDef);
       }
     });
@@ -157,7 +168,7 @@ app.get('/usuarios', IsLoggedIn, (req, res) => {
 /* profile */
 app.get('/profile', IsLoggedIn, (req, res) => {
   if (req.user) {
-    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, req.user]);
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, req.user, 0]);
     res.render('inicio', renderDef);
   } else {
     // lo manda al login
@@ -176,7 +187,7 @@ app.get('/materiales', IsLoggedIn, (req, res) => {
         console.log(err);
       } else {
         const datos = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([0, datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, req.user]);
+        const renderDef = mainRendering([0, datos, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, req.user, 0]);
         res.render('inicio', renderDef); 
       }
     });
@@ -190,7 +201,7 @@ app.get('/materiales', IsLoggedIn, (req, res) => {
 /* Vista compras. El usuario de Compras puede hacer pedidos en esta vista */
 app.get('/compras', IsLoggedIn, (req, res) => {
   if (req.user) { 
-    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, req.user]);
+    const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, req.user, 0]);
     res.render('inicio', renderDef);
   } else {
     res.redirect('/');
@@ -207,7 +218,7 @@ app.get('/listapedidos', IsLoggedIn, (req, res) => {
         console.log(err);
       } else {
         const datos = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, 0, req.user]);
+        const renderDef = mainRendering([0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, 0, req.user, 0]);
         res.render('inicio', renderDef);
       }
     });
@@ -292,7 +303,7 @@ app.get('/almacen', IsLoggedIn, (req, res) => {
         console.log(err);
       } else {
         const datos = JSON.parse(JSON.stringify(results));
-        const renderDef = mainRendering([0, 0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, req.user]);
+        const renderDef = mainRendering([0, 0, 0, datos, 0, 0, 0, 0, 0, 0, 1, 0, req.user, 0]);
         res.render('inicio', renderDef);
       }
     });
@@ -618,7 +629,7 @@ app.post('/login', async (req, res) => {
           //console.log(cookieOptions);
           res.cookie('jwt', token, cookieOptions);
           req.user = results[0];
-          const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user]);
+          const renderDef = mainRendering([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, req.user, 0]);
           res.render('inicio', renderDef);
         }
       } else {
