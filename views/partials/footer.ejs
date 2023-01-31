@@ -347,9 +347,9 @@
 
 
 
-        // ------------------------------
+        // ----------------------------------
         // tabla con la lista para el Almacén
-        // ------------------------------
+        // ----------------------------------
         let tableListaProdPedidosAlmacen = new Tabulator("#tabla-lista-almacen", { 
             height: 280,               // set height of table to enable virtual DOM 
             data: tabledataListaProdPedidosAlmacen,          //load initial data into table 
@@ -366,7 +366,7 @@
                 {title:"Proveedor",          field:"nb_proveedor",    sorter:"string", hozAlign:"left", tooltip:true }, 
                 {title:"Estatus",            field:"nb_estatus",      sorter:"string", hozAlign:"left" }, 
                 {title:"Id de producto",     field:"id_producto",     sorter:"string", hozAlign:"left" },
-                {title:"Producto a recibir", field:"nb_producto",     sorter:"date",   hozAlign:"left", tooltip:true },
+                {title:"Producto a recibir", field:"nb_producto",     sorter:"string",   hozAlign:"left", tooltip:true },
                 {title:"Cantidad",           field:"nu_cantidad",     sorter:"string", hozAlign:"left" },
                 {title:"Código de artículo", field:"cd_articulo",     sorter:"string", hozAlign:"left" },
                 {title:"Estatus recepción", field:"nb_prodpedido_estatus",     sorter:"string", hozAlign:"left" },
@@ -375,8 +375,32 @@
         }); 
 
 
+        // ----------------------------------
+        // tabla con la lista para facturacion
+        // ----------------------------------
+        let tableFacturacion = new Tabulator("#tbl-list-almacen-fact", { 
+            height: 280,               // set height of table to enable virtual DOM 
+            data: [],          //load initial data into table 
+            layout: "fitColumns", //fit columns to width of table (optional)6
+            pagination: "local",       //paginate the data 
+            paginationSize: 10,        //allow 7 rows per page of data 
+            paginationCounter: "rows", //display count of paginated rows in footer 
+            selectable: 1, 
+            columnDefaults:{ headerTooltip:true,},
+            columns: [ //Define Table Columns 
+                {title:"Id de recepcion",  field:"id_recepcion",     sorter:"string", hozAlign:"left", tooltip:true  },
+                {title:"Id de Pedido",     field:"id_pedido",        sorter:"string", hozAlign:"left", tooltip:true  }, 
+                {title:"Fecha recepción",  field:"fh_recepcion",     sorter:"date",   hozAlign:"left", tooltip:true  }, 
+                {title:"Vehículo",         field:"tx_vehiculo",      sorter:"string", hozAlign:"left", tooltip:true  }, 
+                {title:"Chofer",           field:"nb_chofer",        sorter:"string", hozAlign:"left", tooltip:true  },
+                {title:"Piezas recibidas", field:"nu_pzs_recibidas", sorter:"date",   hozAlign:"left", tooltip:true  },
+                
+            ],
+        }); 
+
         
         
+
         $("#pedidos-nuevo-producto").click(function() { 
             // Tendrias que generar el nuevo Id en la DB, y cuardarlo en nuevoId 
             const nuevoId = 0;
@@ -384,7 +408,7 @@
         }); 
 
 
-
+        
         // ------------------------------
         // General FE script
         // ------------------------------
@@ -407,6 +431,7 @@
         }
 
         
+
         /* Limpia los objetos de un form */ 
         const limpiaObjetosEnForm = (frm) => {
             $("#" + frm).find(":input").each(function () {  // 'function' is needed here 
@@ -730,6 +755,7 @@
         /* -------------------------------- */
         /* TERMINA VISTA - LISTA DE ALMACEN */
         /* -------------------------------- */
+
 
 
 
