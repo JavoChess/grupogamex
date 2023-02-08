@@ -121,3 +121,38 @@ create table recepcion (
 
 alter table usuarios modify contrasena varchar(60);
 
+
+/* crea la tabla recepción en almacén */ 
+create table almacen ( 
+    id_recepcion int primary key not null auto_increment,
+    id_pedido int,
+    id_usuario int,
+	recepcion_created_at timestamp default current_timestamp, 
+    recepcion_updated_at timestamp on update current_timestamp, 
+    fh_recepcion date,
+    tx_vehiculo varchar(50),
+    nb_chofer varchar(100),
+    cd_valida varchar(1),
+    nu_pzs_recibidas int
+);
+
+
+
+/* Crea tabla facturacion */
+
+drop table facturacion;
+
+create table facturacion (
+    id_factura int primary key not null auto_increment,
+    id_pedido int,
+    id_usuario int,
+    id_recepcion int,
+	factura_created_at timestamp default current_timestamp, 
+    factura_updated_at timestamp on update current_timestamp, 
+    cd_folio varchar(50),
+    cd_razon_social varchar(200),
+    fh_recepcion date
+);
+
+
+
