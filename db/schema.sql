@@ -76,6 +76,8 @@ create table pedidos (
     tx_especificaciones varchar(200)
 );
 
+alter table pedidos add id_usr_cambia_estatus int;
+alter table pedidos add tx_comentarios_estatus varchar (200);
 
 
 
@@ -99,6 +101,11 @@ create table prodpedidos (
     cd_moneda varchar(3),
     im_tipo_de_cambio float
 );
+
+alter table prodpedidos add nb_prodpedido_status varchar (15);
+alter table prodpedidos rename column nb_prodpedido_status to nb_prodpedido_estatus;
+alter table prodpedidos rename column id_prodpedidos to id_prodpedido;
+
 
 
 /* crea la tabla recepción */
@@ -153,6 +160,29 @@ create table facturacion (
     cd_razon_social varchar(200),
     fh_recepcion date
 );
+
+
+
+
+/* ejemplo random de registro */
+insert into facturacion (id_factura, id_pedido, id_usuario, id_recepcion, cd_folio, cd_razon_social) values (1, 43, 1, 2, 'abc', 'codestar sa de cv');
+select * from facturacion;
+
+
+/* query para la vista de facturación 
+(solo aquellos que no están en tbl factuacion)*/
+select 
+	a.id_recepcion,
+	a.id_pedido, 
+    a.recepcion_created_at,
+    a.tx_vehiculo,
+    a.nb_chofer,
+    a.nu_pzs_recibidas
+from almacen a
+left join facturacion b
+on a.id_recepcion = b.id_recepcion 
+where b.id_recepcion is null
+;
 
 
 

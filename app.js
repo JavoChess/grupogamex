@@ -180,7 +180,7 @@ app.get('/profile', IsLoggedIn, (req, res) => {
 
 /* Vista catalogo de materiales */
 app.get('/materiales', IsLoggedIn, (req, res) => {
-  const sql = 'select * from materiales';
+  const sql = 'select * from productos';
   if (req.user) {
     connection.query(sql, (err, results) => {
       if (err) {

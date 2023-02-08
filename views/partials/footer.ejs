@@ -184,16 +184,16 @@
                         }, 
             columnDefaults:{ headerTooltip:true,},
             columns: [ //Define Table Columns 
-                {title:"Id",              field:"material_id",    sorter:"string", hozAlign:"left"},
-                {title:"Nombre",          field:"nombre",         sorter:"string", hozAlign:"left", editor: true}, 
-                {title:"Código",          field:"codigo",         sorter:"string", hozAlign:"left", editor: true}, 
-                {title:"Tipo producto",   field:"tipo_producto",  sorter:"string", hozAlign:"left", editor: true},
-                {title:"Marca",           field:"marca",          sorter:"string", hozAlign:"left", editor: true},
-                {title:"Cliente",         field:"cliente",        sorter:"string", hozAlign:"left", editor: true},
-                {title:"Proveedor",       field:"proveedor",      sorter:"string", hozAlign:"left", editor: true},
-                {title:"Almacén",         field:"almacen",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
-                {title:"Clasif. Almacén", field:"clasif_almacen", sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
-                {title:"Estatus",         field:"estatus",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
+                {title:"Id",              field:"id_producto",    sorter:"string", hozAlign:"left"},
+                {title:"Nombre",          field:"nb_producto",         sorter:"string", hozAlign:"left", editor: true}, 
+                {title:"Código",          field:"cd_producto",         sorter:"string", hozAlign:"left", editor: true}, 
+                {title:"Tipo producto",   field:"tp_producto",  sorter:"string", hozAlign:"left", editor: true},
+                {title:"Marca",           field:"nb_marca",          sorter:"string", hozAlign:"left", editor: true},
+                {title:"Cliente",         field:"nb_cliente",        sorter:"string", hozAlign:"left", editor: true},
+                {title:"Proveedor",       field:"nb_proveedor",      sorter:"string", hozAlign:"left", editor: true},
+                {title:"Almacén",         field:"tp_almacen",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["1", "2"]}},
+                {title:"Clasif. Almacén", field:"cd_almacen", sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["A", "B", "C"]}},
+                {title:"Estatus",         field:"cd_estatus",        sorter:"string", hozAlign:"left", editor: true, editor:"list", editorParams:{values:["Activo", "Inactivo"]}},
                 {formatter: iconoElimina, width:40, hozAlign:"center", cellClick:function(e, cell) { 
                             
                         const id = cell.getRow().getData().material_id; 
