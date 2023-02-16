@@ -7,7 +7,7 @@ use grupogamex;
 alter user 'root'@'localhost' identified with mysql_native_password by '';
 flush privileges; 
 
-
+/* aqui debes re-hacer este file de una mejor forma */
 
 /* crea la primera tabla de usuarios */
 drop table usuarios;
